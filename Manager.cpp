@@ -1,0 +1,205 @@
+#include "Main.h"
+#include "Manager.h"
+#include "Renderer.h"
+#include "C_ModelRenderer.h"
+#include "C_Audio.h"
+#include "Input.h"
+#include "Fade.h"
+
+#include "S_Title.h"
+#include "S_Game.h"
+#include "S_Result.h"
+
+#include "Rendpoly.h"
+
+Scene* Manager::_scene{};
+Scene* Manager::_nextscene{};
+Scene* Manager::_prvscene{};
+Sprite2D* Manager::_sprite;
+FadeMode Manager::_mode;
+XMFLOAT4 Manager::_fadecolor;
+float Manager::_faderate;
+FontData* Manager::_fontdata;
+DirectWriteCustomFont* Manager::_loadT;
+std::string Manager::_loading;
+float Manager::_time;
+Fade* Manager::_fade;
+
+Rendpoly* g_rendp;
+
+void Manager::Init()
+{
+	Input::Init();
+	Renderer::Init();
+	Audio::InitMaster();
+
+	//フェード初期化
+	_fade = new Fade();
+	_fade->Init();
+
+	_mode = FadeMode::None;
+	_fadecolor = { 1.0f, 1.0f, 1.0f, 0.0f };
+
+
+	_fontdata = new FontData();
+	_fontdata->fontSize = 30.0f;
+	_fontdata->fontWeight = DWRITE_FONT_WEIGHT_ULTRA_BLACK;
+	_fontdata->Color = D2D1::ColorF(D2D1::ColorF::Black);
+	_fontdata->font = L"クラフト明朝";
+
+	_loadT = new DirectWriteCustomFont(_fontdata);
+
+	_loadT->Init(Renderer::GetSwapChain());
+	_loadT->FontLoader();
+
+	// 日本語ロケールのフォント名を取得
+	_loadT->GetFontFamilyName(_loadT->fontCollection.Get());
+
+	// フォントをセット
+	_loadT->SetFont((*_fontdata));
+
+	_time = 0.0f;
+
+	_scene = new Title();
+	_scene->Init();
+
+	g_rendp = new Rendpoly();
+	g_rendp->Init();
+}
+
+
+void Manager::Uninit()
+{
+	g_rendp->Uninit();
+	delete g_rendp;
+
+	_scene->Uninit();
+	delete _scene;
+
+	//フェード解放
+	_fade->Uninit();
+	delete _fade;
+
+	//モデル解放
+	ModelRenderer::UnloadAll();
+	Audio::UninitAll();
+	Sprite::UninitAll();
+
+	Audio::UninitMaster();
+	Renderer::Uninit();
+	Input::Uninit();
+}
+
+void Manager::Update()
+{
+	Input::Update();
+
+	if (_mode == FadeMode::None) {
+		_scene->Update();
+	}
+	g_rendp->Update();
+	FadeUpdate();
+}
+
+void Manager::Draw() {
+	//Renderer::BeginPE();
+
+	//_scene->Draw();
+
+	Renderer::Begin();
+	_scene->Draw();
+	//g_rendp->Draw();
+	if (_mode != FadeMode::None) {
+		_fade->Draw();
+		_loadT->DrawString(_loading, XMFLOAT2(10.0f, 10.0f), D2D1_DRAW_TEXT_OPTIONS_NONE);
+	}
+
+
+	Renderer::End();
+
+	//画面遷移
+	if (!_nextscene) {
+		return;
+	}
+	//次のシーンがセットされていたら
+	if (_scene) {
+		_scene->Uninit();
+		delete _scene;
+		_scene = nullptr;
+	}
+
+	//モデル解放
+	ModelRenderer::UnloadAll();
+	Audio::UninitAll();
+	Sprite::UninitAll();
+
+	_fade->Init();
+
+	//次のシーンをセット
+	_scene = _nextscene;
+	_scene->Init();
+
+	_nextscene = nullptr;
+}
+
+void Manager::FadeUpdate() {
+	if (_mode == FadeMode::None) {
+		return;
+	}
+	//フェードアウト処理
+	if (_mode == FadeMode::Out) {
+		_fadecolor.w += _faderate;
+
+		if (_fadecolor.w >= 1.0f) {
+			//フェードイン処理に切り替え
+			_fadecolor.w = 1.0f;
+			_mode = FadeMode::In;
+
+			//モードを設定
+			_nextscene = _prvscene;
+
+			_prvscene = nullptr;
+		}
+	}
+	//フェードイン処理
+	else if (_mode == FadeMode::In) {
+		_fadecolor.w -= _faderate;
+
+		if (_fadecolor.w <= 0.0f) {
+			//フェード処理終了
+			_fadecolor.w = 0.0f;
+			_mode = FadeMode::None;
+		}
+	}
+	//スプライトの色更新
+	_fade->SetColor(_fadecolor);
+
+	_time += 0.1f;
+	if (_time >= 0.2f) {
+		_loading = "L";
+	}
+	if (_time >= 0.4f) {
+		_loading = "Lo";
+	}
+	if (_time >= 0.6f) {
+		_loading = "Loa";
+	}
+	if (_time >= 0.8f) {
+		_loading = "Load";
+	}
+	if (_time >= 1.0f) {
+		_loading = "Loadi";
+	}
+	if (_time >= 1.2f) {
+		_loading = "Loadin";
+	}
+	if (_time >= 1.4f) {
+		_loading = "Loading";
+	}
+	if (_time >= 1.6f) {
+		_time = 0.0f;
+		_loading = "";
+	}
+	_fontdata->Color = D2D1::ColorF(0.0f, 0.0f, 0.0f, _fadecolor.w);
+	_loadT->SetFont((*_fontdata));
+}
