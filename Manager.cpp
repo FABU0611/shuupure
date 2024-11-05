@@ -102,13 +102,13 @@ void Manager::Update()
 }
 
 void Manager::Draw() {
-	//Renderer::BeginPE();
+	Renderer::BeginPE();
 
-	//_scene->Draw();
+	_scene->Draw();
 
 	Renderer::Begin();
-	_scene->Draw();
-	//g_rendp->Draw();
+	//_scene->Draw();
+	g_rendp->Draw();
 	if (_mode != FadeMode::None) {
 		_fade->Draw();
 		_loadT->DrawString(_loading, XMFLOAT2(10.0f, 10.0f), D2D1_DRAW_TEXT_OPTIONS_NONE);

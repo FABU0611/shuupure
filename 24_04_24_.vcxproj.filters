@@ -304,6 +304,7 @@
     <FxCompile Include="shader\TangentNormalLightingPS.hlsl" />
     <FxCompile Include="shader\NormalLightingPS.hlsl" />
     <FxCompile Include="shader\NormalLightingVS.hlsl" />
+    <FxCompile Include="shader\PartilcePS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="24_04_24_.rc">

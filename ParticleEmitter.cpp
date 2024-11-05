@@ -56,7 +56,7 @@ void ParticleEmitter::Init() {
 		"shader\\unlitTextureVS.cso");
 
 	Renderer::CreatePixelShader(&_PixelShader,
-		"shader\\unlitTexturePS.cso");
+		"shader\\PartilcePS.cso");
 }
 
 //I—¹ˆ—
