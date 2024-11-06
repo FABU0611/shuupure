@@ -5,7 +5,7 @@
 #include <thread>
 #include "Input.h"
 #include "Time.h"
-#include "resource.h"
+#include "Resource.h"
 
 //#define _CRTDBG_MAP_ALLOC
 //#include <cstdlib>

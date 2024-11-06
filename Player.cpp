@@ -11,7 +11,6 @@
 #include "C_Transform.h"
 #include "C_Collision.h"
 #include "C_Audio.h"
-#include "PlayerState_jump.h"
 
 const float Player::_FALL_NUM = -98.0f;
 const float Player::_JUMP_POWER = 100.0f;
@@ -20,7 +19,7 @@ const float Player::_MOVE_NUM = 10.0f;
 const float Player::_FRICTION_NUM = 2.0f;
 
 Player::Player(const XMFLOAT3& pos, const XMFLOAT3& scl):
-_state(new PlayerStateJump(this)){
+_state(nullptr){
 	SetPosition(pos);
 	SetScale(scl);
 }
@@ -89,14 +88,12 @@ void Player::Update() {
 	XMFLOAT3 oldPos = GetPosition();
 
 	_move = { 0.0f, 0.0f, 0.0f };
-	float dlt = 1.0f / 60.0f;
 	float dt = Time::GetDeltaTime();
 	for (auto c : _components) {
 		c->Update();
 	}
 
 	SetQuaternion(GetQuaternion());
-	_state->Update();
 
 	//‘¬“x‚ÌXV
 	_velocity.x += _accel.x * _move.x * dt;

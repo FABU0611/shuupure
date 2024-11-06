@@ -10,7 +10,6 @@
 
 #include "Camera.h"
 #include "Player.h"
-#include "Mob01.h"
 #include "Sky.h"
 #include "ParticleFireup.h"
 #include "DivingBoard.h"
@@ -34,7 +33,6 @@ void Game::Init() {
 	AddGameobject<Sky>(Skydoom, 300.0f);
 
 	AddGameobject<Player>(Object, XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(1.0f, 1.0f, 1.0f));
-	AddGameobject<Mob01>(Object, XMFLOAT3(50.0f, -3.0f, -20.0f), XMFLOAT3(0.05f, 0.05f, 0.05f));
 	AddGameobject<DivingBoard>(Object, XMFLOAT3(-30.0f, 0.0f, 0.0f));
 	AddGameobject<Pool>(Object, XMFLOAT3(0.0f, 0.0f, 0.0f));
 	AddGameobject<Water>(Effect, XMFLOAT3(40.0f, 20.0f, 0.0f));

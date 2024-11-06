@@ -5,9 +5,6 @@
 #include "Renderer.h"
 #include "Scene.h"
 #include "Manager.h"
-#include "PlayerState_jump.h"
-#include "PlayerState_rorate.h"
-#include "PlayerState_end.h"
 #include "C_Audio.h"
 #include "Time.h"
 #include "EasingFunc.h"
@@ -74,36 +71,6 @@ void UIManager::Draw(){
 		return;
 	}
 
-	PlayerStateJump* sj = dynamic_cast<PlayerStateJump*>(_state);
-	if (sj) {
-		_endsize += Time::GetDeltaTime();
-		_fontdata->fontSize = sin(_endsize) + _size;
-		
-		_jump->SetFont((*_fontdata));
-		
-		if (!sj->GetChage()) {
-			_jump->DrawString("Space Kye Hold", XMFLOAT2(90, 90), D2D1_DRAW_TEXT_OPTIONS_NONE);
-		}
-		else {
-			_jump->DrawString("Release!!", XMFLOAT2(90, 90), D2D1_DRAW_TEXT_OPTIONS_NONE);
-		}
-		return;
-	}
-
-	PlayerStateRotate* sr = dynamic_cast<PlayerStateRotate*>(_state);
-	if (sr) {
-		//フォントのアニメーション
-		float t = _prog;
-		_prog += Time::GetDeltaTime();
-		_fontdata->fontSize = std::lerp(_size, _endsize, Easing::EaseOutCirc(t));
-
-		_rot = sr->GetRotCount() + sr->GetTwistCount();
-		if (_rot > _currot || t > 1.0f) {
-			_prog = 0.0f;
-			_fontdata->fontSize = _endsize;
-		}
-		_currot = _rot;
-	}
 	//色とテキスト変更
 	std::string judge;
 
@@ -124,20 +91,6 @@ void UIManager::Draw(){
 		_fontdata->Color = D2D1::ColorF(D2D1::ColorF::Yellow);
 	}
 
-	PlayerStateEnd* se = dynamic_cast<PlayerStateEnd*>(_state);
-	if (se) {
-		if (judge == "Good" && !_play) {
-			GetComponent<Audio>()->Play("asset\\audio\\clap01.wav", false);
-		}
-		else if (judge == "Wow!" && !_play) {
-			GetComponent<Audio>()->Play("asset\\audio\\clap02.wav", false);
-		}
-		else if (judge == "Excellent!!" && !_play) {
-			GetComponent<Audio>()->Play("asset\\audio\\clap01.wav", false);
-			GetComponent<Audio>()->Play("asset\\audio\\clap02.wav", false);
-		}
-		_play = true;
-	}
 
 	//フォント更新
 	_rotaion->SetFont((*_fontdata));
