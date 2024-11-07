@@ -40,8 +40,6 @@ ID3D11RenderTargetView* Renderer::_BXrenderertargetview = NULL;
 ID3D11ShaderResourceView* Renderer::_BXshaderresourceview = NULL;
 ID3D11RenderTargetView* Renderer::_BYrenderertargetview = NULL;
 ID3D11ShaderResourceView* Renderer::_BYshaderresourceview = NULL;
-ID3D11RenderTargetView* Renderer::_DoFrendertargetview = NULL;
-ID3D11ShaderResourceView* Renderer::_DoFshaderresourceview = NULL;
 
 
 
@@ -455,46 +453,6 @@ void Renderer::Init() {
 		srvd.Texture2D.MipLevels = 1;
 		_device->CreateShaderResourceView(ppTexture, &srvd, &_PEshaderresourceview);
 	}
-	{
-		//被写界深度
-		D3D11_TEXTURE2D_DESC	dtd;			//テクスチャ作成用デスクリプタ構造体
-		ZeroMemory(&dtd, sizeof(dtd));
-		dtd.Width = swapChainDesc.BufferDesc.Width;
-		dtd.Height = swapChainDesc.BufferDesc.Height;
-		//作成するミップマップの数
-		dtd.MipLevels = 1;
-		dtd.ArraySize = 1;
-		dtd.Format = DXGI_FORMAT_R8_UNORM;		//ピクセルフォーマット
-		dtd.SampleDesc.Count = 1;
-		dtd.SampleDesc.Quality = 0;
-		dtd.Usage = D3D11_USAGE_DEFAULT;
-		//レンダリングターゲット用の設定
-		dtd.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
-		dtd.CPUAccessFlags = 0;
-		dtd.MiscFlags = 0;
-
-		//テクスチャの作成
-		ID3D11Texture2D* dofTexture = NULL;
-		_device->CreateTexture2D(&dtd, NULL, &dofTexture);
-
-		//レンダーターゲットビュー
-		D3D11_RENDER_TARGET_VIEW_DESC rtvd;
-		ZeroMemory(&rtvd, sizeof(rtvd));
-		rtvd.Format = DXGI_FORMAT_R8_UNORM;
-		rtvd.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
-		_device->CreateRenderTargetView(dofTexture, &rtvd, &_DoFrendertargetview);
-
-		//シェーダーリソースビューの作成
-		D3D11_SHADER_RESOURCE_VIEW_DESC srvd;
-		ZeroMemory(&srvd, sizeof(srvd));
-		srvd.Format = DXGI_FORMAT_R8_UNORM;
-		srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-		srvd.Texture2D.MipLevels = 1;
-		srvd.Texture2D.MostDetailedMip = 0;
-		_device->CreateShaderResourceView(dofTexture, &srvd, &_DoFshaderresourceview);
-	}
-
-
 }
 
 
@@ -510,8 +468,6 @@ void Renderer::Uninit() {
 	_weightsbuffer->Release();
 	_dofbuffer->Release();
 
-	_DoFshaderresourceview->Release();
-	_DoFrendertargetview->Release();
 	_Depthshaderresourceview->Release();
 	_Depthrenderertargetview->Release();
 	_BXshaderresourceview->Release();

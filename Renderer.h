@@ -85,8 +85,6 @@ private:
 	static ID3D11ShaderResourceView*	_BXshaderresourceview;
 	static ID3D11RenderTargetView*		_BYrenderertargetview;
 	static ID3D11ShaderResourceView*	_BYshaderresourceview;
-	static ID3D11RenderTargetView*		_DoFrendertargetview;
-	static ID3D11ShaderResourceView*	_DoFshaderresourceview;
 
 
 public:
@@ -124,7 +122,6 @@ public:
 	static ID3D11ShaderResourceView* GetBXTexture() { return _BXshaderresourceview; }
 	static ID3D11ShaderResourceView* GetBYTexture() { return _BYshaderresourceview; }
 	static ID3D11ShaderResourceView* GetDepthTexture() { return _Depthshaderresourceview; }
-	static ID3D11ShaderResourceView* GetCheckDoFTexture() { return _DoFshaderresourceview; }
 
 	//レンダリングターゲットをテクスチャに切り替える
 	static void BeginPE() {
@@ -163,18 +160,6 @@ public:
 		//レンダリングテクスチャクリア
 		float ClearColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 		_devicecontext->ClearRenderTargetView(_BYrenderertargetview, ClearColor);
-
-		//Zバッファクリア
-		_devicecontext->ClearDepthStencilView(_depthstencilview, D3D11_CLEAR_DEPTH, 1.0f, 0);
-	}
-	static void BeginCheckDoF() {
-		_devicecontext->OMSetRenderTargets(1,
-			&_DoFrendertargetview,	//レンダリングテクスチャ 
-			_depthstencilview);		//Zバッファ
-
-		//レンダリングテクスチャクリア
-		float ClearColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-		_devicecontext->ClearRenderTargetView(_DoFrendertargetview, ClearColor);
 
 		//Zバッファクリア
 		_devicecontext->ClearDepthStencilView(_depthstencilview, D3D11_CLEAR_DEPTH, 1.0f, 0);
