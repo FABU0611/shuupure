@@ -31,10 +31,10 @@ void Polygon2D::Init(){
 	GetComponent<Sprite2D>()->SetColor({ 1.0f, 0.0f, 0.0f, 1.0f });
 
 	Renderer::CreateVertexShader(&_vertexshader, &_vertexlayout,
-		"shader\\unlitTextureVS.cso");
+		"shader\\UnlitTextureVS.cso");
 
 	Renderer::CreatePixelShader(&_pixelshader,
-		"shader\\unlitTexturePS.cso");
+		"shader\\UnlitTexturePS.cso");
 }
 
 //I—¹ˆ—

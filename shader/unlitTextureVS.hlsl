@@ -1,9 +1,10 @@
-
+//unlitTextureVS.hlsl
+//20106_ìcíÜÅ@ò@
+//24_04_24
 #include "common.hlsl"
 
 
-void main(in VS_IN In, out PS_IN Out)
-{
+void main(in VS_IN In, out PS_IN Out) {
 
 	matrix wvp;
 	wvp = mul(World, View);

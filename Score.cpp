@@ -48,10 +48,10 @@ void Score::Init(){
 	_score += _twist * 5;
 
 	Renderer::CreateVertexShader(&_vertexshader, &_vertexlayout,
-		"shader\\unlitTextureVS.cso");
+		"shader\\UnlitTextureVS.cso");
 
 	Renderer::CreatePixelShader(&_pixelshader,
-		"shader\\unlitTexturePS.cso");
+		"shader\\UnlitTexturePS.cso");
 }
 
 //I—¹ˆ—

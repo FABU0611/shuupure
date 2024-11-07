@@ -10,6 +10,7 @@
 #include "S_Game.h"
 #include "S_Result.h"
 
+#include "Gaussian.h"
 #include "Rendpoly.h"
 
 Scene* Manager::_scene{};
@@ -25,6 +26,12 @@ std::string Manager::_loading;
 float Manager::_time;
 Fade* Manager::_fade;
 Rendpoly* Manager::_final;
+Gaussian* Manager::_gaussian;
+#ifdef _DEBUG
+#include "CheckDoF.h"
+CheckDoF* Manager::_checkdof;
+#endif
+
 
 
 void Manager::Init()
@@ -65,11 +72,25 @@ void Manager::Init()
 
 	_final = new Rendpoly();
 	_final->Init();
+
+	_gaussian = new Gaussian();
+	_gaussian->Init();
+#ifdef _DEBUG
+	_checkdof = new CheckDoF();
+	_checkdof->Init();
+#endif
 }
 
 
 void Manager::Uninit()
 {
+#ifdef _DEBUG
+	_checkdof->Uninit();
+	delete _checkdof;
+#endif
+	_gaussian->Uninit();
+	delete _gaussian;
+
 	_final->Uninit();
 	delete _final;
 
@@ -97,15 +118,21 @@ void Manager::Update()
 	if (_mode == FadeMode::None) {
 		_scene->Update();
 	}
+	_gaussian->Update();
 	_final->Update();
+#ifdef _DEBUG
+	_checkdof->Update();
+#endif
 	FadeUpdate();
 }
 
 void Manager::Draw() {
-	//オブジェクトの描画
+	//オブジェクトの描画、深度値の取得
 	Renderer::BeginPE();
 
 	_scene->Draw();
+
+	_gaussian->Draw();
 
 	//最終的な描画
 	Renderer::Begin();
@@ -117,6 +144,9 @@ void Manager::Draw() {
 		_fade->Draw();
 		_loadT->DrawString(_loading, XMFLOAT2(10.0f, 10.0f), D2D1_DRAW_TEXT_OPTIONS_NONE);
 	}
+#ifdef _DEBUG
+	_checkdof->Draw();
+#endif
 
 
 	Renderer::End();

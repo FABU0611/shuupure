@@ -117,6 +117,18 @@
     <ClCompile Include="Rendpoly.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Gaussian.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="GaussianX.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="GaussianY.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="CheckDoF.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Main.h">
@@ -263,11 +275,23 @@
     <ClInclude Include="Rendpoly.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="Gaussian.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="GaussianX.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="GaussianY.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="CheckDoF.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shader\common.hlsl" />
-    <FxCompile Include="shader\unlitTexturePS.hlsl" />
-    <FxCompile Include="shader\unlitTextureVS.hlsl" />
+    <FxCompile Include="shader\UnlitTexturePS.hlsl" />
+    <FxCompile Include="shader\UnlitTextureVS.hlsl" />
     <FxCompile Include="shader\WaterSurfacePS.hlsl" />
     <FxCompile Include="shader\WaterSurfaceVS.hlsl" />
     <FxCompile Include="shader\TangentNormalLightingVS.hlsl" />
@@ -275,6 +299,10 @@
     <FxCompile Include="shader\NormalLightingPS.hlsl" />
     <FxCompile Include="shader\NormalLightingVS.hlsl" />
     <FxCompile Include="shader\PartilcePS.hlsl" />
+    <FxCompile Include="shader\GaussianPS_X.hlsl" />
+    <FxCompile Include="shader\GaussianPS_Y.hlsl" />
+    <FxCompile Include="shader\DepthPS.hlsl" />
+    <FxCompile Include="shader\CheckDoFPS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="24_04_24_.rc">

@@ -53,7 +53,7 @@ void ParticleEmitter::Init() {
 
 
 	Renderer::CreateVertexShader(&_vertexshader, &_vertexlayout,
-		"shader\\unlitTextureVS.cso");
+		"shader\\UnlitTextureVS.cso");
 
 	Renderer::CreatePixelShader(&_pixelshader,
 		"shader\\PartilcePS.cso");

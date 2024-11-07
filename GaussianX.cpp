@@ -1,16 +1,12 @@
-//Rendpoyl.cpp
+//Gaussian.h
 //20106_田中　蓮
-//24_09_26
-
-#include "Main.h"
+//24_11_07
+#include "GaussianX.h"
 #include "Renderer.h"
-#include "Rendpoly.h"
+#include "Input.h"
 
 
-
-
-
-void Rendpoly::Init() {
+void GaussianX::Init() {
 	VERTEX_3D vertex[4];
 
 	vertex[0].Position = XMFLOAT3(0.0f, 0.0f, 0.0f);
@@ -48,31 +44,22 @@ void Rendpoly::Init() {
 
 	Renderer::GetDevice()->CreateBuffer(&bd, &sd, &_vertexbuffer);
 
-
 	//ここにシェーダーファイルのロードを追加
 	Renderer::CreateVertexShader(&_vertexshader, &_vertexlayout, "shader\\UnlitTextureVS.cso");
-	Renderer::CreatePixelShader(&_pixelshader, "shader\\DepthPS.cso");
+	Renderer::CreatePixelShader(&_pixelshader, "shader\\GaussianPS_X.cso");
 }
 
-
-void Rendpoly::Uninit() {
+void GaussianX::Uninit() {
 	_vertexbuffer->Release();
-	//_texture->Release();
 
-
-	//ここにシェーダーオブジェクトの解放を追加
 	_vertexshader->Release();
 	_vertexlayout->Release();
 	_pixelshader->Release();
 }
 
+void GaussianX::Update() {}
 
-void Rendpoly::Update() {}
-
-
-void Rendpoly::Draw() {
-	//ここにシェーダー関連の描画準備を追加
-
+void GaussianX::Draw() {
 	//頂点レイアウトを設定
 	Renderer::GetDeviceContext()->IASetInputLayout(_vertexlayout);
 	//頂点シェーダーをセット
@@ -100,10 +87,6 @@ void Rendpoly::Draw() {
 	// テクスチャ設定
 	ID3D11ShaderResourceView* ppTexture = Renderer::GetPETexture();
 	Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &ppTexture);
-	ID3D11ShaderResourceView* bsTexture = Renderer::GetBYTexture();
-	Renderer::GetDeviceContext()->PSSetShaderResources(1, 1, &bsTexture);
-	ID3D11ShaderResourceView* dsTexture = Renderer::GetDepthTexture();
-	Renderer::GetDeviceContext()->PSSetShaderResources(2, 1, &dsTexture);
 
 	// プリミティブトポロジ設定
 	Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);

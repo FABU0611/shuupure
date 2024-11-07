@@ -64,6 +64,8 @@ private:
 	static ID3D11Buffer*				_lightbuffer;
 	static ID3D11Buffer*				_camerabuffer;
 	static ID3D11Buffer*				_parameterbuffer;
+	static ID3D11Buffer*				_weightsbuffer;
+	static ID3D11Buffer*				_dofbuffer;
 
 
 	static ID3D11DepthStencilState*		_depthstateenable;
@@ -77,10 +79,14 @@ private:
 	static ID3D11RenderTargetView*		_PErenderertargetview;
 	static ID3D11ShaderResourceView*	_PEshaderresourceview;
 
+	static ID3D11RenderTargetView*		_Depthrenderertargetview;
+	static ID3D11ShaderResourceView*	_Depthshaderresourceview;
 	static ID3D11RenderTargetView*		_BXrenderertargetview;
 	static ID3D11ShaderResourceView*	_BXshaderresourceview;
 	static ID3D11RenderTargetView*		_BYrenderertargetview;
 	static ID3D11ShaderResourceView*	_BYshaderresourceview;
+	static ID3D11RenderTargetView*		_DoFrendertargetview;
+	static ID3D11ShaderResourceView*	_DoFshaderresourceview;
 
 
 public:
@@ -102,6 +108,8 @@ public:
 	static void SetLight(LIGHT Light);
 	static void SetCameraPosition(XMFLOAT3 Position);
 	static void SetParameter(XMFLOAT4 Parameter);
+	static void SetWeights(float* weights);
+	static void SetDoF(XMFLOAT2 dof);
 
 	static ID3D11Device* GetDevice( void ){ return _device; }
 	static ID3D11DeviceContext* GetDeviceContext( void ){ return _devicecontext; }
@@ -115,16 +123,58 @@ public:
 	static ID3D11ShaderResourceView* GetPETexture() { return _PEshaderresourceview; }
 	static ID3D11ShaderResourceView* GetBXTexture() { return _BXshaderresourceview; }
 	static ID3D11ShaderResourceView* GetBYTexture() { return _BYshaderresourceview; }
+	static ID3D11ShaderResourceView* GetDepthTexture() { return _Depthshaderresourceview; }
+	static ID3D11ShaderResourceView* GetCheckDoFTexture() { return _DoFshaderresourceview; }
 
 	//レンダリングターゲットをテクスチャに切り替える
 	static void BeginPE() {
-		_devicecontext->OMSetRenderTargets(1,
-			&_PErenderertargetview,	//レンダリングテクスチャ 
+		ID3D11RenderTargetView* mrt[2]{
+			_PErenderertargetview, _Depthrenderertargetview
+		};
+		_devicecontext->OMSetRenderTargets(2,
+			&(*mrt),	//レンダリングテクスチャ 
 			_depthstencilview);		//Zバッファ
 
 		//レンダリングテクスチャクリア
 		float ClearColor[4] = { 0.0f, 0.0f, 0.5f, 1.0f };
 		_devicecontext->ClearRenderTargetView(_PErenderertargetview, ClearColor);
+		_devicecontext->ClearRenderTargetView(_Depthrenderertargetview, ClearColor);
+
+		//Zバッファクリア
+		_devicecontext->ClearDepthStencilView(_depthstencilview, D3D11_CLEAR_DEPTH, 1.0f, 0);
+	}
+	static void BeginBlurX() {
+		_devicecontext->OMSetRenderTargets(1,
+			&_BXrenderertargetview,	//レンダリングテクスチャ 
+			_depthstencilview);		//Zバッファ
+
+		//レンダリングテクスチャクリア
+		float ClearColor[4] = { 0.0f, 0.0f, 0.5f, 1.0f };
+		_devicecontext->ClearRenderTargetView(_BXrenderertargetview, ClearColor);
+
+		//Zバッファクリア
+		_devicecontext->ClearDepthStencilView(_depthstencilview, D3D11_CLEAR_DEPTH, 1.0f, 0);
+	}
+	static void BeginBlurY() {
+		_devicecontext->OMSetRenderTargets(1,
+			&_BYrenderertargetview,	//レンダリングテクスチャ 
+			_depthstencilview);		//Zバッファ
+
+		//レンダリングテクスチャクリア
+		float ClearColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+		_devicecontext->ClearRenderTargetView(_BYrenderertargetview, ClearColor);
+
+		//Zバッファクリア
+		_devicecontext->ClearDepthStencilView(_depthstencilview, D3D11_CLEAR_DEPTH, 1.0f, 0);
+	}
+	static void BeginCheckDoF() {
+		_devicecontext->OMSetRenderTargets(1,
+			&_DoFrendertargetview,	//レンダリングテクスチャ 
+			_depthstencilview);		//Zバッファ
+
+		//レンダリングテクスチャクリア
+		float ClearColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+		_devicecontext->ClearRenderTargetView(_DoFrendertargetview, ClearColor);
 
 		//Zバッファクリア
 		_devicecontext->ClearDepthStencilView(_depthstencilview, D3D11_CLEAR_DEPTH, 1.0f, 0);

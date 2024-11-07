@@ -8,6 +8,10 @@
 
 class Fade;
 class Rendpoly;
+class Gaussian;
+#ifdef _DEBUG
+class CheckDoF;
+#endif
 
 enum class FadeMode {
 	None,
@@ -34,6 +38,11 @@ class Manager{
 	static Fade*		_fade;
 
 	static Rendpoly*	_final;
+
+	static Gaussian*	_gaussian;
+#ifdef _DEBUG
+	static CheckDoF*	_checkdof;
+#endif
 
 public:
 	static void Init();

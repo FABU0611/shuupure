@@ -16,10 +16,10 @@ void Skyobj::Init() {
 
 
 	Renderer::CreateVertexShader(&_vertexshader, &_vertexLayout,
-		"shader\\unlitTextureVS.cso");
+		"shader\\UnlitTextureVS.cso");
 
 	Renderer::CreatePixelShader(&_pixelShader,
-		"shader\\unlitTexturePS.cso");
+		"shader\\UnlitTexturePS.cso");
 }
 
 void Skyobj::Uninit() {

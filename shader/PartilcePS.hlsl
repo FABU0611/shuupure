@@ -2,20 +2,19 @@
 #include "common.hlsl"
 
 
-Texture2D		g_Texture : register(t0);
-SamplerState	g_SamplerState : register(s0);
+Texture2D g_Texture : register(t0);
+SamplerState g_SamplerState : register(s0);
 
 
-void main(in PS_IN In, out float4 outDiffuse : SV_Target)
-{
+void main(in PS_IN In, out PS_OUT Out) {
 
-	if (Material.TextureEnable)
-	{
-		outDiffuse = g_Texture.Sample(g_SamplerState, In.TexCoord);
-		outDiffuse *= In.Diffuse;
+	if(Material.TextureEnable) {
+		Out.Out0 = g_Texture.Sample(g_SamplerState, In.TexCoord);
+		Out.Out0 *= In.Diffuse;
 	}
-	else
-	{
-		outDiffuse = In.Diffuse;
+	else {
+		Out.Out0 = In.Diffuse;
 	}
+	Out.Out1 = In.Position.z;
+
 }
