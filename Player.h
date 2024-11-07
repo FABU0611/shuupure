@@ -27,7 +27,9 @@ class Player : public GameObject {
 public:
 	Player(const XMFLOAT3& pos, const XMFLOAT3& scl);
 	~Player() {
-		delete _state;
+		if (_state) {
+			delete _state;
+		}
 	}
 
 	void Init()override;
@@ -44,8 +46,10 @@ public:
 
 	void Fall(const float& deltatime) { _velocity.y += _accel.y * deltatime; }
 	void ChangeState(PlayerState* next) {
-		delete _state;
-		_state = next;
+		if (_state) {
+			delete _state;
+			_state = next;
+		}
 	}
 	PlayerState* GetPlayerState()const { return _state; }
 	void TrunHeadup() {
