@@ -34,4 +34,9 @@ void main(in VS_IN In, out PS_IN Out) {
 	worldBinormal.xyz = cross(worldTangent.xyz, worldNormal.xyz);
 	worldBinormal = normalize(worldBinormal);
 	Out.Binormal = worldBinormal;
+
+	matrix prevmvp;
+	prevmvp = mul(PrevWorld, PrevView);
+	prevmvp = mul(prevmvp, PrevProjection);
+	Out.PrevPosition = mul(In.Position, prevmvp);
 }

@@ -11,9 +11,16 @@ IDXGISwapChain* Renderer::_swapchain{};
 ID3D11RenderTargetView* Renderer::_rendertargetview{};
 ID3D11DepthStencilView* Renderer::_depthstencilview{};
 
+XMMATRIX Renderer::_prevworld{};
+XMMATRIX Renderer::_prevview{};
+XMMATRIX Renderer::_prevprojection{};
+
 ID3D11Buffer* Renderer::_worldbuffer{};
 ID3D11Buffer* Renderer::_viewbuffer{};
 ID3D11Buffer* Renderer::_projectionbuffer{};
+ID3D11Buffer* Renderer::_prevworldbuffer{};
+ID3D11Buffer* Renderer::_prevviewbuffer{};
+ID3D11Buffer* Renderer::_prevprojectionbuffer{};
 ID3D11Buffer* Renderer::_materialbuffer{};
 ID3D11Buffer* Renderer::_lightbuffer{};
 ID3D11Buffer* Renderer::_camerabuffer{};
@@ -40,6 +47,8 @@ ID3D11RenderTargetView* Renderer::_BXrenderertargetview = NULL;
 ID3D11ShaderResourceView* Renderer::_BXshaderresourceview = NULL;
 ID3D11RenderTargetView* Renderer::_BYrenderertargetview = NULL;
 ID3D11ShaderResourceView* Renderer::_BYshaderresourceview = NULL;
+ID3D11RenderTargetView* Renderer::_Velrenderertargetview = NULL;
+ID3D11ShaderResourceView* Renderer::_Velshaderresourceview = NULL;
 
 
 
@@ -272,6 +281,16 @@ void Renderer::Init() {
 	_devicecontext->PSSetConstantBuffers(8, 1, &_dofbuffer);
 
 
+	bufferDesc.ByteWidth = sizeof(XMFLOAT4X4);
+
+	_device->CreateBuffer(&bufferDesc, NULL, &_prevworldbuffer);
+	_devicecontext->VSSetConstantBuffers(9, 1, &_prevworldbuffer);
+
+	_device->CreateBuffer(&bufferDesc, NULL, &_prevviewbuffer);
+	_devicecontext->VSSetConstantBuffers(10, 1, &_prevviewbuffer);
+
+	_device->CreateBuffer(&bufferDesc, NULL, &_prevprojectionbuffer);
+	_devicecontext->VSSetConstantBuffers(11, 1, &_prevprojectionbuffer);
 
 
 	// ライト初期化
@@ -413,6 +432,44 @@ void Renderer::Init() {
 		srvd.Texture2D.MostDetailedMip = 0;
 		_device->CreateShaderResourceView(depthTexture, &srvd, &_Depthshaderresourceview);
 	}
+	{
+		//速度マップ
+		D3D11_TEXTURE2D_DESC	dtd;			//テクスチャ作成用デスクリプタ構造体
+		ZeroMemory(&dtd, sizeof(dtd));
+		dtd.Width = swapChainDesc.BufferDesc.Width;
+		dtd.Height = swapChainDesc.BufferDesc.Height;
+		//作成するミップマップの数
+		dtd.MipLevels = 1;
+		dtd.ArraySize = 1;
+		dtd.Format = DXGI_FORMAT_R8G8_UNORM;		//ピクセルフォーマット
+		dtd.SampleDesc.Count = 1;
+		dtd.SampleDesc.Quality = 0;
+		dtd.Usage = D3D11_USAGE_DEFAULT;
+		//レンダリングターゲット用の設定
+		dtd.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+		dtd.CPUAccessFlags = 0;
+		dtd.MiscFlags = 0;
+
+		//テクスチャの作成
+		ID3D11Texture2D* velocityTexture = NULL;
+		_device->CreateTexture2D(&dtd, NULL, &velocityTexture);
+
+		//レンダーターゲットビュー
+		D3D11_RENDER_TARGET_VIEW_DESC rtvd;
+		ZeroMemory(&rtvd, sizeof(rtvd));
+		rtvd.Format = DXGI_FORMAT_R8G8_UNORM;
+		rtvd.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+		_device->CreateRenderTargetView(velocityTexture, &rtvd, &_Velrenderertargetview);
+
+		//シェーダーリソースビューの作成
+		D3D11_SHADER_RESOURCE_VIEW_DESC srvd;
+		ZeroMemory(&srvd, sizeof(srvd));
+		srvd.Format = DXGI_FORMAT_R8G8_UNORM;
+		srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+		srvd.Texture2D.MipLevels = 1;
+		srvd.Texture2D.MostDetailedMip = 0;
+		_device->CreateShaderResourceView(velocityTexture, &srvd, &_Velshaderresourceview);
+	}
 	//レンダリングテクスチャの作成
 	{
 		ID3D11Texture2D* ppTexture = NULL;
@@ -462,12 +519,17 @@ void Renderer::Uninit() {
 	_worldbuffer->Release();
 	_viewbuffer->Release();
 	_projectionbuffer->Release();
+	_prevworldbuffer->Release();
+	_prevviewbuffer->Release();
+	_prevprojectionbuffer->Release();
 	_lightbuffer->Release();
 	_materialbuffer->Release();
 	_parameterbuffer->Release();
 	_weightsbuffer->Release();
 	_dofbuffer->Release();
 
+	_Velshaderresourceview->Release();
+	_Velrenderertargetview->Release();
 	_Depthshaderresourceview->Release();
 	_Depthrenderertargetview->Release();
 	_BXshaderresourceview->Release();
@@ -547,21 +609,41 @@ void Renderer::SetWorldViewProjection2D() {
 
 void Renderer::SetWorldMatrix(XMMATRIX WorldMatrix) {
 	XMFLOAT4X4 worldf;
+
+	XMStoreFloat4x4(&worldf, XMMatrixTranspose(_prevworld));
+	_devicecontext->UpdateSubresource(_prevworldbuffer, 0, NULL, &worldf, 0, 0);
+	
 	XMStoreFloat4x4(&worldf, XMMatrixTranspose(WorldMatrix));
 	_devicecontext->UpdateSubresource(_worldbuffer, 0, NULL, &worldf, 0, 0);
+
+	//前フレーム保存
+	_prevworld = WorldMatrix;
 }
 
 void Renderer::SetViewMatrix(XMMATRIX ViewMatrix) {
 	XMFLOAT4X4 viewf;
+
+	XMStoreFloat4x4(&viewf, XMMatrixTranspose(_prevview));
+	_devicecontext->UpdateSubresource(_prevviewbuffer, 0, NULL, &viewf, 0, 0);
+	
 	XMStoreFloat4x4(&viewf, XMMatrixTranspose(ViewMatrix));
 	_devicecontext->UpdateSubresource(_viewbuffer, 0, NULL, &viewf, 0, 0);
+
+	//前フレーム保存
+	_prevview = ViewMatrix;
 }
 
 void Renderer::SetProjectionMatrix(XMMATRIX ProjectionMatrix) {
 	XMFLOAT4X4 projectionf;
+
+	XMStoreFloat4x4(&projectionf, XMMatrixTranspose(_prevprojection));
+	_devicecontext->UpdateSubresource(_prevprojectionbuffer, 0, NULL, &projectionf, 0, 0);
+
 	XMStoreFloat4x4(&projectionf, XMMatrixTranspose(ProjectionMatrix));
 	_devicecontext->UpdateSubresource(_projectionbuffer, 0, NULL, &projectionf, 0, 0);
 
+	//前フレーム保存
+	_prevprojection = ProjectionMatrix;
 }
 
 

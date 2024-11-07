@@ -14,5 +14,9 @@ void main(in VS_IN In, out PS_IN Out) {
 	Out.TexCoord = In.TexCoord;
 	Out.Diffuse = In.Diffuse * Material.Diffuse;
 
+	matrix prevmvp;
+	prevmvp = mul(PrevWorld, PrevView);
+	prevmvp = mul(prevmvp, PrevProjection);
+	Out.PrevPosition = mul(In.Position, prevmvp);
 }
 

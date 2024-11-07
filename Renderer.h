@@ -57,9 +57,17 @@ private:
 	static ID3D11RenderTargetView*		_rendertargetview;
 	static ID3D11DepthStencilView*		_depthstencilview;
 
+	static XMMATRIX						_prevworld;
+	static XMMATRIX						_prevview;
+	static XMMATRIX						_prevprojection;
+
 	static ID3D11Buffer*				_worldbuffer;
 	static ID3D11Buffer*				_viewbuffer;
 	static ID3D11Buffer*				_projectionbuffer;
+	static ID3D11Buffer*				_prevworldbuffer;
+	static ID3D11Buffer*				_prevviewbuffer;
+	static ID3D11Buffer*				_prevprojectionbuffer;
+
 	static ID3D11Buffer*				_materialbuffer;
 	static ID3D11Buffer*				_lightbuffer;
 	static ID3D11Buffer*				_camerabuffer;
@@ -85,7 +93,9 @@ private:
 	static ID3D11ShaderResourceView*	_BXshaderresourceview;
 	static ID3D11RenderTargetView*		_BYrenderertargetview;
 	static ID3D11ShaderResourceView*	_BYshaderresourceview;
-
+	static ID3D11RenderTargetView*		_Velrenderertargetview;
+	static ID3D11ShaderResourceView*	_Velshaderresourceview;
+	//モーションブラーSRV、RTVを作って
 
 public:
 	static void Init();
@@ -122,6 +132,7 @@ public:
 	static ID3D11ShaderResourceView* GetBXTexture() { return _BXshaderresourceview; }
 	static ID3D11ShaderResourceView* GetBYTexture() { return _BYshaderresourceview; }
 	static ID3D11ShaderResourceView* GetDepthTexture() { return _Depthshaderresourceview; }
+	static ID3D11ShaderResourceView* GetVelocityTexture() { return _Velshaderresourceview; }
 
 	//レンダリングターゲットをテクスチャに切り替える
 	static void BeginPE() {

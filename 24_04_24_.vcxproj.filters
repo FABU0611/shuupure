@@ -13,6 +13,15 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="シェーダー">
+      <UniqueIdentifier>{94bd07a3-5461-41de-97e6-1edbb1eb3463}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="シェーダー\PS">
+      <UniqueIdentifier>{580b08eb-0334-4af0-a870-1ed6e8ee0952}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="シェーダー\VS">
+      <UniqueIdentifier>{b3750639-5955-47c6-a079-fe9104e96fca}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -289,20 +298,48 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="shader\common.hlsl" />
-    <FxCompile Include="shader\UnlitTexturePS.hlsl" />
-    <FxCompile Include="shader\UnlitTextureVS.hlsl" />
-    <FxCompile Include="shader\WaterSurfacePS.hlsl" />
-    <FxCompile Include="shader\WaterSurfaceVS.hlsl" />
-    <FxCompile Include="shader\TangentNormalLightingVS.hlsl" />
-    <FxCompile Include="shader\TangentNormalLightingPS.hlsl" />
-    <FxCompile Include="shader\NormalLightingPS.hlsl" />
-    <FxCompile Include="shader\NormalLightingVS.hlsl" />
-    <FxCompile Include="shader\PartilcePS.hlsl" />
-    <FxCompile Include="shader\GaussianPS_X.hlsl" />
-    <FxCompile Include="shader\GaussianPS_Y.hlsl" />
-    <FxCompile Include="shader\DepthPS.hlsl" />
-    <FxCompile Include="shader\CheckDoFPS.hlsl" />
+    <FxCompile Include="shader\common.hlsl">
+      <Filter>シェーダー</Filter>
+    </FxCompile>
+    <FxCompile Include="shader\CheckDoFPS.hlsl">
+      <Filter>シェーダー\PS</Filter>
+    </FxCompile>
+    <FxCompile Include="shader\DepthPS.hlsl">
+      <Filter>シェーダー\PS</Filter>
+    </FxCompile>
+    <FxCompile Include="shader\GaussianPS_X.hlsl">
+      <Filter>シェーダー\PS</Filter>
+    </FxCompile>
+    <FxCompile Include="shader\GaussianPS_Y.hlsl">
+      <Filter>シェーダー\PS</Filter>
+    </FxCompile>
+    <FxCompile Include="shader\NormalLightingPS.hlsl">
+      <Filter>シェーダー\PS</Filter>
+    </FxCompile>
+    <FxCompile Include="shader\PartilcePS.hlsl">
+      <Filter>シェーダー\PS</Filter>
+    </FxCompile>
+    <FxCompile Include="shader\TangentNormalLightingPS.hlsl">
+      <Filter>シェーダー\PS</Filter>
+    </FxCompile>
+    <FxCompile Include="shader\UnlitTexturePS.hlsl">
+      <Filter>シェーダー\PS</Filter>
+    </FxCompile>
+    <FxCompile Include="shader\WaterSurfacePS.hlsl">
+      <Filter>シェーダー\PS</Filter>
+    </FxCompile>
+    <FxCompile Include="shader\NormalLightingVS.hlsl">
+      <Filter>シェーダー\VS</Filter>
+    </FxCompile>
+    <FxCompile Include="shader\TangentNormalLightingVS.hlsl">
+      <Filter>シェーダー\VS</Filter>
+    </FxCompile>
+    <FxCompile Include="shader\UnlitTextureVS.hlsl">
+      <Filter>シェーダー\VS</Filter>
+    </FxCompile>
+    <FxCompile Include="shader\WaterSurfaceVS.hlsl">
+      <Filter>シェーダー\VS</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="24_04_24_.rc">

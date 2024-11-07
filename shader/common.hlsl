@@ -10,6 +10,15 @@ cbuffer ViewBuffer : register(b1) {
 cbuffer ProjectionBuffer : register(b2) {
 	matrix Projection;
 }
+cbuffer WorldBuffer : register(b9) {
+	matrix PrevWorld;
+}
+cbuffer ViewBuffer : register(b10) {
+	matrix PrevView;
+}
+cbuffer ProjectionBuffer : register(b11) {
+	matrix PrevProjection;
+}
 
 
 
@@ -70,26 +79,28 @@ cbuffer DoFBuffer : register(b8) {
 }
 
 struct VS_IN {
-	float4 Position : POSITION0; //ポジションゼロ
-	float4 Normal : NORMAL0; //ノーマルゼロ
-	float4 Diffuse : COLOR0; //カラーゼロ
-	float2 TexCoord : TEXCOORD0; //テクスコードゼロ
-	float4 Tangent : TANGENT0; //タンジェントゼロ
+	float4 Position			: POSITION0; //ポジションゼロ
+	float4 Normal			: NORMAL0; //ノーマルゼロ
+	float4 Diffuse			: COLOR0; //カラーゼロ
+	float2 TexCoord			: TEXCOORD0; //テクスコードゼロ
+	float4 Tangent			: TANGENT0; //タンジェントゼロ
 };
 
 
 struct PS_IN {
-	float4 Position : SV_POSITION; //ピクセルの座標
-	float4 WorldPosition : POSITION0; //ピクセルの空間での座標
-	float4 Normal : NORMAL0; //ピクセルの法線
-	float4 Diffuse : COLOR0; //ピクセルの色
-	float2 TexCoord : TEXCOORD0; //ピクセルのテクスチャ座標
-	float4 Tangent : TANGENT0; //タンジェント
-	float4 Binormal : BINORMAL0; //バイノーマル
+	float4 Position			: SV_POSITION; //ピクセルの座標
+	float4 PrevPosition		: TEXCOORD1; //ピクセルの座標
+	float4 WorldPosition	: POSITION0; //ピクセルの空間での座標
+	float4 Normal			: NORMAL0; //ピクセルの法線
+	float4 Diffuse			: COLOR0; //ピクセルの色
+	float2 TexCoord			: TEXCOORD0; //ピクセルのテクスチャ座標
+	float4 Tangent			: TANGENT0; //タンジェント
+	float4 Binormal			: BINORMAL0; //バイノーマル
 };
 struct PS_OUT {
-	float4 Out0 : SV_Target0;
-	float Out1 : SV_Target1;
+	float4 Out0				: SV_Target0;	//デフォルトのびょうが
+	float Out1				: SV_Target1;	//深度マップ
+	float2 Out2				: SV_Target1;	//速度マップ
 };
 
 void HalfVector(in float3 eyev, in float4 lv, out float3 halfv) {

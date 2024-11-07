@@ -20,4 +20,9 @@ void main(in VS_IN In, out PS_IN Out) {
 	Out.TexCoord = In.TexCoord;
     
 	Out.WorldPosition = mul(In.Position, World);
+
+	matrix prevmvp;
+	prevmvp = mul(PrevWorld, PrevView);
+	prevmvp = mul(prevmvp, PrevProjection);
+	Out.PrevPosition = mul(In.Position, prevmvp);
 }
