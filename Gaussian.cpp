@@ -35,14 +35,18 @@ void Gaussian::Init() {
 	_gaussiany = new GaussianY();
 	_gaussiany->Init();
 
-	_param.x = SCREEN_WIDTH * 0.5f;
-	_param.y = SCREEN_HEIGHT * 0.5f;
+	_param.x = SCREEN_WIDTH;
+	_param.y = SCREEN_HEIGHT;
 	Renderer::SetParameter(_param);
 }
 
 void Gaussian::Uninit() {
-	_gaussiany->Uninit();
-	_gaussianx->Uninit();
+	if (_gaussiany) {
+		_gaussiany->Uninit();
+	}
+	if (_gaussianx) {
+		_gaussianx->Uninit();
+	}
 }
 
 void Gaussian::Update() {
@@ -56,19 +60,21 @@ void Gaussian::Update() {
 	}
 	CalcGaussianweight(_param.z);
 
-	if (Input::GetKeyPress('3')) {
+	if (Input::GetKeyPress('3')) {			//âú
 		_dof.x += 0.01f;
+		_dof.x = (std::min)(_dof.x, 2.0f);
 	}
-	if (Input::GetKeyPress('4')) {
+	if (Input::GetKeyPress('4')) {			//éËëO
 		_dof.x += -0.01f;
 		_dof.x = (std::max)(_dof.x, 0.0f);
 	}
-	if (Input::GetKeyPress('5')) {
+	if (Input::GetKeyPress('5')) {			//çLÇ≠
 		_dof.y += 0.01f;
+		_dof.y = (std::min)(_dof.y, 10.0f);
 	}
-	if (Input::GetKeyPress('6')) {
+	if (Input::GetKeyPress('6')) {			//ã∑Ç≠
 		_dof.y += -0.01f;
-		_dof.y = (std::max)(_dof.y, 0.0f);
+		_dof.y = (std::max)(_dof.y, 0.01f);
 	}
 }
 

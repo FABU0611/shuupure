@@ -13,7 +13,7 @@ class Gaussian {
 
 	XMFLOAT4	_param = { 0.1f, 0.1f, 0.1f, 0.1f };
 	float		_weight[8];
-	XMFLOAT2	_dof = { 0.0f, 0.0f };
+	XMFLOAT2	_dof = { 0.35f, 0.6f };
 
 	void CalcGaussianweight(float);
 
