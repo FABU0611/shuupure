@@ -17,15 +17,15 @@ struct CONTROLER_STATE{
 };
 
 class Input{
-	static BYTE		_OldKeyState[256];
-	static BYTE		_KeyState[256];
+	static BYTE		_oldkeystate[256];
+	static BYTE		_keystate[256];
 
-	static BYTE		_OldMouseState[3];
-	static BYTE		_MouseState[3];
-	static POINT	_OldMousePos;
-	static POINT	_MousePos;
+	static BYTE		_oldmousestate[3];
+	static BYTE		_mousestate[3];
+	static POINT	_oldmousepos;
+	static POINT	_mousepos;
 
-	static int		_MouseWheelDelta;
+	static int		_mousewheeldelta;
 
 	static CONTROLER_STATE _Gamepad[MAX_CONTROLLERS];
 

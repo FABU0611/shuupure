@@ -6,9 +6,9 @@
 #include "GameObject.h"
 
 class Polygon2D : public GameObject{
-	ID3D11VertexShader*			_VertexShader;
-	ID3D11PixelShader*			_PixelShader;
-	ID3D11InputLayout*			_VertexLayout;
+	ID3D11VertexShader*			_vertexshader;
+	ID3D11PixelShader*			_pixelshader;
+	ID3D11InputLayout*			_vertexlayout;
 
 	float						_rot{};
 

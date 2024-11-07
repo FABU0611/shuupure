@@ -6,8 +6,8 @@
 #include "C_Sprite.h"
 
 int Sprite::_textureindex = 0;
-const wchar_t* Sprite::_texname[_MAX_TEXTURE]{};
-ID3D11ShaderResourceView* Sprite::_textures[_MAX_TEXTURE]{};
+const wchar_t* Sprite::_texname[MAX_TEXTURE]{};
+ID3D11ShaderResourceView* Sprite::_textures[MAX_TEXTURE]{};
 
 void Sprite::CreateVertexBuffer(){
 	VERTEX_3D vertex[4];
@@ -93,7 +93,7 @@ void Sprite::Uninit() {
 }
 
 void Sprite::UninitAll(){
-	for (int i = 0; i < _MAX_TEXTURE; i++) {
+	for (int i = 0; i < MAX_TEXTURE; i++) {
 		_texname[i] = {};
 		if (_textures[i] != NULL) {
 			_textures[i]->Release();

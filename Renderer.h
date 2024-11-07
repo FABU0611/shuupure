@@ -49,38 +49,38 @@ class Renderer
 {
 private:
 
-	static D3D_FEATURE_LEVEL			_FeatureLevel;
+	static D3D_FEATURE_LEVEL			_featurelevel;
 
-	static ID3D11Device*				_Device;
-	static ID3D11DeviceContext*			_DeviceContext;
-	static IDXGISwapChain*				_SwapChain;
-	static ID3D11RenderTargetView*		_RenderTargetView;
-	static ID3D11DepthStencilView*		_DepthStencilView;
+	static ID3D11Device*				_device;
+	static ID3D11DeviceContext*			_devicecontext;
+	static IDXGISwapChain*				_swapchain;
+	static ID3D11RenderTargetView*		_rendertargetview;
+	static ID3D11DepthStencilView*		_depthstencilview;
 
-	static ID3D11Buffer*				_WorldBuffer;
-	static ID3D11Buffer*				_ViewBuffer;
-	static ID3D11Buffer*				_ProjectionBuffer;
-	static ID3D11Buffer*				_MaterialBuffer;
-	static ID3D11Buffer*				_LightBuffer;
-	static ID3D11Buffer*				_CameraBuffer;
-	static ID3D11Buffer*				_ParameterBuffer;
-
-
-	static ID3D11DepthStencilState*		_DepthStateEnable;
-	static ID3D11DepthStencilState*		_DepthStateDisable;
-
-	static ID3D11BlendState*			_BlendState;
-	static ID3D11BlendState*			_BlendStateAdd;
-	static ID3D11BlendState*			_BlendStateATC;
+	static ID3D11Buffer*				_worldbuffer;
+	static ID3D11Buffer*				_viewbuffer;
+	static ID3D11Buffer*				_projectionbuffer;
+	static ID3D11Buffer*				_materialbuffer;
+	static ID3D11Buffer*				_lightbuffer;
+	static ID3D11Buffer*				_camerabuffer;
+	static ID3D11Buffer*				_parameterbuffer;
 
 
-	static ID3D11RenderTargetView*		_PERendererTargetView;
-	static ID3D11ShaderResourceView*	_PEShaderResourceView;
+	static ID3D11DepthStencilState*		_depthstateenable;
+	static ID3D11DepthStencilState*		_depthstatedisable;
 
-	static ID3D11RenderTargetView*		_BXRendererTargetView;
-	static ID3D11ShaderResourceView*	_BXShaderResourceView;
-	static ID3D11RenderTargetView*		_BYRendererTargetView;
-	static ID3D11ShaderResourceView*	_BYShaderResourceView;
+	static ID3D11BlendState*			_blendstate;
+	static ID3D11BlendState*			_blendstateAdd;
+	static ID3D11BlendState*			_blendstateATC;
+
+
+	static ID3D11RenderTargetView*		_PErenderertargetview;
+	static ID3D11ShaderResourceView*	_PEshaderresourceview;
+
+	static ID3D11RenderTargetView*		_BXrenderertargetview;
+	static ID3D11ShaderResourceView*	_BXshaderresourceview;
+	static ID3D11RenderTargetView*		_BYrenderertargetview;
+	static ID3D11ShaderResourceView*	_BYshaderresourceview;
 
 
 public:
@@ -89,7 +89,7 @@ public:
 	static void Begin();
 	static void End();
 
-	static IDXGISwapChain* GetSwapChain() { return _SwapChain; }
+	static IDXGISwapChain* GetSwapChain() { return _swapchain; }
 
 	static void SetDepthEnable(bool Enable);
 	static void SetATCEnable(bool Enable);
@@ -103,8 +103,8 @@ public:
 	static void SetCameraPosition(XMFLOAT3 Position);
 	static void SetParameter(XMFLOAT4 Parameter);
 
-	static ID3D11Device* GetDevice( void ){ return _Device; }
-	static ID3D11DeviceContext* GetDeviceContext( void ){ return _DeviceContext; }
+	static ID3D11Device* GetDevice( void ){ return _device; }
+	static ID3D11DeviceContext* GetDeviceContext( void ){ return _devicecontext; }
 
 
 
@@ -112,21 +112,21 @@ public:
 	static void CreatePixelShader(ID3D11PixelShader** PixelShader, const char* FileName);
 
 
-	static ID3D11ShaderResourceView* GetPETexture() { return _PEShaderResourceView; }
-	static ID3D11ShaderResourceView* GetBXTexture() { return _BXShaderResourceView; }
-	static ID3D11ShaderResourceView* GetBYTexture() { return _BYShaderResourceView; }
+	static ID3D11ShaderResourceView* GetPETexture() { return _PEshaderresourceview; }
+	static ID3D11ShaderResourceView* GetBXTexture() { return _BXshaderresourceview; }
+	static ID3D11ShaderResourceView* GetBYTexture() { return _BYshaderresourceview; }
 
 	//レンダリングターゲットをテクスチャに切り替える
 	static void BeginPE() {
-		_DeviceContext->OMSetRenderTargets(1,
-			&_PERendererTargetView,	//レンダリングテクスチャ 
-			_DepthStencilView);		//Zバッファ
+		_devicecontext->OMSetRenderTargets(1,
+			&_PErenderertargetview,	//レンダリングテクスチャ 
+			_depthstencilview);		//Zバッファ
 
 		//レンダリングテクスチャクリア
 		float ClearColor[4] = { 0.0f, 0.0f, 0.5f, 1.0f };
-		_DeviceContext->ClearRenderTargetView(_PERendererTargetView, ClearColor);
+		_devicecontext->ClearRenderTargetView(_PErenderertargetview, ClearColor);
 
 		//Zバッファクリア
-		_DeviceContext->ClearDepthStencilView(_DepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+		_devicecontext->ClearDepthStencilView(_depthstencilview, D3D11_CLEAR_DEPTH, 1.0f, 0);
 	}
 };

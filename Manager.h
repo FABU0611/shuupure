@@ -7,6 +7,7 @@
 #include <string>
 
 class Fade;
+class Rendpoly;
 
 enum class FadeMode {
 	None,
@@ -19,18 +20,20 @@ class Manager{
 	static Scene*	_nextscene;
 	static Scene*	_prvscene;
 
-	static Sprite2D* _sprite;
-	static FadeMode	_mode;
-	static XMFLOAT4	_fadecolor;
-	static float	_faderate;
+	static Sprite2D*	_sprite;
+	static FadeMode		_mode;
+	static XMFLOAT4		_fadecolor;
+	static float		_faderate;
 
-	static FontData* _fontdata;
+	static FontData*	_fontdata;
 	static DirectWriteCustomFont* _loadT;
 
 	static std::string	_loading;
-	static float	_time;
+	static float		_time;
 
-	static Fade* _fade;
+	static Fade*		_fade;
+
+	static Rendpoly*	_final;
 
 public:
 	static void Init();

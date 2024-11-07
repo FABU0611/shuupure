@@ -24,8 +24,8 @@ DirectWriteCustomFont* Manager::_loadT;
 std::string Manager::_loading;
 float Manager::_time;
 Fade* Manager::_fade;
+Rendpoly* Manager::_final;
 
-Rendpoly* g_rendp;
 
 void Manager::Init()
 {
@@ -63,15 +63,15 @@ void Manager::Init()
 	_scene = new Title();
 	_scene->Init();
 
-	g_rendp = new Rendpoly();
-	g_rendp->Init();
+	_final = new Rendpoly();
+	_final->Init();
 }
 
 
 void Manager::Uninit()
 {
-	g_rendp->Uninit();
-	delete g_rendp;
+	_final->Uninit();
+	delete _final;
 
 	_scene->Uninit();
 	delete _scene;
@@ -97,18 +97,22 @@ void Manager::Update()
 	if (_mode == FadeMode::None) {
 		_scene->Update();
 	}
-	g_rendp->Update();
+	_final->Update();
 	FadeUpdate();
 }
 
 void Manager::Draw() {
+	//オブジェクトの描画
 	Renderer::BeginPE();
 
 	_scene->Draw();
 
+	//最終的な描画
 	Renderer::Begin();
-	//_scene->Draw();
-	g_rendp->Draw();
+
+	_final->Draw();
+
+	//フェードの描画
 	if (_mode != FadeMode::None) {
 		_fade->Draw();
 		_loadT->DrawString(_loading, XMFLOAT2(10.0f, 10.0f), D2D1_DRAW_TEXT_OPTIONS_NONE);

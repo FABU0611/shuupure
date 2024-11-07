@@ -13,10 +13,10 @@ void Pool::Init(){
 	GetComponent<AnimationModel>()->Load("asset\\model\\pool.fbx");
 
 	//シェーダーセット
-	Renderer::CreateVertexShader(&_VertexShader, &_VertexLayout,
+	Renderer::CreateVertexShader(&_vertexshader, &_vertexlayout,
 		"shader\\TangentNormalLightingVS.cso");
 
-	Renderer::CreatePixelShader(&_PixelShader,
+	Renderer::CreatePixelShader(&_pixelshader,
 		"shader\\TangentNormalLightingPS.cso");
 }
 
@@ -25,9 +25,9 @@ void Pool::Uninit(){
 		c->Uninit();
 	}
 
-	_VertexShader->Release();
-	_PixelShader->Release();
-	_VertexLayout->Release();
+	_vertexshader->Release();
+	_pixelshader->Release();
+	_vertexlayout->Release();
 }
 
 void Pool::Update(){
@@ -38,11 +38,11 @@ void Pool::Update(){
 
 void Pool::Draw(){
 	//入力レイアウト設定
-	Renderer::GetDeviceContext()->IASetInputLayout(_VertexLayout);
+	Renderer::GetDeviceContext()->IASetInputLayout(_vertexlayout);
 
 	//シェーダ設定
-	Renderer::GetDeviceContext()->VSSetShader(_VertexShader, NULL, 0);
-	Renderer::GetDeviceContext()->PSSetShader(_PixelShader, NULL, 0);
+	Renderer::GetDeviceContext()->VSSetShader(_vertexshader, NULL, 0);
+	Renderer::GetDeviceContext()->PSSetShader(_pixelshader, NULL, 0);
 
 	//ワールドマトリクス設定
 	XMMATRIX world, scale, rot, trans;

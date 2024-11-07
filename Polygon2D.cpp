@@ -30,10 +30,10 @@ void Polygon2D::Init(){
 	GetComponent<Sprite2D>()->SetDrawMode(DrawMode::Normal);
 	GetComponent<Sprite2D>()->SetColor({ 1.0f, 0.0f, 0.0f, 1.0f });
 
-	Renderer::CreateVertexShader(&_VertexShader, &_VertexLayout,
+	Renderer::CreateVertexShader(&_vertexshader, &_vertexlayout,
 		"shader\\unlitTextureVS.cso");
 
-	Renderer::CreatePixelShader(&_PixelShader,
+	Renderer::CreatePixelShader(&_pixelshader,
 		"shader\\unlitTexturePS.cso");
 }
 
@@ -43,9 +43,9 @@ void Polygon2D::Uninit(){
 		c->Uninit();
 	}
 
-	_VertexShader->Release();
-	_PixelShader->Release();
-	_VertexLayout->Release();
+	_vertexshader->Release();
+	_pixelshader->Release();
+	_vertexlayout->Release();
 }
 
 //更新処理
@@ -57,11 +57,11 @@ void Polygon2D::Update(){
 //描画処理
 void Polygon2D::Draw(){
 	//入力レイアウト設定
-	Renderer::GetDeviceContext()->IASetInputLayout(_VertexLayout);
+	Renderer::GetDeviceContext()->IASetInputLayout(_vertexlayout);
 
 	//シェーダ設定
-	Renderer::GetDeviceContext()->VSSetShader(_VertexShader, NULL, 0);
-	Renderer::GetDeviceContext()->PSSetShader(_PixelShader, NULL, 0);
+	Renderer::GetDeviceContext()->VSSetShader(_vertexshader, NULL, 0);
+	Renderer::GetDeviceContext()->PSSetShader(_pixelshader, NULL, 0);
 
 	GetComponent<Sprite2D>()->SetPos(GetPosition());
 	for (auto c : _components) {

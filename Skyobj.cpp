@@ -15,7 +15,7 @@ void Skyobj::Init() {
 	GetComponent<ModelRenderer>()->Load("asset\\model\\sky.obj");
 
 
-	Renderer::CreateVertexShader(&_vertexShader, &_vertexLayout,
+	Renderer::CreateVertexShader(&_vertexshader, &_vertexLayout,
 		"shader\\unlitTextureVS.cso");
 
 	Renderer::CreatePixelShader(&_pixelShader,
@@ -23,7 +23,7 @@ void Skyobj::Init() {
 }
 
 void Skyobj::Uninit() {
-	_vertexShader->Release();
+	_vertexshader->Release();
 	_pixelShader->Release();
 	_vertexLayout->Release();
 }
@@ -36,7 +36,7 @@ void Skyobj::Draw() {
 	Renderer::GetDeviceContext()->IASetInputLayout(_vertexLayout);
 
 	//シェーダ設定
-	Renderer::GetDeviceContext()->VSSetShader(_vertexShader, NULL, 0);
+	Renderer::GetDeviceContext()->VSSetShader(_vertexshader, NULL, 0);
 	Renderer::GetDeviceContext()->PSSetShader(_pixelShader, NULL, 0);
 
 	//ワールドマトリクス設定

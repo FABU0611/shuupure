@@ -17,7 +17,7 @@ const char* CLASS_NAME = "AppClass";
 const char* WINDOW_NAME = "Spin Dive";
 
 #ifdef _DEBUG
-float		g_CountFPS;							// FPSカウンタ
+float		g_CountFPS;				// FPSカウンタ
 char	g_DebugStr[2048] = "";		// デバッグ文字表示用
 
 #endif

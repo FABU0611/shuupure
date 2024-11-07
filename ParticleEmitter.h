@@ -9,9 +9,9 @@ class ParticleEmitter : public GameObject {
 	ID3D11Buffer*		_vertexbuffer = NULL;
 	ID3D11ShaderResourceView* _texture = NULL;
 
-	ID3D11VertexShader*	_VertexShader;
-	ID3D11PixelShader*	_PixelShader;
-	ID3D11InputLayout*	_VertexLayout;
+	ID3D11VertexShader*	_vertexshader;
+	ID3D11PixelShader*	_pixelshader;
+	ID3D11InputLayout*	_vertexlayout;
 
 	float				_size;
 	const wchar_t*		_texname;		//画像ファイルのパス

@@ -32,18 +32,18 @@ struct BONE
 class AnimationModel : public Component
 {
 private:
-	const aiScene* m_AiScene = nullptr;
-	std::unordered_map<std::string, const aiScene*> m_Animation;
+	const aiScene* _aiscene = nullptr;
+	std::unordered_map<std::string, const aiScene*> _animation;
 
-	ID3D11Buffer**	_VertexBuffer;
-	ID3D11Buffer**	m_IndexBuffer;
+	ID3D11Buffer**	_vertexbuffer;
+	ID3D11Buffer**	_indexbuffer;
 
-	std::unordered_map<std::string, ID3D11ShaderResourceView*> _Texture;
-	ID3D11ShaderResourceView* m_DummyTex;
-	ID3D11ShaderResourceView* m_DummyNTex;
+	std::unordered_map<std::string, ID3D11ShaderResourceView*> _texture;
+	ID3D11ShaderResourceView* _dummytex;
+	ID3D11ShaderResourceView* _dummyntex;
 
-	std::vector<DEFORM_VERTEX>* m_DeformVertex;//変形後頂点データ
-	std::unordered_map<std::string, BONE> m_Bone;//ボーンデータ（名前で参照）
+	std::vector<DEFORM_VERTEX>* _deformvertex;//変形後頂点データ
+	std::unordered_map<std::string, BONE> _bone;//ボーンデータ（名前で参照）
 
 	void CreateBone(aiNode* node);
 	void UpdateBoneMatrix(aiNode* node, aiMatrix4x4 matrix);

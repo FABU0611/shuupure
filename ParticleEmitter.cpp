@@ -52,10 +52,10 @@ void ParticleEmitter::Init() {
 	assert(_texture);
 
 
-	Renderer::CreateVertexShader(&_VertexShader, &_VertexLayout,
+	Renderer::CreateVertexShader(&_vertexshader, &_vertexlayout,
 		"shader\\unlitTextureVS.cso");
 
-	Renderer::CreatePixelShader(&_PixelShader,
+	Renderer::CreatePixelShader(&_pixelshader,
 		"shader\\PartilcePS.cso");
 }
 
@@ -68,9 +68,9 @@ void ParticleEmitter::Uninit() {
 	_vertexbuffer->Release();
 	_texture->Release();
 
-	_VertexShader->Release();
-	_PixelShader->Release();
-	_VertexLayout->Release();
+	_vertexshader->Release();
+	_pixelshader->Release();
+	_vertexlayout->Release();
 }
 
 //更新処理
@@ -79,11 +79,11 @@ void ParticleEmitter::Update() {}
 //描画処理
 void ParticleEmitter::Draw() {
 	//入力レイアウト設定
-	Renderer::GetDeviceContext()->IASetInputLayout(_VertexLayout);
+	Renderer::GetDeviceContext()->IASetInputLayout(_vertexlayout);
 
 	//シェーダ設定
-	Renderer::GetDeviceContext()->VSSetShader(_VertexShader, NULL, 0);
-	Renderer::GetDeviceContext()->PSSetShader(_PixelShader, NULL, 0);
+	Renderer::GetDeviceContext()->VSSetShader(_vertexshader, NULL, 0);
+	Renderer::GetDeviceContext()->PSSetShader(_pixelshader, NULL, 0);
 
 	//カメラのビューマトリクス取得
 	Scene* scene = Manager::GetScene();

@@ -12,11 +12,11 @@
 #include "C_Collision.h"
 #include "C_Audio.h"
 
-const float Player::_FALL_NUM = -98.0f;
-const float Player::_JUMP_POWER = 100.0f;
-const float Player::_MAX_SPEED = 10.0f;
-const float Player::_MOVE_NUM = 10.0f;
-const float Player::_FRICTION_NUM = 2.0f;
+const float Player::FALL_NUM = -98.0f;
+const float Player::JUMP_POWER = 100.0f;
+const float Player::MAX_SPEED = 10.0f;
+const float Player::MOVE_NUM = 10.0f;
+const float Player::FRICTION_NUM = 2.0f;
 
 Player::Player(const XMFLOAT3& pos, const XMFLOAT3& scl):
 _state(nullptr){
@@ -52,15 +52,15 @@ void Player::Init(){
 	GetComponent<Audio>()->Play("asset\\audio\\bgm003.wav");
 
 	//シェーダーセット
-	Renderer::CreateVertexShader(&_VertexShader, &_VertexLayout,
+	Renderer::CreateVertexShader(&_vertexshader, &_vertexlayout,
 		"shader\\NormalLightingVS.cso");
 
-	Renderer::CreatePixelShader(&_PixelShader,
+	Renderer::CreatePixelShader(&_pixelshader,
 		"shader\\NormalLightingPS.cso");
 
 	GetPosition().y = 216.5f;
 	_accel.x = 25.0f;
-	_accel.y = _FALL_NUM;
+	_accel.y = FALL_NUM;
 	_accel.z = 25.0f;
 	_move = { 0.0f, 0.0f, 0.0f };
 	SetRotation({ 0.0f, 0.0f, 0.0f });
@@ -76,9 +76,9 @@ void Player::Uninit() {
 		c->Uninit();
 	}
 
-	_VertexShader->Release();
-	_PixelShader->Release();
-	_VertexLayout->Release();
+	_vertexshader->Release();
+	_pixelshader->Release();
+	_vertexlayout->Release();
 }
 
 void Player::Update() {
@@ -101,8 +101,8 @@ void Player::Update() {
 
 
 	//摩擦
-	_velocity.x -= _velocity.x * _FRICTION_NUM * dt;
-	_velocity.z -= _velocity.z * _FRICTION_NUM * dt;
+	_velocity.x -= _velocity.x * FRICTION_NUM * dt;
+	_velocity.z -= _velocity.z * FRICTION_NUM * dt;
 
 
 	//位置更新
@@ -111,11 +111,11 @@ void Player::Update() {
 
 void Player::Draw(){
 	//入力レイアウト設定
-	Renderer::GetDeviceContext()->IASetInputLayout(_VertexLayout);
+	Renderer::GetDeviceContext()->IASetInputLayout(_vertexlayout);
 
 	//シェーダ設定
-	Renderer::GetDeviceContext()->VSSetShader(_VertexShader, NULL, 0);
-	Renderer::GetDeviceContext()->PSSetShader(_PixelShader, NULL, 0);
+	Renderer::GetDeviceContext()->VSSetShader(_vertexshader, NULL, 0);
+	Renderer::GetDeviceContext()->PSSetShader(_pixelshader, NULL, 0);
 
 	//ワールドマトリクス設定
 	XMMATRIX world, scale, rot, trans;

@@ -12,7 +12,7 @@ protected:
 	ID3D11ShaderResourceView* _texture = NULL;
 	ID3D11ShaderResourceView* _normaltexture = NULL;
 
-	static const int _MAX_TEXTURE = 100;
+	static const int MAX_TEXTURE = 100;
 
 	XMFLOAT3		_pos = { 0.0f, 0.0f, 0.0f };
 	XMFLOAT3		_rot = { 0.0f, 0.0f, 0.0f };
@@ -23,8 +23,8 @@ protected:
 	XMFLOAT3		_tangent = { 1.0f, 0.0f, 0.0f };
 
 	static int				_textureindex;
-	static const wchar_t* _texname[_MAX_TEXTURE];		//画像ファイルのパス
-	static ID3D11ShaderResourceView* _textures[_MAX_TEXTURE];		//画像
+	static const wchar_t* _texname[MAX_TEXTURE];		//画像ファイルのパス
+	static ID3D11ShaderResourceView* _textures[MAX_TEXTURE];		//画像
 
 	void CreateVertexBuffer();
 

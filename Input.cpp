@@ -3,27 +3,27 @@
 #include "Input.h"
 
 
-BYTE Input::_OldKeyState[256];
-BYTE Input::_KeyState[256];
-POINT Input::_OldMousePos;
-POINT Input::_MousePos;
-BYTE Input::_OldMouseState[3];
-BYTE Input::_MouseState[3];
-int Input::_MouseWheelDelta = 0;
+BYTE Input::_oldkeystate[256];
+BYTE Input::_keystate[256];
+POINT Input::_oldmousepos;
+POINT Input::_mousepos;
+BYTE Input::_oldmousestate[3];
+BYTE Input::_mousestate[3];
+int Input::_mousewheeldelta = 0;
 CONTROLER_STATE Input::_Gamepad[MAX_CONTROLLERS];
 
 
 void Input::Init(){
-	memset(_OldKeyState, 0, 256);
-	memset(_KeyState, 0, 256);
+	memset(_oldkeystate, 0, 256);
+	memset(_keystate, 0, 256);
 
-	ZeroMemory(&_OldMouseState, 3);
-	ZeroMemory(&_MouseState, 3);
+	ZeroMemory(&_oldmousestate, 3);
+	ZeroMemory(&_mousestate, 3);
 
-	GetCursorPos(&_MousePos);
-	_MousePos = _OldMousePos;
+	GetCursorPos(&_mousepos);
+	_mousepos = _oldmousepos;
 
-	_MouseWheelDelta = 0;
+	_mousewheeldelta = 0;
 
 	for (int i = 0; i < MAX_CONTROLLERS; i++) {
 		ZeroMemory(&_Gamepad[i], sizeof(CONTROLER_STATE));
@@ -55,49 +55,49 @@ HRESULT Input::UpdateControllerState()
 }
 
 void Input::Update(){
-	memcpy(_OldKeyState, _KeyState, 256);
-	GetKeyboardState(_KeyState);
+	memcpy(_oldkeystate, _keystate, 256);
+	GetKeyboardState(_keystate);
 
-	memcpy(_OldMouseState, _MouseState, 3);
-	_MouseState[0] = GetAsyncKeyState(VK_LBUTTON) & 0x8000 ? 1 : 0;
-	_MouseState[1] = GetAsyncKeyState(VK_RBUTTON) & 0x8000 ? 1 : 0;
-	_MouseState[2] = GetAsyncKeyState(VK_MBUTTON) & 0x8000 ? 1 : 0;
+	memcpy(_oldmousestate, _mousestate, 3);
+	_mousestate[0] = GetAsyncKeyState(VK_LBUTTON) & 0x8000 ? 1 : 0;
+	_mousestate[1] = GetAsyncKeyState(VK_RBUTTON) & 0x8000 ? 1 : 0;
+	_mousestate[2] = GetAsyncKeyState(VK_MBUTTON) & 0x8000 ? 1 : 0;
 
-	_OldMousePos = _MousePos;
-	GetCursorPos(&_MousePos);
+	_oldmousepos = _mousepos;
+	GetCursorPos(&_mousepos);
 
 	UpdateControllerState();
 }
 
 //キーボード入力---------------------------------------------------------------
 bool Input::GetKeyPress(BYTE KeyCode){
-	return (_KeyState[KeyCode] & 0x80);
+	return (_keystate[KeyCode] & 0x80);
 }
 bool Input::GetKeyTrigger(BYTE KeyCode){
-	return ((_KeyState[KeyCode] & 0x80) && !(_OldKeyState[KeyCode] & 0x80));
+	return ((_keystate[KeyCode] & 0x80) && !(_oldkeystate[KeyCode] & 0x80));
 }
 bool Input::GetKeyRelease(BYTE KeyCode){
-	return (!(_KeyState[KeyCode] & 0x80) && (_OldKeyState[KeyCode] & 0x80));
+	return (!(_keystate[KeyCode] & 0x80) && (_oldkeystate[KeyCode] & 0x80));
 }
 
 //マウス入力-------------------------------------------------------------------
 bool Input::GetMousePress(int Button){
-	return _MouseState[Button];
+	return _mousestate[Button];
 }
 bool Input::GetMouseTrigger(int Button){
-	return (_MouseState[Button] && !_OldMouseState[Button]);
+	return (_mousestate[Button] && !_oldmousestate[Button]);
 }
 bool Input::GetMouseRelease(int Button){
-	return (!_MouseState[Button] && _OldMouseState[Button]);
+	return (!_mousestate[Button] && _oldmousestate[Button]);
 }
 POINT Input::GetMousePosition(){
-	return _MousePos;
+	return _mousepos;
 }
 int Input::GetMouseWheelDelta(){
-	return _MouseWheelDelta;
+	return _mousewheeldelta;
 }
 void Input::OnMouseWheel(int delta) {
-	_MouseWheelDelta = delta;
+	_mousewheeldelta = delta;
 }
 
 //コントローラ入力-------------------------------------------------------------

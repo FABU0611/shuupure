@@ -46,24 +46,24 @@ void Rendpoly::Init() {
 	ZeroMemory(&sd, sizeof(sd));
 	sd.pSysMem = vertex;
 
-	Renderer::GetDevice()->CreateBuffer(&bd, &sd, &_VertexBuffer);
+	Renderer::GetDevice()->CreateBuffer(&bd, &sd, &_vertexbuffer);
 
 
 	//ここにシェーダーファイルのロードを追加
-	Renderer::CreateVertexShader(&_VertexShader, &_VertexLayout, "shader\\unlitTextureVS.cso");
-	Renderer::CreatePixelShader(&_PixelShader, "shader\\unlitTexturePS.cso");
+	Renderer::CreateVertexShader(&_vertexshader, &_vertexlayout, "shader\\unlitTextureVS.cso");
+	Renderer::CreatePixelShader(&_pixelshader, "shader\\unlitTexturePS.cso");
 }
 
 
 void Rendpoly::Uninit() {
-	_VertexBuffer->Release();
-	//_Texture->Release();
+	_vertexbuffer->Release();
+	//_texture->Release();
 
 
 	//ここにシェーダーオブジェクトの解放を追加
-	_VertexShader->Release();
-	_VertexLayout->Release();
-	_PixelShader->Release();
+	_vertexshader->Release();
+	_vertexlayout->Release();
+	_pixelshader->Release();
 }
 
 
@@ -74,11 +74,11 @@ void Rendpoly::Draw() {
 	//ここにシェーダー関連の描画準備を追加
 
 	//頂点レイアウトを設定
-	Renderer::GetDeviceContext()->IASetInputLayout(_VertexLayout);
+	Renderer::GetDeviceContext()->IASetInputLayout(_vertexlayout);
 	//頂点シェーダーをセット
-	Renderer::GetDeviceContext()->VSSetShader(_VertexShader, NULL, 0);
+	Renderer::GetDeviceContext()->VSSetShader(_vertexshader, NULL, 0);
 	//ピクセルシェーダーをセット
-	Renderer::GetDeviceContext()->PSSetShader(_PixelShader, NULL, 0);
+	Renderer::GetDeviceContext()->PSSetShader(_pixelshader, NULL, 0);
 
 
 	// マトリクス設定
@@ -88,7 +88,7 @@ void Rendpoly::Draw() {
 	// 頂点バッファ設定
 	UINT stride = sizeof(VERTEX_3D);
 	UINT offset = 0;
-	Renderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &_VertexBuffer, &stride, &offset);
+	Renderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &_vertexbuffer, &stride, &offset);
 
 	// マテリアル設定
 	MATERIAL material;

@@ -7,10 +7,10 @@
 
 //初期化処理
 void Water::Init(){
-	Renderer::CreateVertexShader(&_VertexShader, &_VertexLayout,
+	Renderer::CreateVertexShader(&_vertexshader, &_vertexlayout,
 		"shader\\WaterSurfaceVS.cso");
 
-	Renderer::CreatePixelShader(&_PixelShader,
+	Renderer::CreatePixelShader(&_pixelshader,
 		"shader\\WaterSurfacePS.cso");
 
 	SetRotation({ 90.0f, 0.0f, 0.0f });
@@ -25,9 +25,9 @@ void Water::Uninit(){
 		c->Uninit();
 	}
 
-	_VertexShader->Release();
-	_PixelShader->Release();
-	_VertexLayout->Release();
+	_vertexshader->Release();
+	_pixelshader->Release();
+	_vertexlayout->Release();
 }
 
 //更新処理
@@ -37,11 +37,11 @@ void Water::Update() {
 //描画処理
 void Water::Draw(){
 	//入力レイアウト設定
-	Renderer::GetDeviceContext()->IASetInputLayout(_VertexLayout);
+	Renderer::GetDeviceContext()->IASetInputLayout(_vertexlayout);
 
 	//シェーダ設定
-	Renderer::GetDeviceContext()->VSSetShader(_VertexShader, NULL, 0);
-	Renderer::GetDeviceContext()->PSSetShader(_PixelShader, NULL, 0);
+	Renderer::GetDeviceContext()->VSSetShader(_vertexshader, NULL, 0);
+	Renderer::GetDeviceContext()->PSSetShader(_pixelshader, NULL, 0);
 
 	//Zバッファ無効
 	Renderer::SetDepthEnable(false);	//パーティクルをZソートするのは負荷が高い

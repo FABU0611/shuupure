@@ -9,9 +9,9 @@
 class PlayerState;
 
 class Player : public GameObject {
-	ID3D11VertexShader*	_VertexShader;
-	ID3D11PixelShader*	_PixelShader;
-	ID3D11InputLayout*	_VertexLayout;
+	ID3D11VertexShader*	_vertexshader;
+	ID3D11PixelShader*	_pixelshader;
+	ID3D11InputLayout*	_vertexlayout;
 
 	PlayerState* _state;
 
@@ -19,11 +19,11 @@ class Player : public GameObject {
 	XMFLOAT3			_accel;
 	XMFLOAT3			_move;
 
-	static const float _FALL_NUM;
-	static const float _JUMP_POWER;
-	static const float _MAX_SPEED;
-	static const float _MOVE_NUM;
-	static const float _FRICTION_NUM;
+	static const float FALL_NUM;
+	static const float JUMP_POWER;
+	static const float MAX_SPEED;
+	static const float MOVE_NUM;
+	static const float FRICTION_NUM;
 public:
 	Player(const XMFLOAT3& pos, const XMFLOAT3& scl);
 	~Player() {

@@ -7,11 +7,11 @@
 #include <unordered_map>
 
 struct Sound{
-	IXAudio2SourceVoice* _SourceVoice{};
-	BYTE* _SoundData{};
+	IXAudio2SourceVoice* _sourcevoice{};
+	BYTE* _sounddata{};
 
-	int						_Length{};
-	int						_PlayLength{};
+	int						_length{};
+	int						_playlength{};
 };
 
 class Audio : public Component{

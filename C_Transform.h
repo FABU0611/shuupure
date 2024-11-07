@@ -8,6 +8,7 @@
 
 class Transform : public Component {
 	bool		_isusequaternion = false;
+
 public:
 	using Component::Component;
 
