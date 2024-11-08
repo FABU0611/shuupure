@@ -100,7 +100,7 @@ struct PS_IN {
 struct PS_OUT {
 	float4 Out0				: SV_Target0;	//デフォルトのびょうが
 	float Out1				: SV_Target1;	//深度マップ
-	float2 Out2				: SV_Target1;	//速度マップ
+	float2 Out2				: SV_Target2;	//速度マップ
 };
 
 void HalfVector(in float3 eyev, in float4 lv, out float3 halfv) {

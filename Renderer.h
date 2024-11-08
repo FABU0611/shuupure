@@ -96,6 +96,8 @@ private:
 	static ID3D11RenderTargetView*		_Velrenderertargetview;
 	static ID3D11ShaderResourceView*	_Velshaderresourceview;
 	//モーションブラーSRV、RTVを作って
+	static ID3D11RenderTargetView*		_MBrenderertargetview;
+	static ID3D11ShaderResourceView*	_MBshaderresourceview;
 
 public:
 	static void Init();
@@ -133,13 +135,14 @@ public:
 	static ID3D11ShaderResourceView* GetBYTexture() { return _BYshaderresourceview; }
 	static ID3D11ShaderResourceView* GetDepthTexture() { return _Depthshaderresourceview; }
 	static ID3D11ShaderResourceView* GetVelocityTexture() { return _Velshaderresourceview; }
+	static ID3D11ShaderResourceView* GetMBTexture() { return _MBshaderresourceview; }
 
 	//レンダリングターゲットをテクスチャに切り替える
 	static void BeginPE() {
-		ID3D11RenderTargetView* mrt[2]{
-			_PErenderertargetview, _Depthrenderertargetview
+		ID3D11RenderTargetView* mrt[3]{
+			_PErenderertargetview, _Depthrenderertargetview, _Velrenderertargetview
 		};
-		_devicecontext->OMSetRenderTargets(2,
+		_devicecontext->OMSetRenderTargets(3,
 			&(*mrt),	//レンダリングテクスチャ 
 			_depthstencilview);		//Zバッファ
 
@@ -147,6 +150,7 @@ public:
 		float ClearColor[4] = { 0.0f, 0.0f, 0.5f, 1.0f };
 		_devicecontext->ClearRenderTargetView(_PErenderertargetview, ClearColor);
 		_devicecontext->ClearRenderTargetView(_Depthrenderertargetview, ClearColor);
+		_devicecontext->ClearRenderTargetView(_Velrenderertargetview, ClearColor);
 
 		//Zバッファクリア
 		_devicecontext->ClearDepthStencilView(_depthstencilview, D3D11_CLEAR_DEPTH, 1.0f, 0);
@@ -171,6 +175,18 @@ public:
 		//レンダリングテクスチャクリア
 		float ClearColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 		_devicecontext->ClearRenderTargetView(_BYrenderertargetview, ClearColor);
+
+		//Zバッファクリア
+		_devicecontext->ClearDepthStencilView(_depthstencilview, D3D11_CLEAR_DEPTH, 1.0f, 0);
+	}
+	static void BeginMotionBlur() {
+		_devicecontext->OMSetRenderTargets(1,
+			&_MBrenderertargetview,	//レンダリングテクスチャ 
+			_depthstencilview);		//Zバッファ
+
+		//レンダリングテクスチャクリア
+		float ClearColor[4] = { 0.5f, 0.0f, 0.0f, 1.0f };
+		_devicecontext->ClearRenderTargetView(_MBrenderertargetview, ClearColor);
 
 		//Zバッファクリア
 		_devicecontext->ClearDepthStencilView(_depthstencilview, D3D11_CLEAR_DEPTH, 1.0f, 0);

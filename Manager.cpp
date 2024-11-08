@@ -11,6 +11,7 @@
 #include "S_Result.h"
 
 #include "Gaussian.h"
+#include "MotionBlur.h"
 #include "Rendpoly.h"
 
 Scene* Manager::_scene{};
@@ -27,6 +28,7 @@ float Manager::_time;
 Fade* Manager::_fade;
 Rendpoly* Manager::_final;
 Gaussian* Manager::_gaussian;
+MotionBlur* Manager::_motionblur;
 #ifdef _DEBUG
 #include "CheckDoF.h"
 CheckDoF* Manager::_checkdof;
@@ -75,6 +77,10 @@ void Manager::Init()
 
 	_gaussian = new Gaussian();
 	_gaussian->Init();
+
+	_motionblur = new MotionBlur();
+	_motionblur->Init();
+
 #ifdef _DEBUG
 	_checkdof = new CheckDoF();
 	_checkdof->Init();
@@ -88,6 +94,9 @@ void Manager::Uninit()
 	_checkdof->Uninit();
 	delete _checkdof;
 #endif
+	_motionblur->Uninit();
+	delete _motionblur;
+
 	_gaussian->Uninit();
 	delete _gaussian;
 
@@ -119,6 +128,7 @@ void Manager::Update()
 		_scene->Update();
 	}
 	_gaussian->Update();
+	_motionblur->Update();
 	_final->Update();
 #ifdef _DEBUG
 	_checkdof->Update();
@@ -129,24 +139,29 @@ void Manager::Update()
 void Manager::Draw() {
 	//オブジェクトの描画、深度値の取得
 	Renderer::BeginPE();
-
 	_scene->Draw();
 
+	//ガウシアンブラーを掛ける
 	_gaussian->Draw();
+
+	//モーションブラーを掛ける
+	Renderer::BeginMotionBlur();
+	_motionblur->Draw();
 
 	//最終的な描画
 	Renderer::Begin();
-
 	_final->Draw();
+
+	//被写界深度範囲確認用
+#ifdef _DEBUG
+	_checkdof->Draw();
+#endif
 
 	//フェードの描画
 	if (_mode != FadeMode::None) {
 		_fade->Draw();
 		_loadT->DrawString(_loading, XMFLOAT2(10.0f, 10.0f), D2D1_DRAW_TEXT_OPTIONS_NONE);
 	}
-#ifdef _DEBUG
-	_checkdof->Draw();
-#endif
 
 
 	Renderer::End();

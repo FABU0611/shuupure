@@ -49,6 +49,8 @@ ID3D11RenderTargetView* Renderer::_BYrenderertargetview = NULL;
 ID3D11ShaderResourceView* Renderer::_BYshaderresourceview = NULL;
 ID3D11RenderTargetView* Renderer::_Velrenderertargetview = NULL;
 ID3D11ShaderResourceView* Renderer::_Velshaderresourceview = NULL;
+ID3D11RenderTargetView* Renderer::_MBrenderertargetview = NULL;
+ID3D11ShaderResourceView* Renderer::_MBshaderresourceview = NULL;
 
 
 
@@ -394,6 +396,47 @@ void Renderer::Init() {
 		srvd.Texture2D.MipLevels = 1;
 		_device->CreateShaderResourceView(byTexture, &srvd, &_BYshaderresourceview);
 	}
+	//モーションブラー後テクスチャの作成
+	{
+		ID3D11Texture2D* mbTexture = NULL;
+
+		D3D11_TEXTURE2D_DESC	td;		//テクスチャ作成用デスクリプタ構造体
+		ZeroMemory(&td, sizeof(td));
+
+		td.Width = swapChainDesc.BufferDesc.Width;
+		td.Height = swapChainDesc.BufferDesc.Height;
+
+		//作成するミップマップの数
+		td.MipLevels = 1;
+		td.ArraySize = 1;
+
+		td.Format = DXGI_FORMAT_R8G8B8A8_UNORM;		//ピクセルフォーマット
+		td.SampleDesc = swapChainDesc.SampleDesc;
+		td.Usage = D3D11_USAGE_DEFAULT;
+
+		//レンダリングターゲット用の設定
+		td.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+		td.CPUAccessFlags = 0;
+		td.MiscFlags = 0;
+
+		//テクスチャの作成
+		_device->CreateTexture2D(&td, NULL, &mbTexture);
+
+		//レンダーターゲットビュー
+		D3D11_RENDER_TARGET_VIEW_DESC rtvd;
+		ZeroMemory(&rtvd, sizeof(rtvd));
+		rtvd.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+		rtvd.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+		_device->CreateRenderTargetView(mbTexture, &rtvd, &_MBrenderertargetview);
+
+		//シェーダーリソースビューの作成
+		D3D11_SHADER_RESOURCE_VIEW_DESC srvd;
+		ZeroMemory(&srvd, sizeof(srvd));
+		srvd.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+		srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+		srvd.Texture2D.MipLevels = 1;
+		_device->CreateShaderResourceView(mbTexture, &srvd, &_MBshaderresourceview);
+	}
 	{
 		//深度
 		D3D11_TEXTURE2D_DESC	dtd;			//テクスチャ作成用デスクリプタ構造体
@@ -530,6 +573,8 @@ void Renderer::Uninit() {
 
 	_Velshaderresourceview->Release();
 	_Velrenderertargetview->Release();
+	_MBshaderresourceview->Release();
+	_MBrenderertargetview->Release();
 	_Depthshaderresourceview->Release();
 	_Depthrenderertargetview->Release();
 	_BXshaderresourceview->Release();

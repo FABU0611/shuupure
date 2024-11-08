@@ -9,6 +9,7 @@
 class Fade;
 class Rendpoly;
 class Gaussian;
+class MotionBlur;
 #ifdef _DEBUG
 class CheckDoF;
 #endif
@@ -40,6 +41,8 @@ class Manager{
 	static Rendpoly*	_final;
 
 	static Gaussian*	_gaussian;
+
+	static MotionBlur*	_motionblur;
 #ifdef _DEBUG
 	static CheckDoF*	_checkdof;
 #endif
