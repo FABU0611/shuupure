@@ -72,7 +72,5 @@ void main(in PS_IN In, out PS_OUT Out) {
 	
 	Out.Out1 = In.Position.z;
 	
-	float2 velocity = (In.Position.xy / In.Position.w) - (In.PrevPosition.xy / In.PrevPosition.w);
-	float2 velocityNormalized = clamp(velocity * 0.5 + 0.5, 0.0, 1.0);
-	Out.Out2 = velocityNormalized;
+	CreateVelTex(In, Out.Out2);
 }

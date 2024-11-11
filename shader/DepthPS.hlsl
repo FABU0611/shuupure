@@ -24,25 +24,3 @@ void main(in PS_IN In, out PS_OUT Out) {
 	Out.Out0 *= In.Diffuse;
 	Out.Out0.a = 1.0f;
 }
-	
- //   //クリップ空間の深度を取得
-	//float depth = depthValue;
-
- //   //深度の線形化
-	//float linearDepth = (2.0f * DoF.x) / (DoF.y + DoF.x - depth * (DoF.y - DoF.x));
-
- //   //0～1の範囲にクランプ
-	//linearDepth = clamp(linearDepth, 0.0f, 1.0f);
-    
-	////outDiffuse = float4(linearDepth, linearDepth, linearDepth, 1.0f);
-		
-	
-	////焦点距離と範囲に基づいて調整
-	//float focalDistance = 0.5f; // 焦点距離
-	//float focalRange = DoF.z; // ピントが合う範囲
-
-	////グレースケールの深度を焦点距離に基づいて変換
-	//float blurFactor = saturate(abs(linearDepth - focalDistance) / focalRange);
-
-	////0?1の範囲にクランプ
-	//blurFactor = clamp(blurFactor, 0.0f, 1.0f);

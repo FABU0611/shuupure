@@ -157,8 +157,14 @@ void DepthofField(in float depth, out float value) {
 	//グレースケールの深度を焦点距離に基づいて変換
 	float blurFactor = saturate(abs(linearDepth - focalDistance) / focalRange);
 
-	//0?1の範囲にクランプ
+	//0～1の範囲にクランプ
 	blurFactor = clamp(blurFactor, 0.0f, 1.0f);
 	
 	value = blurFactor;
+}
+
+void CreateVelTex(in PS_IN In, out float2 vel) {
+	float2 velocity = In.Position.xy - (In.PrevPosition.xy / In.PrevPosition.w);
+	float2 velocityNormalized = clamp(velocity * 0.5 + 0.5, 0.0, 1.0);
+	vel = clamp(velocity, -1.0f, 1.0f);
 }

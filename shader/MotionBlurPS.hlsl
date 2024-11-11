@@ -8,9 +8,9 @@ Texture2D g_SceneTexture : register(t0);
 Texture2D g_VelTexture : register(t1);
 SamplerState g_SamplerState : register(s0);
 
-float blurStrength = 10.2f; // ブラー強度
-
 void main(in PS_IN In, out PS_OUT Out) {
+	float blurStrength = 0.2f; // ブラー強度
+
     // 通常のシーンカラー取得
 	float4 sceneColor = g_SceneTexture.Sample(g_SamplerState, In.TexCoord);
     
@@ -34,7 +34,6 @@ void main(in PS_IN In, out PS_OUT Out) {
     
     // 出力カラーを設定
 	Out.Out0 = blurredColor;
-	Out.Out0.a = 1.0f;
 }
 /*
     // シーンカラーをサンプル
