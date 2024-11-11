@@ -11,6 +11,8 @@ class Player_Tutorial : public Player {
 	ID3D11PixelShader*	_pixelshader;
 	ID3D11InputLayout*	_vertexlayout;
 
+	XMMATRIX			_prevworld;
+
 	XMFLOAT3	_angulvel{};
 	const float	_friction = 0.98f;
 

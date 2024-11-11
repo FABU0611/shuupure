@@ -98,7 +98,7 @@ void Rendpoly::Draw() {
 	Renderer::SetMaterial(material);
 
 	// テクスチャ設定
-	ID3D11ShaderResourceView* ppTexture = Renderer::GetMBTexture();
+	ID3D11ShaderResourceView* ppTexture = Renderer::GetPETexture();
 	Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &ppTexture);
 	ID3D11ShaderResourceView* bsTexture = Renderer::GetBYTexture();
 	Renderer::GetDeviceContext()->PSSetShaderResources(1, 1, &bsTexture);

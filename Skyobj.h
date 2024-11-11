@@ -10,6 +10,8 @@ class Skyobj : public GameObject {
 	ID3D11PixelShader* _pixelShader;
 	ID3D11InputLayout* _vertexLayout;
 
+	XMMATRIX			_prevworld{};
+
 public:
 	Skyobj(const float& scl){
 		SetScale({ scl, scl,scl });

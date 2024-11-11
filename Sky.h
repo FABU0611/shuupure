@@ -10,6 +10,8 @@ class Sky : public GameObject {
 	ID3D11PixelShader* _pixelshader;
 	ID3D11InputLayout* _vertexlayout;
 
+	XMMATRIX			_prevworld{};
+
 public:
 	Sky(const float& scl){
 		SetScale({ scl, scl,scl });

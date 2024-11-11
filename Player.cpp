@@ -25,6 +25,8 @@ _state(nullptr){
 }
 
 void Player::Init(){
+	GetPosition().y = 0.0f;
+
 	//Player‚ª‚Á‚Ä‚¢‚é‚±‚Æ‚ğ‹³‚¦‚é
 	AddComponent<AnimationModel>(this);
 	AddComponent<Collision>(this);
@@ -58,7 +60,6 @@ void Player::Init(){
 	Renderer::CreatePixelShader(&_pixelshader,
 		"shader\\NormalLightingPS.cso");
 
-	GetPosition().y = 216.5f;
 	_accel.x = 25.0f;
 	_accel.y = FALL_NUM;
 	_accel.z = 25.0f;
@@ -124,7 +125,7 @@ void Player::Draw(){
 	rot = XMMatrixRotationQuaternion(XMLoadFloat4(&GetQuaternion()));
 	trans = XMMatrixTranslation(GetPosition().x, GetPosition().y, GetPosition().z);
 	world = scale * rot * trans;
-	Renderer::SetWorldMatrix(world);
+	Renderer::SetWorldMatrix(world, _prevworld);
 
 	for (auto c : _components) {
 		c->Draw();

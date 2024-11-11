@@ -654,15 +654,22 @@ void Renderer::SetWorldViewProjection2D() {
 
 void Renderer::SetWorldMatrix(XMMATRIX WorldMatrix) {
 	XMFLOAT4X4 worldf;
-
-	XMStoreFloat4x4(&worldf, XMMatrixTranspose(_prevworld));
-	_devicecontext->UpdateSubresource(_prevworldbuffer, 0, NULL, &worldf, 0, 0);
 	
+	XMStoreFloat4x4(&worldf, XMMatrixTranspose(WorldMatrix));
+	_devicecontext->UpdateSubresource(_worldbuffer, 0, NULL, &worldf, 0, 0);
+}
+
+void Renderer::SetWorldMatrix(XMMATRIX WorldMatrix, XMMATRIX& PrevWorld) {
+	XMFLOAT4X4 worldf;
+
+	XMStoreFloat4x4(&worldf, XMMatrixTranspose(PrevWorld));
+	_devicecontext->UpdateSubresource(_prevworldbuffer, 0, NULL, &worldf, 0, 0);
+
 	XMStoreFloat4x4(&worldf, XMMatrixTranspose(WorldMatrix));
 	_devicecontext->UpdateSubresource(_worldbuffer, 0, NULL, &worldf, 0, 0);
 
 	//‘OƒtƒŒ[ƒ€•Û‘¶
-	_prevworld = WorldMatrix;
+	PrevWorld = WorldMatrix;
 }
 
 void Renderer::SetViewMatrix(XMMATRIX ViewMatrix) {

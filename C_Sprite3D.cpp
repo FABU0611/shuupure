@@ -60,7 +60,7 @@ void Sprite3D::Draw(){
 		rot = XMMatrixRotationRollPitchYaw(0.0f, 0.0f, 0.0f);
 		trans = XMMatrixTranslation(_pos.x, _pos.y, _pos.z);
 		world = scale * rot * trans;
-		Renderer::SetWorldMatrix(world);
+		Renderer::SetWorldMatrix(world, _prevworld);
 	}
 	else if (_mode == DrawMode3D::Billboard ||
 		_mode == DrawMode3D::BillboardColor) {
@@ -80,7 +80,7 @@ void Sprite3D::Draw(){
 		scale = XMMatrixScaling(1.0f, 1.0f, 1.0f);
 		trans = XMMatrixTranslation(_pos.x, _pos.y, _pos.z);
 		world = scale * invView * trans;
-		Renderer::SetWorldMatrix(world);
+		Renderer::SetWorldMatrix(world, _prevworld);
 	}
 
 	//êFê›íË-----------------------------------------------------------------------------

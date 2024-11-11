@@ -112,6 +112,7 @@ public:
 	static void SetBlendAddEnable(bool Enable);
 	static void SetWorldViewProjection2D();
 	static void SetWorldMatrix(XMMATRIX WorldMatrix);
+	static void SetWorldMatrix(XMMATRIX WorldMatrix, XMMATRIX& PrevWorld);
 	static void SetViewMatrix(XMMATRIX ViewMatrix);
 	static void SetProjectionMatrix(XMMATRIX ProjectionMatrix);
 	static void SetMaterial(MATERIAL Material);

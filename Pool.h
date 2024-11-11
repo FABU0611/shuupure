@@ -10,6 +10,8 @@ class Pool : public GameObject {
 	ID3D11PixelShader* _pixelshader;
 	ID3D11InputLayout* _vertexlayout;
 
+	XMMATRIX			_prevworld;
+
 public:
 	Pool(const XMFLOAT3& pos) {
 		SetPosition(pos);

@@ -19,6 +19,8 @@ class Player : public GameObject {
 	XMFLOAT3			_accel;
 	XMFLOAT3			_move;
 
+	XMMATRIX			_prevworld;
+
 	static const float FALL_NUM;
 	static const float JUMP_POWER;
 	static const float MAX_SPEED;

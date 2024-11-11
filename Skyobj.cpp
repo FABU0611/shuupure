@@ -45,7 +45,7 @@ void Skyobj::Draw() {
 	rot = XMMatrixRotationRollPitchYaw(GetRotation().x, GetRotation().y, GetRotation().z);
 	trans = XMMatrixTranslation(GetPosition().x, GetPosition().y, GetPosition().z);
 	world = scale * rot * trans;
-	Renderer::SetWorldMatrix(world);
+	Renderer::SetWorldMatrix(world, _prevworld);
 
 	for (auto c : _components) {
 		c->Draw();
