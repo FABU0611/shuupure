@@ -9,6 +9,9 @@ class Camera : public GameObject{
 	float			_length;
 	float			_cameraspeed;
 
+	XMMATRIX		_prevview;
+	XMMATRIX		_prevprojection;
+
 public:
 	Camera() {}
 	~Camera() {}

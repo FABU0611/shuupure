@@ -123,7 +123,7 @@ void Camera::Draw(){
 	XMFLOAT3 up{ 0.0f, 1.0f, 0.0f };
 	XMMATRIX viewmatrix = XMMatrixLookAtLH(XMLoadFloat3(&GetPosition()), XMLoadFloat3(&_target), XMLoadFloat3(&up));
 
-	Renderer::SetViewMatrix(viewmatrix);
+	Renderer::SetViewMatrix(viewmatrix, _prevview);
 
 	XMStoreFloat4x4(&_viewmatrix, viewmatrix);
 
@@ -131,7 +131,7 @@ void Camera::Draw(){
 	XMMATRIX projectionMatrix;
 	projectionMatrix = XMMatrixPerspectiveFovLH(1.0f, (float)SCREEN_WIDTH / SCREEN_HEIGHT, 1.0f, 1000.0f);
 
-	Renderer::SetProjectionMatrix(projectionMatrix);
+	Renderer::SetProjectionMatrix(projectionMatrix, _prevprojection);
 
 	Renderer::SetCameraPosition(GetPosition());
 }

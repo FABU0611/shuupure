@@ -11,10 +11,6 @@ IDXGISwapChain* Renderer::_swapchain{};
 ID3D11RenderTargetView* Renderer::_rendertargetview{};
 ID3D11DepthStencilView* Renderer::_depthstencilview{};
 
-XMMATRIX Renderer::_prevworld{};
-XMMATRIX Renderer::_prevview{};
-XMMATRIX Renderer::_prevprojection{};
-
 ID3D11Buffer* Renderer::_worldbuffer{};
 ID3D11Buffer* Renderer::_viewbuffer{};
 ID3D11Buffer* Renderer::_projectionbuffer{};
@@ -674,28 +670,40 @@ void Renderer::SetWorldMatrix(XMMATRIX WorldMatrix, XMMATRIX& PrevWorld) {
 
 void Renderer::SetViewMatrix(XMMATRIX ViewMatrix) {
 	XMFLOAT4X4 viewf;
+	
+	XMStoreFloat4x4(&viewf, XMMatrixTranspose(ViewMatrix));
+	_devicecontext->UpdateSubresource(_viewbuffer, 0, NULL, &viewf, 0, 0);
+}
+void Renderer::SetViewMatrix(XMMATRIX ViewMatrix, XMMATRIX& PrevView) {
+	XMFLOAT4X4 viewf;
 
-	XMStoreFloat4x4(&viewf, XMMatrixTranspose(_prevview));
+	XMStoreFloat4x4(&viewf, XMMatrixTranspose(PrevView));
 	_devicecontext->UpdateSubresource(_prevviewbuffer, 0, NULL, &viewf, 0, 0);
 	
 	XMStoreFloat4x4(&viewf, XMMatrixTranspose(ViewMatrix));
 	_devicecontext->UpdateSubresource(_viewbuffer, 0, NULL, &viewf, 0, 0);
 
 	//前フレーム保存
-	_prevview = ViewMatrix;
+	PrevView = ViewMatrix;
 }
 
 void Renderer::SetProjectionMatrix(XMMATRIX ProjectionMatrix) {
 	XMFLOAT4X4 projectionf;
 
-	XMStoreFloat4x4(&projectionf, XMMatrixTranspose(_prevprojection));
+	XMStoreFloat4x4(&projectionf, XMMatrixTranspose(ProjectionMatrix));
+	_devicecontext->UpdateSubresource(_projectionbuffer, 0, NULL, &projectionf, 0, 0);
+}
+void Renderer::SetProjectionMatrix(XMMATRIX ProjectionMatrix, XMMATRIX& PrevProjection) {
+	XMFLOAT4X4 projectionf;
+
+	XMStoreFloat4x4(&projectionf, XMMatrixTranspose(PrevProjection));
 	_devicecontext->UpdateSubresource(_prevprojectionbuffer, 0, NULL, &projectionf, 0, 0);
 
 	XMStoreFloat4x4(&projectionf, XMMatrixTranspose(ProjectionMatrix));
 	_devicecontext->UpdateSubresource(_projectionbuffer, 0, NULL, &projectionf, 0, 0);
 
 	//前フレーム保存
-	_prevprojection = ProjectionMatrix;
+	PrevProjection = ProjectionMatrix;
 }
 
 

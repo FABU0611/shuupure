@@ -41,14 +41,14 @@ cbuffer MaterialBuffer : register(b3) {
 
 
 struct LIGHT {
-	bool Enable; //bool型だがfloat型でうまくやってくれている
+	bool Enable;			//bool型だがfloat型でうまくやってくれている
 	bool3 Dummy;
 	float4 Direction;
 	float4 Diffuse;
 	float4 Ambient;
-	float4 SkyColor; //天球色
-	float4 GroundColor; //地面色
-	float4 GroundNormal; //地面法線
+	float4 SkyColor;		//天球色
+	float4 GroundColor;		//地面色
+	float4 GroundNormal;	//地面法線
 	float4 Position;
 	float4 PointParam;
 	float4 Angle;
@@ -79,23 +79,23 @@ cbuffer DoFBuffer : register(b8) {
 }
 
 struct VS_IN {
-	float4 Position			: POSITION0; //ポジションゼロ
-	float4 Normal			: NORMAL0; //ノーマルゼロ
-	float4 Diffuse			: COLOR0; //カラーゼロ
-	float2 TexCoord			: TEXCOORD0; //テクスコードゼロ
-	float4 Tangent			: TANGENT0; //タンジェントゼロ
+	float4 Position			: POSITION0;	//ポジションゼロ
+	float4 Normal			: NORMAL0;		//ノーマルゼロ
+	float4 Diffuse			: COLOR0;		//カラーゼロ
+	float2 TexCoord			: TEXCOORD0;	//テクスコードゼロ
+	float4 Tangent			: TANGENT0;		//タンジェントゼロ
 };
 
 
 struct PS_IN {
-	float4 Position			: SV_POSITION; //ピクセルの座標
-	float4 PrevPosition		: TEXCOORD1; //ピクセルの座標
-	float4 WorldPosition	: POSITION0; //ピクセルの空間での座標
-	float4 Normal			: NORMAL0; //ピクセルの法線
-	float4 Diffuse			: COLOR0; //ピクセルの色
-	float2 TexCoord			: TEXCOORD0; //ピクセルのテクスチャ座標
-	float4 Tangent			: TANGENT0; //タンジェント
-	float4 Binormal			: BINORMAL0; //バイノーマル
+	float4 Position			: SV_POSITION;	//ピクセルの座標
+	float4 WorldPosition	: POSITION0;	//ピクセルの空間での座標
+	float4 Normal			: NORMAL0;		//ピクセルの法線
+	float4 Diffuse			: COLOR0;		//ピクセルの色
+	float2 TexCoord			: TEXCOORD0;	//ピクセルのテクスチャ座標
+	float4 Tangent			: TANGENT0;		//タンジェント
+	float4 Binormal			: BINORMAL0;	//バイノーマル
+	float2 Velocity			: TEXCOORD1;	//ピクセルの座標
 };
 struct PS_OUT {
 	float4 Out0				: SV_Target0;	//デフォルトのびょうが
@@ -164,7 +164,7 @@ void DepthofField(in float depth, out float value) {
 }
 
 void CreateVelTex(in PS_IN In, out float2 vel) {
-	float2 velocity = In.Position.xy - (In.PrevPosition.xy / In.PrevPosition.w);
-	float2 velocityNormalized = clamp(velocity * 0.5 + 0.5, 0.0, 1.0);
-	vel = clamp(velocity, -1.0f, 1.0f);
+	float2 velocity = clamp(In.Velocity, 0.0f, 1.0f);
+	float2 velocityNormalized = (velocity * 0.5);
+	vel = velocityNormalized;
 }

@@ -51,7 +51,7 @@ void Rendpoly::Init() {
 
 	//ここにシェーダーファイルのロードを追加
 	Renderer::CreateVertexShader(&_vertexshader, &_vertexlayout, "shader\\UnlitTextureVS.cso");
-	Renderer::CreatePixelShader(&_pixelshader, "shader\\DepthPS.cso");
+	Renderer::CreatePixelShader(&_pixelshader, "shader\\UnlitTexturePS.cso");
 }
 
 
@@ -98,7 +98,7 @@ void Rendpoly::Draw() {
 	Renderer::SetMaterial(material);
 
 	// テクスチャ設定
-	ID3D11ShaderResourceView* ppTexture = Renderer::GetPETexture();
+	ID3D11ShaderResourceView* ppTexture = Renderer::GetMBTexture();
 	Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &ppTexture);
 	ID3D11ShaderResourceView* bsTexture = Renderer::GetBYTexture();
 	Renderer::GetDeviceContext()->PSSetShaderResources(1, 1, &bsTexture);

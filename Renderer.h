@@ -57,10 +57,6 @@ private:
 	static ID3D11RenderTargetView*		_rendertargetview;
 	static ID3D11DepthStencilView*		_depthstencilview;
 
-	static XMMATRIX						_prevworld;
-	static XMMATRIX						_prevview;
-	static XMMATRIX						_prevprojection;
-
 	static ID3D11Buffer*				_worldbuffer;
 	static ID3D11Buffer*				_viewbuffer;
 	static ID3D11Buffer*				_projectionbuffer;
@@ -114,7 +110,9 @@ public:
 	static void SetWorldMatrix(XMMATRIX WorldMatrix);
 	static void SetWorldMatrix(XMMATRIX WorldMatrix, XMMATRIX& PrevWorld);
 	static void SetViewMatrix(XMMATRIX ViewMatrix);
+	static void SetViewMatrix(XMMATRIX ViewMatrix, XMMATRIX& PrevView);
 	static void SetProjectionMatrix(XMMATRIX ProjectionMatrix);
+	static void SetProjectionMatrix(XMMATRIX ProjectionMatrix, XMMATRIX& PrevProjection);
 	static void SetMaterial(MATERIAL Material);
 	static void SetLight(LIGHT Light);
 	static void SetCameraPosition(XMFLOAT3 Position);
