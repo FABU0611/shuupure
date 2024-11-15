@@ -100,7 +100,7 @@ struct PS_IN {
 struct PS_OUT {
 	float4 Out0				: SV_Target0;	//デフォルトのびょうが
 	float Out1				: SV_Target1;	//深度マップ
-	float2 Out2				: SV_Target2;	//速度マップ
+	float4 Out2				: SV_Target2;	//速度マップ
 };
 
 void HalfVector(in float3 eyev, in float4 lv, out float3 halfv) {
@@ -145,7 +145,7 @@ void LimLight(in PS_IN In, in float4 normal, inout float4 outDiffuse) {
 
 void DepthofField(in float depth, out float value) {
     //深度の線形化
-	float linearDepth = (2.0f * 1.0f) / (100.0f + 1.0f - depth * (100.0f - 1.0f));
+	float linearDepth = (2.0f * 1.0f) / (1000.0f + 1.0f - depth * (1000.0f - 1.0f));
 
     //0～1の範囲にクランプ
 	linearDepth = clamp(linearDepth, 0.0f, 1.0f);
@@ -163,8 +163,11 @@ void DepthofField(in float depth, out float value) {
 	value = blurFactor;
 }
 
-void CreateVelTex(in PS_IN In, out float2 vel) {
-	float2 velocity = clamp(In.Velocity, 0.0f, 1.0f);
-	float2 velocityNormalized = (velocity * 0.5);
-	vel = velocityNormalized;
+void CreateVelTex(in PS_IN In, out float4 vel) {
+	float2 velocity = In.Velocity;
+	float2 velocityNormalized = (velocity + float2(1.0f, 1.0f)) * float2(0.5f, 0.5f);
+	//velocityNormalized = clamp(velocityNormalized, 0.49f, 0.59f);
+	vel.rg = float2(velocityNormalized);
+	vel.b = 0.0f;
+	vel.a = 1.0f;
 }

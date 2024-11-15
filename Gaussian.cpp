@@ -61,19 +61,19 @@ void Gaussian::Update() {
 	CalcGaussianweight(_param.z);
 
 	if (Input::GetKeyPress('3')) {			//âú
-		_dof.x += 0.01f;
+		_dof.x += 0.001f;
 		_dof.x = (std::min)(_dof.x, 2.0f);
 	}
 	if (Input::GetKeyPress('4')) {			//éËëO
-		_dof.x += -0.01f;
+		_dof.x += -0.001f;
 		_dof.x = (std::max)(_dof.x, 0.0f);
 	}
 	if (Input::GetKeyPress('5')) {			//çLÇ≠
-		_dof.y += 0.01f;
+		_dof.y += 0.001f;
 		_dof.y = (std::min)(_dof.y, 10.0f);
 	}
 	if (Input::GetKeyPress('6')) {			//ã∑Ç≠
-		_dof.y += -0.01f;
+		_dof.y += -0.001f;
 		_dof.y = (std::max)(_dof.y, 0.01f);
 	}
 }

@@ -71,6 +71,9 @@ private:
 	static ID3D11Buffer*				_weightsbuffer;
 	static ID3D11Buffer*				_dofbuffer;
 
+	static XMMATRIX						_prevworld;
+	static XMMATRIX						_prevview;
+	static XMMATRIX						_prevprojection;
 
 	static ID3D11DepthStencilState*		_depthstateenable;
 	static ID3D11DepthStencilState*		_depthstatedisable;
@@ -91,7 +94,6 @@ private:
 	static ID3D11ShaderResourceView*	_BYshaderresourceview;
 	static ID3D11RenderTargetView*		_Velrenderertargetview;
 	static ID3D11ShaderResourceView*	_Velshaderresourceview;
-	//モーションブラーSRV、RTVを作って
 	static ID3D11RenderTargetView*		_MBrenderertargetview;
 	static ID3D11ShaderResourceView*	_MBshaderresourceview;
 

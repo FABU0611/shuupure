@@ -21,5 +21,6 @@ void main(in VS_IN In, out PS_IN Out) {
 	float4 prevPos = mul(In.Position, prevmvp);
 	
 	Out.Velocity = (curPos.xy / curPos.w) - (prevPos.xy / prevPos.w);
+	//Out.Velocity = (Out.Velocity + 1.0f) * 0.5f;
 }
 

@@ -6,16 +6,18 @@
 
 Texture2D g_SceneTexture : register(t0);
 Texture2D g_VelTexture : register(t1);
-SamplerState g_SamplerState : register(s0);
+SamplerState g_SamplerState : register(s1);
 
 void main(in PS_IN In, out PS_OUT Out) {
-	float blurStrength = 0.2f; // ブラー強度
+	float blurStrength = 0.01f; // ブラー強度
 
     // 通常のシーンカラー取得
 	float4 sceneColor = g_SceneTexture.Sample(g_SamplerState, In.TexCoord);
     
     // 速度マップからピクセルの速度ベクトル取得
 	float2 velocity = g_VelTexture.Sample(g_SamplerState, In.TexCoord).xy;
+    
+	velocity = velocity * 2.0f - 1.0f;
     
     // サンプル累積
 	float4 blurredColor = sceneColor;
@@ -24,7 +26,7 @@ void main(in PS_IN In, out PS_OUT Out) {
     // 速度ベクトルに基づいて複数回サンプリング
 	for(int i = 1; i < sampleCount; i++) {
 		float factor = i / float(sampleCount);
-		float2 samplePos = In.TexCoord + normalize(velocity) * factor * blurStrength;
+		float2 samplePos = In.TexCoord + velocity * factor * blurStrength;
 		float4 sampleColor = g_SceneTexture.Sample(g_SamplerState, samplePos);
 		blurredColor += sampleColor;
 	}
@@ -34,6 +36,7 @@ void main(in PS_IN In, out PS_OUT Out) {
     
     // 出力カラーを設定
 	Out.Out0 = blurredColor;
+	Out.Out0.a = In.Diffuse.a;
 }
 /*
     // シーンカラーをサンプル

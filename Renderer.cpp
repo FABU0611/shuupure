@@ -24,6 +24,9 @@ ID3D11Buffer* Renderer::_parameterbuffer{};
 ID3D11Buffer* Renderer::_weightsbuffer{};
 ID3D11Buffer* Renderer::_dofbuffer{};
 
+XMMATRIX Renderer::_prevworld;
+XMMATRIX Renderer::_prevview;
+XMMATRIX Renderer::_prevprojection;
 
 ID3D11DepthStencilState* Renderer::_depthstateenable{};
 ID3D11DepthStencilState* Renderer::_depthstatedisable{};
@@ -480,7 +483,7 @@ void Renderer::Init() {
 		//作成するミップマップの数
 		dtd.MipLevels = 1;
 		dtd.ArraySize = 1;
-		dtd.Format = DXGI_FORMAT_R8G8_UNORM;		//ピクセルフォーマット
+		dtd.Format = DXGI_FORMAT_R8G8B8A8_UNORM;		//ピクセルフォーマット
 		dtd.SampleDesc.Count = 1;
 		dtd.SampleDesc.Quality = 0;
 		dtd.Usage = D3D11_USAGE_DEFAULT;
@@ -496,14 +499,14 @@ void Renderer::Init() {
 		//レンダーターゲットビュー
 		D3D11_RENDER_TARGET_VIEW_DESC rtvd;
 		ZeroMemory(&rtvd, sizeof(rtvd));
-		rtvd.Format = DXGI_FORMAT_R8G8_UNORM;
+		rtvd.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 		rtvd.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
 		_device->CreateRenderTargetView(velocityTexture, &rtvd, &_Velrenderertargetview);
 
 		//シェーダーリソースビューの作成
 		D3D11_SHADER_RESOURCE_VIEW_DESC srvd;
 		ZeroMemory(&srvd, sizeof(srvd));
-		srvd.Format = DXGI_FORMAT_R8G8_UNORM;
+		srvd.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 		srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 		srvd.Texture2D.MipLevels = 1;
 		srvd.Texture2D.MostDetailedMip = 0;
@@ -639,12 +642,12 @@ void Renderer::SetBlendAddEnable(bool Enable) {
 }
 
 void Renderer::SetWorldViewProjection2D() {
-	SetWorldMatrix(XMMatrixIdentity());
-	SetViewMatrix(XMMatrixIdentity());
+	SetWorldMatrix(XMMatrixIdentity(), _prevworld);
+	SetViewMatrix(XMMatrixIdentity(), _prevview);
 
 	XMMATRIX projection;
 	projection = XMMatrixOrthographicOffCenterLH(0.0f, SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f, 0.0f, 1.0f);
-	SetProjectionMatrix(projection);
+	SetProjectionMatrix(projection, _prevprojection);
 }
 
 
