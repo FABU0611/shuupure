@@ -7,4 +7,10 @@
 
 class Button : public GUI {
 public:
+	~Button() {}
+
+	void Init()override;
+	void Uninit()override;
+	void Update()override;
+	void Draw()override;
 };

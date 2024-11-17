@@ -16,7 +16,7 @@ public:
 	Camera() {}
 	~Camera() {}
 
-	void Init() override;
+	void Init()override;
 	void Uninit()override;
 	void Update()override;
 	void Draw()override;

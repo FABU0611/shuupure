@@ -42,9 +42,7 @@ public:
 	XMFLOAT3& GetForward() { return GetComponent<Transform>()->_forward; }
 	XMFLOAT3& GetUp() { return GetComponent<Transform>()->_up; }
 	XMFLOAT3& GetRight() { return GetComponent<Transform>()->_right; }
-	float GetCameraLength(XMFLOAT3 camerapos) { 
-		return Distance(camerapos, GetPosition()); 
-	}
+	float& GetCamDistance() { return _cameralength; }
 
 	void SetPosition(const XMFLOAT3& position) { GetComponent<Transform>()->_position = position; }
 	void SetRotation(const XMFLOAT3& rotation) { GetComponent<Transform>()->_rotation = rotation; }
@@ -54,10 +52,7 @@ public:
 		GetComponent<Transform>()->UseQuaternion();
 	}
 	void SetDestroy() { _destroy = true; }
-
-	void CamVector(XMVECTOR& camp) {
-		//XMVECTOR vec = XMLoadFloat3(this->GetPosition());
-	}
+	void SetCamDistance(const float& camdis) { _cameralength = camdis; }
 
 	virtual void Hit(GameObject* obj){}
 

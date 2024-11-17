@@ -3,7 +3,9 @@
 //24_11_14
 #pragma once
 
-class GUI {
+#include "GameObject.h"
+
+class GUI : public GameObject{
 public:
 	GUI() = delete;
 	virtual ~GUI() {}
