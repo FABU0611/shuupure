@@ -51,7 +51,7 @@ void Rendpoly::Init() {
 
 	//ここにシェーダーファイルのロードを追加
 	Renderer::CreateVertexShader(&_vertexshader, &_vertexlayout, "shader\\UnlitTextureVS.cso");
-	Renderer::CreatePixelShader(&_pixelshader, "shader\\UnlitTexturePS.cso");
+	Renderer::CreatePixelShader(&_pixelshader, "shader\\DepthPS.cso");
 }
 
 
