@@ -53,35 +53,7 @@ public:
 		}
 	};
 	virtual void Draw() {
-		//カメラからの距離の降順でソート
-		Camera* c = GetGameobject<Camera>();
-		if (c) {
-			//カメラのポジションをベクター型に変換
-			XMVECTOR camP = XMLoadFloat3(&c->GetPosition());
-
-			//カメラのZベクトルを取得
-			XMVECTOR camD = c->GetZDirection();
-			//正規化
-			XMVector3Normalize(camD);
-
-			//Zソート
-			_gameobjects[Object].sort([camP, camD](GameObject* a, GameObject* b) {
-				//オブジェクトのポジションをベクター型で取得
-				XMVECTOR aPos = XMLoadFloat3(&a->GetPosition());
-				XMVECTOR bPos = XMLoadFloat3(&b->GetPosition());
-
-				//オブジェクトからカメラへのベクトルを計算
-				XMVECTOR aDir = aPos - camP;
-				XMVECTOR bDir = bPos - camP;
-
-				//内積を計算
-				float aDot = XMVectorGetX(XMVector3Dot(aDir, camD));
-				float bDot = XMVectorGetX(XMVector3Dot(bDir, camD));
-
-				return (aDot > bDot);
-				});
-			//射影、当たり判定でも使う
-		}//end if
+		ZSort();
 
 		for (int i = 0; i < MAX_LAYER; i++) {
 			for (auto o : _gameobjects[i]) {
@@ -152,5 +124,32 @@ public:
 				obj->Hit(o);
 			}
 		}
+	}
+
+	void ZSort() {
+		//カメラからの距離の降順でソート
+		Camera* c = GetGameobject<Camera>();
+		if (!c) {
+			return;
+		}
+		//カメラのポジションをベクター型に変換
+		XMVECTOR camP = XMLoadFloat3(&c->GetPosition());
+
+		//カメラのZベクトルを取得
+		XMVECTOR camD = c->GetZDirection();
+		//正規化
+		XMVector3Normalize(camD);
+
+		for (auto& o : _gameobjects[Object]) {
+			XMVECTOR pos = XMLoadFloat3(&o->GetPosition());
+			XMVECTOR dir = pos - camP;
+			o->SetCamDistance(XMVectorGetX(XMVector3Dot(dir, camD)));
+		}
+
+		//Zソート
+		_gameobjects[Object].sort([](GameObject* a, GameObject* b) {
+			return (a->GetCamDistance() > b->GetCamDistance());
+			});
+		//射影、当たり判定でも使う
 	}
 };
