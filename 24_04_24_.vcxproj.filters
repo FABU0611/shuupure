@@ -141,6 +141,12 @@
     <ClCompile Include="MotionBlur.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="G_Button.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Main.h">
@@ -308,6 +314,9 @@
     <ClInclude Include="G_Button.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="GUIManager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shader\common.hlsl">
@@ -328,7 +337,7 @@
     <FxCompile Include="shader\NormalLightingPS.hlsl">
       <Filter>シェーダー\PS</Filter>
     </FxCompile>
-    <FxCompile Include="shader\PartilcePS.hlsl">
+    <FxCompile Include="shader\ParticlePS.hlsl">
       <Filter>シェーダー\PS</Filter>
     </FxCompile>
     <FxCompile Include="shader\TangentNormalLightingPS.hlsl">

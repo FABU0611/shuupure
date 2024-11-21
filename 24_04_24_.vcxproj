@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -179,6 +179,8 @@
     <ClCompile Include="Gaussian.cpp" />
     <ClCompile Include="GaussianX.cpp" />
     <ClCompile Include="GaussianY.cpp" />
+    <ClCompile Include="GUIManager.cpp" />
+    <ClCompile Include="G_Button.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Manager.cpp" />
@@ -226,6 +228,7 @@
     <ClInclude Include="GaussianX.h" />
     <ClInclude Include="GaussianY.h" />
     <ClInclude Include="GUI.h" />
+    <ClInclude Include="GUIManager.h" />
     <ClInclude Include="G_Button.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Main.h" />
@@ -332,7 +335,7 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">shader\%(Filename).cso</ObjectFileOutput>
     </FxCompile>
-    <FxCompile Include="shader\PartilcePS.hlsl">
+    <FxCompile Include="shader\ParticlePS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>

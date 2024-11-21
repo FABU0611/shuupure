@@ -2,27 +2,28 @@
 //20106_ìcíÜÅ@ò@
 //24_11_17
 #pragma once
-#include <list>
-#include "GameObject.h"
+#include <vector>
+#include "GUI.h"
+#include "Manager.h"
+#include "Scene.h"
 
 class GUIManager {
-	std::list<GameObject*>	_guis;
+	static std::vector<GUI*>	_guis;
 
 public:
 	GUIManager() {}
-	~GUIManager() {
-		for (auto g : _guis) {
-			if (!g) {
-				continue;
-			}
-			delete g;
-		}
-		_guis.clear();
-	}
+	~GUIManager() {}
 
-	void Draw() {
-		for (auto g : _guis) {
-			g->Draw();
-		}
+	template <typename T, typename... Args>
+	static int AddGUI(Args&& ...args) {
+		//åªç›ÇÃÉVÅ[ÉìÇ…GUIÇí«â¡
+		Scene* scene = Manager::GetScene();
+		GUI* gui = scene->AddGameobject<T>(std::forward<Args>(args)...);
+
+		//GUIManagerÇ…ìoò^
+		_guis.push_back(gui);
+		return _guis.size() - 1;
 	}
+	static GUI* GetGUI(const int& index);
+	static void Clear();
 };

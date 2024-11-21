@@ -5,6 +5,7 @@
 #include "GameObject.h"
 #include "DirectWriteCustomFont.h"
 
+
 class TitlePush : public GameObject {
 	FontData* _fontdata;
 	DirectWriteCustomFont* _push;
@@ -12,7 +13,9 @@ class TitlePush : public GameObject {
 	XMFLOAT2	_spos;
 	XMFLOAT2	_epos;
 	XMFLOAT2	_drawpos;
-	float	_pos;
+	float		_pos;
+
+	int			_start;
 
 public:
 	TitlePush() {}

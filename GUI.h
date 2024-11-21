@@ -6,12 +6,22 @@
 #include "GameObject.h"
 
 class GUI : public GameObject{
+protected:
+	ID3D11VertexShader*	_vertexshader{};
+	ID3D11PixelShader*	_pixelshader{};
+	ID3D11InputLayout*	_vertexlayout{};
+
+	XMFLOAT3			_size{};
+	const wchar_t*		_texname{};
+
 public:
-	GUI() = delete;
+	GUI() {};
 	virtual ~GUI() {}
 
 	virtual void Init() = 0;
 	virtual void Uninit() = 0;
 	virtual void Update() = 0;
 	virtual void Draw() = 0;
+
+	virtual bool IsHovered(const POINT pos) = 0;	//マウスが重なっているか
 };

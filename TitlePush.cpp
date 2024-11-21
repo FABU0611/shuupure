@@ -10,6 +10,9 @@
 #include "C_Audio.h"
 #include "EasingFunc.h"
 #include "Time.h"
+#include "G_Button.h"
+#include "GUIManager.h"
+
 void TitlePush::Init(){
 	_fontdata = new FontData();
 	_fontdata->fontSize = 60.0f;
@@ -38,6 +41,8 @@ void TitlePush::Init(){
 	_spos.x = _epos.x = _drawpos.x = (SCREEN_WIDTH * 0.5f) - 190.0f;
 	_spos.y = SCREEN_HEIGHT + 100.0f;
 	_epos.y = 600.0f;
+
+	_start = GUIManager::AddGUI<Button>(UI, XMFLOAT3(200.0f, 200.0f, 0.0f), XMFLOAT3(100.0f, 100.0f, 100.0f));
 }
 
 void TitlePush::Uninit(){
@@ -53,8 +58,12 @@ void TitlePush::Update(){
 		_pos = 1.0f;
 		_drawpos.y = _epos.y;
 	}
+	Button* button = dynamic_cast<Button*>(GUIManager::GetGUI(_start));
+	if (!button) {
+		return;
+	}
 	//ƒV[ƒ“‘JˆÚ
-	if (Input::GetKeyTrigger('K')) {
+	if (Input::GetKeyTrigger('K') || button->OnClicked(VK_LBUTTON)) {
 		GetComponent<Audio>()->Play("asset\\audio\\push.wav", false);
 		Manager::SetSceneFade<Tutorial>(0.05f);
 	}
