@@ -7,18 +7,18 @@
 #include <unordered_map>
 
 struct Sound{
-	IXAudio2SourceVoice* _sourcevoice{};
-	BYTE* _sounddata{};
+	IXAudio2SourceVoice*	SourceVoice{};
+	BYTE*					SoundData{};
 
-	int						_length{};
-	int						_playlength{};
+	int						Length{};
+	int						PlayLength{};
 };
 
 class Audio : public Component{
-	static std::unordered_map<std::string, Sound*> _AudioPool;
+	static std::unordered_map<std::string, Sound*> _audiopool;
 
-	static IXAudio2*				_Xaudio;
-	static IXAudio2MasteringVoice*	_MasteringVoice;
+	static IXAudio2*				_xaudio;
+	static IXAudio2MasteringVoice*	_masteringvoice;
 
 	Sound* _sound{};
 

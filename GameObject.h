@@ -12,9 +12,9 @@ class Component;
 
 class GameObject {
 protected:
-	std::list<Component*>	_components;
+	std::list<Component*>	_components{};
 	bool					_destroy = false;
-	float					_cameralength;
+	float					_cameralength{};
 
 public:
 	//コンストラクタ

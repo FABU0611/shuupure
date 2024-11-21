@@ -20,7 +20,7 @@ class Sprite3D : public Sprite {
 	DrawMode3D		_mode = DrawMode3D::Normal;
 	XMFLOAT3		_scl{};
 
-	XMMATRIX			_prevworld;
+	XMMATRIX		_prevworld{};
 
 public:
 	using Sprite::Sprite;

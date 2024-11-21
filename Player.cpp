@@ -36,7 +36,7 @@ void Player::Init(){
 	GetComponent<Collision>()->SetPosition(GetPosition());
 	GetComponent<Collision>()->SetRotation(GetRotation());
 	GetComponent<Collision>()->SetScale({ 3.0f, 7.0f, 2.0f });
-	GetComponent<Collision>()->SetType(BOX);
+	GetComponent<Collision>()->SetType(ColiderType::BOX);
 
 	//ÉÇÉfÉãì«Ç›çûÇ›
 	GetComponent<AnimationModel>()->Load("asset\\model\\bikeman.fbx");

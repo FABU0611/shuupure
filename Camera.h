@@ -4,13 +4,13 @@
 #pragma once
 #include "GameObject.h"
 class Camera : public GameObject{
-	XMFLOAT3		_target;
-	XMFLOAT4X4		_viewmatrix;
-	float			_length;
-	float			_cameraspeed;
+	XMFLOAT3		_target{};
+	XMFLOAT4X4		_viewmatrix{};
+	float			_length{};
+	float			_cameraspeed{};
 
-	XMMATRIX		_prevview;
-	XMMATRIX		_prevprojection;
+	XMMATRIX		_prevview{};
+	XMMATRIX		_prevprojection{};
 
 public:
 	Camera() {}

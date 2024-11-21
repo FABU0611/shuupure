@@ -7,11 +7,11 @@
 #include "Time.h"
 
 class Player_Tutorial : public Player {
-	ID3D11VertexShader*	_vertexshader;
-	ID3D11PixelShader*	_pixelshader;
-	ID3D11InputLayout*	_vertexlayout;
+	ID3D11VertexShader*	_vertexshader{};
+	ID3D11PixelShader*	_pixelshader{};
+	ID3D11InputLayout*	_vertexlayout{};
 
-	XMMATRIX			_prevworld;
+	XMMATRIX			_prevworld{};
 
 	XMFLOAT3	_angulvel{};
 	const float	_friction = 0.98f;

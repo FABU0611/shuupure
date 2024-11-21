@@ -6,7 +6,7 @@
 #include "Main.h"
 #include "Component.h"
 
-static enum ColiderType {
+static enum class ColiderType {
 	BOX,
 	SQUARE,
 	CYLINDER,
@@ -24,7 +24,7 @@ public:
 	XMFLOAT3	_scale = { 1.0f, 1.0f, 1.0f };
 	float		_radius = 1.0f;
 
-	ColiderType	_type;
+	ColiderType	_type = ColiderType::BOX;
 
 	void SetPosition(const XMFLOAT3& pos) { _position = pos; }
 	void SetRotation(const XMFLOAT3& rot) { _rotation = rot; }
@@ -39,10 +39,10 @@ public:
 			return false;
 		}
 		//コリジョンのタイプで分岐
-		if (me->_type == BOX && you->_type == BOX) {
+		if (me->_type == ColiderType::BOX && you->_type == ColiderType::BOX) {
 			return CheckHitAABB(me, you);
 		}
-		if (me->_type == SQUARE && you->_type == SQUARE) {
+		if (me->_type == ColiderType::SQUARE && you->_type == ColiderType::SQUARE) {
 			return CheckHitSphere(me, you);
 		}
 		return false;

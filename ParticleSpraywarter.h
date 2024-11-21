@@ -11,7 +11,7 @@
 class SprayWater : public ParticleEmitter {
 	static const int	PARTICLE_MAX = 500;
 
-	float				_spraysize = 0.0f;
+	float				_spraysize{};
 
 public:
 	SprayWater(const XMFLOAT3& pos, const float& size, const float& spraysize):

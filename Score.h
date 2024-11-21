@@ -6,24 +6,24 @@
 #include "GameObject.h"
 
 class Score : public GameObject{
-	ID3D11VertexShader*			_vertexshader;
-	ID3D11PixelShader*			_pixelshader;
-	ID3D11InputLayout*			_vertexlayout;
+	ID3D11VertexShader*			_vertexshader{};
+	ID3D11PixelShader*			_pixelshader{};
+	ID3D11InputLayout*			_vertexlayout{};
 
-	const wchar_t*				_texname;		//画像ファイルのパス
+	const wchar_t*				_texname{};		//画像ファイルのパス
 
-	int							_score = 0;
-	XMFLOAT2					_uv;
-	int							_anim_count = 0;
+	int							_score{};
+	XMFLOAT2					_uv{};
+	int							_anim_count{};
 	const int					_anime_ptn_x = 5;	//横
 	const int					_anime_ptn_y = 5;	//縦
 	const int					_anime_ptn = _anime_ptn_x * _anime_ptn_y;
-	float						_ptn_width;		//エフェクト一つ分の横幅
-	float						_ptn_height;	//エフェクト一つ分の縦幅
+	float						_ptn_width{};		//エフェクト一つ分の横幅
+	float						_ptn_height{};	//エフェクト一つ分の縦幅
 
-	int							_rot;
-	int							_twist;
-	float						_dot;
+	int							_rot{};
+	int							_twist{};
+	float						_dot{};
 
 public:
 	Score(const XMFLOAT3& pos, const XMFLOAT3& size);

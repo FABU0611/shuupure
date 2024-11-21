@@ -12,7 +12,7 @@
 #include "Camera.h"
 #include "Player_Tutorial.h"
 #include "Skyobj.h"
-#include "TutorialText.h"
+#include "T_Tutorial.h"
 
 void Tutorial::Init() {
 	_light = new LIGHT();

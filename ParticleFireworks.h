@@ -8,8 +8,8 @@
 
 class Fireworks : public ParticleEmitter {
 	static const int	PARTICLE_MAX = 500;
-	float				_volume;
-	XMFLOAT3			_befcolor;
+	float				_volume{};
+	XMFLOAT3			_befcolor{};
 
 public:
 	Fireworks(const XMFLOAT3& pos, const float& size, const XMFLOAT4& color, const float& volume):

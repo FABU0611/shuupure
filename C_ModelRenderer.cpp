@@ -10,7 +10,7 @@
 
 
 
-std::unordered_map<std::string, MODEL*> ModelRenderer::m_ModelPool;
+std::unordered_map<std::string, MODEL*> ModelRenderer::_modelpool;
 
 
 void ModelRenderer::Draw()
@@ -19,33 +19,33 @@ void ModelRenderer::Draw()
 	// 頂点バッファ設定
 	UINT stride = sizeof(VERTEX_3D);
 	UINT offset = 0;
-	Renderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &m_Model->VertexBuffer, &stride, &offset);
+	Renderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &_model->VertexBuffer, &stride, &offset);
 
 	// インデックスバッファ設定
-	Renderer::GetDeviceContext()->IASetIndexBuffer(m_Model->IndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+	Renderer::GetDeviceContext()->IASetIndexBuffer(_model->IndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
 	// プリミティブトポロジ設定
 	Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 
-	for( unsigned int i = 0; i < m_Model->SubsetNum; i++ )
+	for( unsigned int i = 0; i < _model->SubsetNum; i++ )
 	{
 		// マテリアル設定
-		Renderer::SetMaterial(m_Model->SubsetArray[i].Material.Material );
+		Renderer::SetMaterial(_model->SubsetArray[i].Material.Material );
 
 		// テクスチャ設定
-		if(m_Model->SubsetArray[i].Material.Texture)
-			Renderer::GetDeviceContext()->PSSetShaderResources( 0, 1, &m_Model->SubsetArray[i].Material.Texture );
+		if(_model->SubsetArray[i].Material.Texture)
+			Renderer::GetDeviceContext()->PSSetShaderResources( 0, 1, &_model->SubsetArray[i].Material.Texture );
 
 		// ポリゴン描画
-		Renderer::GetDeviceContext()->DrawIndexed(m_Model->SubsetArray[i].IndexNum, m_Model->SubsetArray[i].StartIndex, 0 );
+		Renderer::GetDeviceContext()->DrawIndexed(_model->SubsetArray[i].IndexNum, _model->SubsetArray[i].StartIndex, 0 );
 	}
 
 }
 
 void ModelRenderer::Preload(const char *FileName)
 {
-	if (m_ModelPool.count(FileName) > 0)
+	if (_modelpool.count(FileName) > 0)
 	{
 		return;
 	}
@@ -53,14 +53,14 @@ void ModelRenderer::Preload(const char *FileName)
 	MODEL* model = new MODEL;
 	LoadModel(FileName, model);
 
-	m_ModelPool[FileName] = model;
+	_modelpool[FileName] = model;
 
 }
 
 
 void ModelRenderer::UnloadAll()
 {
-	for (std::pair<const std::string, MODEL*> pair : m_ModelPool)
+	for (std::pair<const std::string, MODEL*> pair : _modelpool)
 	{
 		pair.second->VertexBuffer->Release();
 		pair.second->IndexBuffer->Release();
@@ -76,22 +76,22 @@ void ModelRenderer::UnloadAll()
 		delete pair.second;
 	}
 
-	m_ModelPool.clear();
+	_modelpool.clear();
 }
 
 
 void ModelRenderer::Load(const char *FileName)
 {
-	if (m_ModelPool.count(FileName) > 0)
+	if (_modelpool.count(FileName) > 0)
 	{
-		m_Model = m_ModelPool[FileName];
+		_model = _modelpool[FileName];
 		return;
 	}
 
-	m_Model = new MODEL;
-	LoadModel(FileName, m_Model);
+	_model = new MODEL;
+	LoadModel(FileName, _model);
 
-	m_ModelPool[FileName] = m_Model;
+	_modelpool[FileName] = _model;
 
 }
 

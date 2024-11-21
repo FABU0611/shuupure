@@ -1,4 +1,6 @@
-
+//Input.cpp
+//20106_田中　蓮
+//24_07_23
 #include "Main.h"
 #include "Input.h"
 
@@ -42,14 +44,14 @@ HRESULT Input::UpdateControllerState()
 	DWORD dwResult;
 	for (DWORD i = 0; i < MAX_CONTROLLERS; i++)
 	{
-		XInputSetState(i, &_gamepad[i].vibration);
-		_gamepad[i].oldstate = _gamepad[i].state;
-		dwResult = XInputGetState(i, &_gamepad[i].state);
+		XInputSetState(i, &_gamepad[i].Vibration);
+		_gamepad[i].OldState = _gamepad[i].State;
+		dwResult = XInputGetState(i, &_gamepad[i].State);
 
 		if (dwResult == ERROR_SUCCESS)
-			_gamepad[i].bConnected = true;
+			_gamepad[i].isConnected = true;
 		else
-			_gamepad[i].bConnected = false;
+			_gamepad[i].isConnected = false;
 	}
 
 	return S_OK;
@@ -107,62 +109,71 @@ void Input::OnMouseWheel(int delta) {
 //コントローラ入力-------------------------------------------------------------
 bool Input::GetButtonPress(const int& padindex, WORD Button) {
 	if (padindex >= 0 && padindex < MAX_CONTROLLERS) {
-		return (_gamepad[padindex].state.Gamepad.wButtons & Button) != 0;
+		return (_gamepad[padindex].State.Gamepad.wButtons & Button) != 0;
 	}
+	return false;
 }
 bool Input::GetButtonTrigger(const int& padindex, WORD Button) {
 	if (padindex >= 0 && padindex < MAX_CONTROLLERS) {
-		return ((_gamepad[padindex].state.Gamepad.wButtons & Button) != 0) &&
-			((_gamepad[padindex].oldstate.Gamepad.wButtons & Button) == 0);
+		return ((_gamepad[padindex].State.Gamepad.wButtons & Button) != 0) &&
+			((_gamepad[padindex].OldState.Gamepad.wButtons & Button) == 0);
 	}
+	return false;
 }
 bool Input::GetButtonRelease(const int& padindex, WORD Button) {
 	if (padindex >= 0 && padindex < MAX_CONTROLLERS) {
-		return ((_gamepad[padindex].state.Gamepad.wButtons & Button) == 0) &&
-			((_gamepad[padindex].oldstate.Gamepad.wButtons & Button) != 0);
+		return ((_gamepad[padindex].State.Gamepad.wButtons & Button) == 0) &&
+			((_gamepad[padindex].OldState.Gamepad.wButtons & Button) != 0);
 	}
+	return false;
 }
 //スティック
 float Input::GetLeftStickX(const int& padindex) {
 	if (padindex >= 0 && padindex < MAX_CONTROLLERS) {
-		return _gamepad[padindex].state.Gamepad.sThumbLX / 32767.0f;
+		return _gamepad[padindex].State.Gamepad.sThumbLX / 32767.0f;
 	}
+	return 0.0f;
 }
 float Input::GetLeftStickY(const int& padindex) {
 	if (padindex >= 0 && padindex < MAX_CONTROLLERS) {
-		return _gamepad[padindex].state.Gamepad.sThumbLY / 32767.0f;
+		return _gamepad[padindex].State.Gamepad.sThumbLY / 32767.0f;
 	}
+	return 0.0f;
 }
 float Input::GetRightStickX(const int& padindex) {
 	if (padindex >= 0 && padindex < MAX_CONTROLLERS) {
-		return _gamepad[padindex].state.Gamepad.sThumbRX / 32767.0f;
+		return _gamepad[padindex].State.Gamepad.sThumbRX / 32767.0f;
 	}
+	return 0.0f;
 }
 float Input::GetRightStickY(const int& padindex) {
 	if (padindex >= 0 && padindex < MAX_CONTROLLERS) {
-		return _gamepad[padindex].state.Gamepad.sThumbRY / 32767.0f;
+		return _gamepad[padindex].State.Gamepad.sThumbRY / 32767.0f;
 	}
+	return 0.0f;
 }
 //トリガー
 float Input::GetLeftTrigger(const int& padindex) {
 	if (padindex >= 0 && padindex < MAX_CONTROLLERS) {
-		return _gamepad[padindex].state.Gamepad.bLeftTrigger / 255.0f;
+		return _gamepad[padindex].State.Gamepad.bLeftTrigger / 255.0f;
 	}
+	return 0.0f;
 }
 float Input::GetRightTrigger(const int& padindex) {
 	if (padindex >= 0 && padindex < MAX_CONTROLLERS) {
-		return _gamepad[padindex].state.Gamepad.bRightTrigger / 255.0f;
+		return _gamepad[padindex].State.Gamepad.bRightTrigger / 255.0f;
 	}
+	return 0.0f;
 }
 //バイブレーション
 void Input::SetLeftVibration(const int& padindex, float speed) {
 	if (padindex >= 0 && padindex < MAX_CONTROLLERS) {
-		_gamepad[padindex].vibration.wLeftMotorSpeed = (speed * 65535.0f);
+		_gamepad[padindex].Vibration.wLeftMotorSpeed = (speed * 65535.0f);
 	}
 }
 void Input::SetRightVibration(const int& padindex, float speed) {
 	if (padindex >= 0 && padindex < MAX_CONTROLLERS) {
-		_gamepad[padindex].vibration.wRightMotorSpeed = (speed * 65535.0f);
+		_gamepad[padindex].Vibration.wRightMotorSpeed = (speed * 65535.0f);
 	}
 }
 void Input::StopVibration(const int& padindex) {

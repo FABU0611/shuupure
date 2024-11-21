@@ -30,8 +30,7 @@ class CustomFontCollectionLoader;
 //=============================================================================
 //		フォントの保存場所
 //=============================================================================
-namespace FontList
-{
+namespace FontList {
 	const std::wstring FontPath[] =
 	{
 		//ココカエル
@@ -42,8 +41,7 @@ namespace FontList
 //=============================================================================
 //		フォント設定
 //=============================================================================
-struct FontData
-{
+struct FontData {
 	std::wstring font;							// フォント名
 	IDWriteFontCollection* fontCollection;		// フォントコレクション
 	DWRITE_FONT_WEIGHT fontWeight;				// フォントの太さ
@@ -58,8 +56,7 @@ struct FontData
 	D2D1_POINT_2F shadowOffset;					// 影のオフセット
 
 	// デフォルト設定
-	FontData()
-	{
+	FontData() {
 		font = L"";
 		fontCollection = nullptr;
 		fontWeight = DWRITE_FONT_WEIGHT::DWRITE_FONT_WEIGHT_NORMAL;
@@ -78,8 +75,7 @@ struct FontData
 //=============================================================================
 //		DirectWrite
 //=============================================================================
-class DirectWriteCustomFont
-{
+class DirectWriteCustomFont {
 public:
 
 	// デフォルトコンストラクタを制限

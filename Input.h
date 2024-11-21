@@ -1,3 +1,6 @@
+//Input.h
+//20106_ìcíÜÅ@ò@
+//24_07_23
 #pragma once
 #include <Xinput.h>
 
@@ -10,10 +13,10 @@ static enum MOUSE_BUTTON {
 };
 
 struct CONTROLER_STATE {
-	XINPUT_STATE		state;
-	XINPUT_STATE		oldstate;
-	XINPUT_VIBRATION	vibration;
-	bool				bConnected;
+	XINPUT_STATE		State;
+	XINPUT_STATE		OldState;
+	XINPUT_VIBRATION	Vibration;
+	bool				isConnected;
 };
 
 class Input {

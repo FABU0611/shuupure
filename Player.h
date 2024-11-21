@@ -9,17 +9,17 @@
 class PlayerState;
 
 class Player : public GameObject {
-	ID3D11VertexShader*	_vertexshader;
-	ID3D11PixelShader*	_pixelshader;
-	ID3D11InputLayout*	_vertexlayout;
+	ID3D11VertexShader*	_vertexshader{};
+	ID3D11PixelShader*	_pixelshader{};
+	ID3D11InputLayout*	_vertexlayout{};
 
-	PlayerState* _state;
+	PlayerState*		_state{};
 
-	XMFLOAT3			_velocity;
-	XMFLOAT3			_accel;
-	XMFLOAT3			_move;
+	XMFLOAT3			_velocity{};
+	XMFLOAT3			_accel{};
+	XMFLOAT3			_move{};
 
-	XMMATRIX			_prevworld;
+	XMMATRIX			_prevworld{};
 
 	static const float FALL_NUM;
 	static const float JUMP_POWER;

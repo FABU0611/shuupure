@@ -5,17 +5,17 @@
 #include<Windows.h>
 
 class Time{
-    static LARGE_INTEGER _frequency;  // タイマーの周波数
-    static LARGE_INTEGER _lastTime;   // 前回のフレーム時間
-    static float          _deltatime;
+    static LARGE_INTEGER    _frequency;  //タイマーの周波数
+    static LARGE_INTEGER    _lastTime;   //前回のフレーム時間
+    static float            _deltatime;
 
 public:
     static void Init();
     static void Update();
 
-    // フレーム間の経過時間を取得
+    //フレーム間の経過時間を取得
     static float GetDeltaTime();
 
-    // 現在のフレームレートを取得
+    //現在のフレームレートを取得
     static float GetFrameRate();
 };

@@ -9,20 +9,20 @@
 #include "PlayerState.h"
 
 class UIManager : public GameObject{
-	FontData* _fontdata;
-	DirectWriteCustomFont* _jump;
-	DirectWriteCustomFont* _rotaion;
-	DirectWriteCustomFont* _twist;
+	FontData*				_fontdata{};
+	DirectWriteCustomFont*	_jump{};
+	DirectWriteCustomFont*	_rotaion{};
+	DirectWriteCustomFont*	_twist{};
 
-	Player* _player;
-	PlayerState* _state;
+	Player*					_player{};
+	PlayerState*			_state{};
 
-	float	_size;
-	float	_endsize;
-	float	_prog;
-	int		_rot;
-	int		_currot;
-	bool	_play;
+	float					_size{};
+	float					_endsize{};
+	float					_prog{};
+	int						_rot{};
+	int						_currot{};
+	bool					_play{};
 
 public:
 	void Init()override;

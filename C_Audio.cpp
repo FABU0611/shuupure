@@ -6,9 +6,9 @@
 
 
 
-IXAudio2*				Audio::_Xaudio = NULL;
-IXAudio2MasteringVoice*	Audio::_MasteringVoice = NULL;
-std::unordered_map<std::string, Sound*> Audio::_AudioPool;
+IXAudio2*				Audio::_xaudio = NULL;
+IXAudio2MasteringVoice*	Audio::_masteringvoice = NULL;
+std::unordered_map<std::string, Sound*> Audio::_audiopool;
 
 
 void Audio::InitMaster(){
@@ -16,16 +16,16 @@ void Audio::InitMaster(){
 	CoInitializeEx(NULL, COINIT_MULTITHREADED);
 
 	// XAudio生成
-	XAudio2Create(&_Xaudio, 0);
+	XAudio2Create(&_xaudio, 0);
 
 	// マスタリングボイス生成
-	_Xaudio->CreateMasteringVoice(&_MasteringVoice);
+	_xaudio->CreateMasteringVoice(&_masteringvoice);
 }
 
 
 void Audio::UninitMaster(){
-	_MasteringVoice->DestroyVoice();
-	_Xaudio->Release();
+	_masteringvoice->DestroyVoice();
+	_xaudio->Release();
 	CoUninitialize();
 }
 
@@ -53,13 +53,13 @@ void Audio::Load(const char *FileName){
 
 
 		//読み込まれているサウンド名を調べる
-		if (_AudioPool.count(FileName) > 0) {
-			_sound = _AudioPool[FileName];
+		if (_audiopool.count(FileName) > 0) {
+			_sound = _audiopool[FileName];
 			return;
 		}
 		//なかったら新しく作る
 		_sound = new Sound;
-		_AudioPool[FileName] = _sound;
+		_audiopool[FileName] = _sound;
 
 
 		hmmio = mmioOpen((LPSTR)FileName, &mmioinfo, MMIO_READ);
@@ -89,12 +89,12 @@ void Audio::Load(const char *FileName){
 
 
 		buflen = datachunkinfo.cksize;
-		_AudioPool[FileName]->_sounddata = new unsigned char[buflen];
-		readlen = mmioRead(hmmio, (HPSTR)_AudioPool[FileName]->_sounddata, buflen);
+		_audiopool[FileName]->SoundData = new unsigned char[buflen];
+		readlen = mmioRead(hmmio, (HPSTR)_audiopool[FileName]->SoundData, buflen);
 
 
-		_AudioPool[FileName]->_length = readlen;
-		_AudioPool[FileName]->_playlength = readlen / wfx.nBlockAlign;
+		_audiopool[FileName]->Length = readlen;
+		_audiopool[FileName]->PlayLength = readlen / wfx.nBlockAlign;
 
 
 		mmioClose(hmmio, 0);
@@ -102,23 +102,23 @@ void Audio::Load(const char *FileName){
 
 
 	// サウンドソース生成
-	_Xaudio->CreateSourceVoice(&_AudioPool[FileName]->_sourcevoice, &wfx);
-	assert(_AudioPool[FileName]->_sourcevoice);
+	_xaudio->CreateSourceVoice(&_audiopool[FileName]->SourceVoice, &wfx);
+	assert(_audiopool[FileName]->SourceVoice);
 }
 
 
 void Audio::UninitAll(){
 	//すべてのSoundの終了処理をする
-	for (std::pair<const std::string, Sound*> pair : _AudioPool) {
-		pair.second->_sourcevoice->Stop();
-		pair.second->_sourcevoice->DestroyVoice();
+	for (std::pair<const std::string, Sound*> pair : _audiopool) {
+		pair.second->SourceVoice->Stop();
+		pair.second->SourceVoice->DestroyVoice();
 
-		delete[] pair.second->_sounddata;
+		delete[] pair.second->SoundData;
 
 		delete pair.second;
 	}
 	//全部消す
-	_AudioPool.clear();
+	_audiopool.clear();
 }
 
 
@@ -127,27 +127,27 @@ void Audio::UninitAll(){
 
 void Audio::Play(const char* FileName, bool Loop)
 {
-	_AudioPool[FileName]->_sourcevoice->Stop();
-	_AudioPool[FileName]->_sourcevoice->FlushSourceBuffers();
+	_audiopool[FileName]->SourceVoice->Stop();
+	_audiopool[FileName]->SourceVoice->FlushSourceBuffers();
 
 
 	// バッファ設定
 	XAUDIO2_BUFFER bufinfo;
 
 	memset(&bufinfo, 0x00, sizeof(bufinfo));
-	bufinfo.AudioBytes = _AudioPool[FileName]->_length;
-	bufinfo.pAudioData = _AudioPool[FileName]->_sounddata;
+	bufinfo.AudioBytes = _audiopool[FileName]->Length;
+	bufinfo.pAudioData = _audiopool[FileName]->SoundData;
 	bufinfo.PlayBegin = 0;
-	bufinfo.PlayLength = _AudioPool[FileName]->_playlength;
+	bufinfo.PlayLength = _audiopool[FileName]->PlayLength;
 
 	// ループ設定
 	if (Loop){
 		bufinfo.LoopBegin = 0;
-		bufinfo.LoopLength = _AudioPool[FileName]->_playlength;
+		bufinfo.LoopLength = _audiopool[FileName]->PlayLength;
 		bufinfo.LoopCount = XAUDIO2_LOOP_INFINITE;
 	}
 
-	_AudioPool[FileName]->_sourcevoice->SubmitSourceBuffer(&bufinfo, NULL);
+	_audiopool[FileName]->SourceVoice->SubmitSourceBuffer(&bufinfo, NULL);
 
 /*
 	float outputMatrix[4] = { 0.0f , 0.0f, 1.0f , 0.0f };
@@ -157,45 +157,45 @@ void Audio::Play(const char* FileName, bool Loop)
 
 
 	// 再生
-	_AudioPool[FileName]->_sourcevoice->Start();
+	_audiopool[FileName]->SourceVoice->Start();
 
 }
 
 void Audio::StopAudio(const char* FileName){
-	_AudioPool[FileName]->_sourcevoice->Stop();
+	_audiopool[FileName]->SourceVoice->Stop();
 }
 
 void Audio::SetVolume(const char* FileName, const float& volume){
-	_AudioPool[FileName]->_sourcevoice->SetVolume(volume);
+	_audiopool[FileName]->SourceVoice->SetVolume(volume);
 }
 
 bool Audio::IsPlaying(const char* FileName){
 	XAUDIO2_VOICE_STATE xa2state;
 
 	// 状態取得
-	_AudioPool[FileName]->_sourcevoice->GetState(&xa2state);
+	_audiopool[FileName]->SourceVoice->GetState(&xa2state);
 
 	return (xa2state.BuffersQueued != 0);
 }
 
 void Audio::FadeOut(const char* FileName, const float& rate){
 	float volume;
-	 _AudioPool[FileName]->_sourcevoice->GetVolume(&volume);
+	 _audiopool[FileName]->SourceVoice->GetVolume(&volume);
 	 if (volume <= 0.0f) {
 		 return;
 	 }
 	 volume -= rate;
-	 _AudioPool[FileName]->_sourcevoice->SetVolume(volume);
+	 _audiopool[FileName]->SourceVoice->SetVolume(volume);
 }
 
 void Audio::FadeIn(const char* FileName, const float& rate){
 	float volume;
-	_AudioPool[FileName]->_sourcevoice->GetVolume(&volume);
+	_audiopool[FileName]->SourceVoice->GetVolume(&volume);
 	if (volume >= 1.0f) {
 		return;
 	}
 	volume += rate;
-	_AudioPool[FileName]->_sourcevoice->SetVolume(volume);
+	_audiopool[FileName]->SourceVoice->SetVolume(volume);
 }
 
 

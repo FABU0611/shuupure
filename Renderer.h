@@ -3,8 +3,7 @@
 
 
 
-struct VERTEX_3D
-{
+struct VERTEX_3D {
 	XMFLOAT3 Position;
 	XMFLOAT3 Normal;
 	XMFLOAT4 Diffuse;
@@ -15,8 +14,7 @@ struct VERTEX_3D
 
 
 
-struct MATERIAL
-{
+struct MATERIAL {
 	XMFLOAT4	Ambient;
 	XMFLOAT4	Diffuse;
 	XMFLOAT4	Specular;
@@ -28,8 +26,7 @@ struct MATERIAL
 
 
 
-struct LIGHT
-{
+struct LIGHT {
 	BOOL		Enable;
 	BOOL		Dummy[3];//16byte‹«ŠE—p
 	XMFLOAT4	Direction;
@@ -45,57 +42,56 @@ struct LIGHT
 
 
 
-class Renderer
-{
+class Renderer {
 private:
 
 	static D3D_FEATURE_LEVEL			_featurelevel;
 
-	static ID3D11Device*				_device;
-	static ID3D11DeviceContext*			_devicecontext;
-	static IDXGISwapChain*				_swapchain;
-	static ID3D11RenderTargetView*		_rendertargetview;
-	static ID3D11DepthStencilView*		_depthstencilview;
+	static ID3D11Device* _device;
+	static ID3D11DeviceContext* _devicecontext;
+	static IDXGISwapChain* _swapchain;
+	static ID3D11RenderTargetView* _rendertargetview;
+	static ID3D11DepthStencilView* _depthstencilview;
 
-	static ID3D11Buffer*				_worldbuffer;
-	static ID3D11Buffer*				_viewbuffer;
-	static ID3D11Buffer*				_projectionbuffer;
-	static ID3D11Buffer*				_prevworldbuffer;
-	static ID3D11Buffer*				_prevviewbuffer;
-	static ID3D11Buffer*				_prevprojectionbuffer;
+	static ID3D11Buffer* _worldbuffer;
+	static ID3D11Buffer* _viewbuffer;
+	static ID3D11Buffer* _projectionbuffer;
+	static ID3D11Buffer* _prevworldbuffer;
+	static ID3D11Buffer* _prevviewbuffer;
+	static ID3D11Buffer* _prevprojectionbuffer;
 
-	static ID3D11Buffer*				_materialbuffer;
-	static ID3D11Buffer*				_lightbuffer;
-	static ID3D11Buffer*				_camerabuffer;
-	static ID3D11Buffer*				_parameterbuffer;
-	static ID3D11Buffer*				_weightsbuffer;
-	static ID3D11Buffer*				_dofbuffer;
+	static ID3D11Buffer* _materialbuffer;
+	static ID3D11Buffer* _lightbuffer;
+	static ID3D11Buffer* _camerabuffer;
+	static ID3D11Buffer* _parameterbuffer;
+	static ID3D11Buffer* _weightsbuffer;
+	static ID3D11Buffer* _dofbuffer;
 
 	static XMMATRIX						_prevworld;
 	static XMMATRIX						_prevview;
 	static XMMATRIX						_prevprojection;
 
-	static ID3D11DepthStencilState*		_depthstateenable;
-	static ID3D11DepthStencilState*		_depthstatedisable;
+	static ID3D11DepthStencilState* _depthstateenable;
+	static ID3D11DepthStencilState* _depthstatedisable;
 
-	static ID3D11BlendState*			_blendstate;
-	static ID3D11BlendState*			_blendstateAdd;
-	static ID3D11BlendState*			_blendstateATC;
+	static ID3D11BlendState* _blendstate;
+	static ID3D11BlendState* _blendstateAdd;
+	static ID3D11BlendState* _blendstateATC;
 
 
-	static ID3D11RenderTargetView*		_PErenderertargetview;
-	static ID3D11ShaderResourceView*	_PEshaderresourceview;
+	static ID3D11RenderTargetView* _PErenderertargetview;
+	static ID3D11ShaderResourceView* _PEshaderresourceview;
 
-	static ID3D11RenderTargetView*		_Depthrenderertargetview;
-	static ID3D11ShaderResourceView*	_Depthshaderresourceview;
-	static ID3D11RenderTargetView*		_BXrenderertargetview;
-	static ID3D11ShaderResourceView*	_BXshaderresourceview;
-	static ID3D11RenderTargetView*		_BYrenderertargetview;
-	static ID3D11ShaderResourceView*	_BYshaderresourceview;
-	static ID3D11RenderTargetView*		_Velrenderertargetview;
-	static ID3D11ShaderResourceView*	_Velshaderresourceview;
-	static ID3D11RenderTargetView*		_MBrenderertargetview;
-	static ID3D11ShaderResourceView*	_MBshaderresourceview;
+	static ID3D11RenderTargetView* _Depthrenderertargetview;
+	static ID3D11ShaderResourceView* _Depthshaderresourceview;
+	static ID3D11RenderTargetView* _BXrenderertargetview;
+	static ID3D11ShaderResourceView* _BXshaderresourceview;
+	static ID3D11RenderTargetView* _BYrenderertargetview;
+	static ID3D11ShaderResourceView* _BYshaderresourceview;
+	static ID3D11RenderTargetView* _Velrenderertargetview;
+	static ID3D11ShaderResourceView* _Velshaderresourceview;
+	static ID3D11RenderTargetView* _MBrenderertargetview;
+	static ID3D11ShaderResourceView* _MBshaderresourceview;
 
 public:
 	static void Init();
@@ -122,8 +118,8 @@ public:
 	static void SetWeights(float* weights);
 	static void SetDoF(XMFLOAT2 dof);
 
-	static ID3D11Device* GetDevice( void ){ return _device; }
-	static ID3D11DeviceContext* GetDeviceContext( void ){ return _devicecontext; }
+	static ID3D11Device* GetDevice(void) { return _device; }
+	static ID3D11DeviceContext* GetDeviceContext(void) { return _devicecontext; }
 
 
 

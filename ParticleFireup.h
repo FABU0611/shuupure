@@ -11,10 +11,10 @@
 class Fireup : public ParticleEmitter {
 	static const int	PARTICLE_MAX = 500;
 
-	float				_stoptime = 0.0f;
+	float				_stoptime{};
 	bool				_isSpawn = false;
-	float				_volume;
-	float				_size;
+	float				_volume{};
+	float				_size{};
 
 public:
 	Fireup(const XMFLOAT3& pos, const float& size, const float& stoptime, const XMFLOAT4& color, const float& volume):

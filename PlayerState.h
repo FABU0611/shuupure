@@ -7,7 +7,7 @@
 class Player;
 
 class PlayerState{
-	Player*		_player;
+	Player*		_player{};
 
 protected:
 	Player* GetPlayer() { return _player; }

@@ -6,16 +6,16 @@
 #include "GameObject.h"
 
 class ParticleEmitter : public GameObject {
-	ID3D11Buffer*		_vertexbuffer = NULL;
-	ID3D11ShaderResourceView* _texture = NULL;
+	ID3D11Buffer*				_vertexbuffer = NULL;
+	ID3D11ShaderResourceView*	_texture = NULL;
 
-	ID3D11VertexShader*	_vertexshader;
-	ID3D11PixelShader*	_pixelshader;
-	ID3D11InputLayout*	_vertexlayout;
+	ID3D11VertexShader* _vertexshader{};
+	ID3D11PixelShader*	_pixelshader{};
+	ID3D11InputLayout*	_vertexlayout{};
 
-	float				_size;
-	const wchar_t*		_texname;		//画像ファイルのパス
-	XMFLOAT4			_color;
+	float				_size{};
+	const wchar_t*		_texname{};		//画像ファイルのパス
+	XMFLOAT4			_color{};
 
 
 	//生成するパーティクル

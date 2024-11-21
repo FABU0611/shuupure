@@ -6,9 +6,9 @@
 #include "GameObject.h"
 
 class Skyobj : public GameObject {
-	ID3D11VertexShader* _vertexshader;
-	ID3D11PixelShader* _pixelShader;
-	ID3D11InputLayout* _vertexLayout;
+	ID3D11VertexShader* _vertexshader{};
+	ID3D11PixelShader*	_pixelShader{};
+	ID3D11InputLayout*	_vertexLayout{};
 
 	XMMATRIX			_prevworld{};
 

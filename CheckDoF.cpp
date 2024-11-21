@@ -44,7 +44,7 @@ void CheckDoF::Init() {
 
 	//ここにシェーダーファイルのロードを追加
 	Renderer::CreateVertexShader(&_vertexshader, &_vertexlayout, "shader\\UnlitTextureVS.cso");
-	Renderer::CreatePixelShader(&_pixelshader, "shader\\PartilcePS.cso");
+	Renderer::CreatePixelShader(&_pixelshader, "shader\\ParticlePS.cso");
 }
 
 void CheckDoF::Uninit() {
