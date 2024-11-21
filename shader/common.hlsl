@@ -165,7 +165,8 @@ void DepthofField(in float depth, out float value) {
 
 void CreateVelTex(in PS_IN In, out float4 vel) {
 	float2 velocity = In.Velocity;
-	float2 velocityNormalized = (velocity + float2(1.0f, 1.0f)) * float2(0.5f, 0.5f);
+	float2 velocityNormalized = (velocity + 1.0f) * 0.5f;
+	//float2 velocityNormalized = (velocity + float2(1.0f, 1.0f)) * float2(0.5f, 0.5f);
 	//velocityNormalized = clamp(velocityNormalized, 0.49f, 0.59f);
 	vel.rg = float2(velocityNormalized);
 	vel.b = 0.0f;
