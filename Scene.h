@@ -11,8 +11,9 @@
 
 enum Layer{
 	System,
-	Skydoom,
+	BackGround,
 	Object,
+	Transparency,
 	Effect,
 	UI,
 

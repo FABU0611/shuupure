@@ -18,7 +18,7 @@ class ScoreText : public GameObject {
 	float		_time{};
 
 	float		_score{};
-	float		_curscore{};
+	float		_prvscore{};
 	float		_dot{};
 	int			_twist{};
 	int			_rot{};

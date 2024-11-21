@@ -11,7 +11,7 @@
 #include "T_Title.h"
 
 void Title::Init(){
-	AddGameobject<Polygon2D>(UI, XMFLOAT3((SCREEN_WIDTH * 0.5f), (SCREEN_HEIGHT * 0.5f), 0.0f), XMFLOAT3(SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f), L"asset\\texture\\title_back.png");
+	AddGameobject<Polygon2D>(BackGround, XMFLOAT3((SCREEN_WIDTH * 0.5f), (SCREEN_HEIGHT * 0.5f), 0.0f), XMFLOAT3(SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f), L"asset\\texture\\title_back.png");
 	AddGameobject<TitlePush>(UI);
 	AddGameobject<TitleText>(UI);
 }

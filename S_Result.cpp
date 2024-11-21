@@ -13,7 +13,7 @@
 #include "T_Score.h"
 
 void Result::Init(){
-	AddGameobject<Polygon2D>(UI, XMFLOAT3((SCREEN_WIDTH * 0.5f), (SCREEN_HEIGHT * 0.5f), 0.0f), XMFLOAT3(SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f), L"asset\\texture\\result_back.png");
+	AddGameobject<Polygon2D>(BackGround, XMFLOAT3((SCREEN_WIDTH * 0.5f), (SCREEN_HEIGHT * 0.5f), 0.0f), XMFLOAT3(SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f), L"asset\\texture\\result_back.png");
 	AddGameobject<ScoreText>(UI);
 }
 

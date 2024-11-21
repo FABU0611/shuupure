@@ -30,7 +30,7 @@ void Game::Init() {
 
 	AddGameobject<Camera>(System);
 
-	AddGameobject<Sky>(Skydoom, 300.0f);
+	AddGameobject<Sky>(BackGround, 300.0f);
 
 	AddGameobject<Player>(Object, XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(1.0f, 1.0f, 1.0f));
 	AddGameobject<DivingBoard>(Object, XMFLOAT3(-30.0f, 0.0f, 0.0f));

@@ -27,7 +27,7 @@ void Tutorial::Init() {
 
 	AddGameobject<Camera>(System);
 
-	AddGameobject<Skyobj>(Skydoom, 300.0f);
+	AddGameobject<Skyobj>(BackGround, 300.0f);
 
 	AddGameobject<Player_Tutorial>(Object, XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(1.0f, 1.0f, 1.0f));
 

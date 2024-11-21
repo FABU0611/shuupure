@@ -101,13 +101,14 @@ void Manager::Update() {
 
 	if (_fade->GetFadeMode() == FadeMode::None) {
 		_scene->Update();
-	}
-	_gaussian->Update();
-	_motionblur->Update();
-	_final->Update();
+		_gaussian->Update();
+		_motionblur->Update();
+		_final->Update();
 #ifdef _DEBUG
-	_checkdof->Update();
+		_checkdof->Update();
 #endif
+	}
+
 	FadeUpdate();
 }
 
@@ -127,6 +128,9 @@ void Manager::Draw() {
 	Renderer::Begin();
 	_final->Draw();
 
+	//テキストのみ描画
+
+	
 	//被写界深度範囲確認用
 #ifdef _DEBUG
 	_checkdof->Draw();
