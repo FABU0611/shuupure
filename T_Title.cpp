@@ -1,7 +1,7 @@
 //Title.cpp
 //20106_“c’†@˜@
 //24_09_15
-#include "Title.h"
+#include "T_Title.h"
 #include "Renderer.h"
 
 #include "EasingFunc.h"

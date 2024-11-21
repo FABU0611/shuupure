@@ -7,15 +7,15 @@
 
 
 class TitlePush : public GameObject {
-	FontData* _fontdata;
-	DirectWriteCustomFont* _push;
+	FontData*				_fontdata{};
+	DirectWriteCustomFont*	_push{};
 
-	XMFLOAT2	_spos;
-	XMFLOAT2	_epos;
-	XMFLOAT2	_drawpos;
-	float		_pos;
+	XMFLOAT2				_spos{};
+	XMFLOAT2				_epos{};
+	XMFLOAT2				_drawpos{};
+	float					_pos{};
 
-	int			_start;
+	int						_start{};
 
 public:
 	TitlePush() {}

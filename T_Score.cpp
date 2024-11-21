@@ -1,7 +1,7 @@
-//ScoreText.cpp
+//T_Score.cpp
 //20106_ìcíÜÅ@ò@
 //24_09_15
-#include "ScoreText.h"
+#include "T_Score.h"
 #include "Renderer.h"
 
 #include "EasingFunc.h"

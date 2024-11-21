@@ -1,7 +1,7 @@
 //TutorialText.cpp
 //20106_ìcíÜÅ@ò@
 //24_09_17
-#include "TutorialText.h"
+#include "T_Tutorial.h"
 #include "Renderer.h"
 
 #include "EasingFunc.h"

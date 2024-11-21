@@ -194,7 +194,8 @@
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Rendpoly.cpp" />
     <ClCompile Include="Score.cpp" />
-    <ClCompile Include="ScoreText.cpp" />
+    <ClCompile Include="TextManager.cpp" />
+    <ClCompile Include="T_Score.cpp" />
     <ClCompile Include="Sky.cpp" />
     <ClCompile Include="Skyobj.cpp" />
     <ClCompile Include="S_Game.cpp" />
@@ -204,7 +205,8 @@
     <ClCompile Include="Time.cpp" />
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="TitlePush.cpp" />
-    <ClCompile Include="TutorialText.cpp" />
+    <ClCompile Include="T_Tutorial.cpp" />
+    <ClCompile Include="T_Loading.cpp" />
     <ClCompile Include="UIManager.cpp" />
     <ClCompile Include="Water.cpp" />
   </ItemGroup>
@@ -251,7 +253,8 @@
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Score.h" />
-    <ClInclude Include="ScoreText.h" />
+    <ClInclude Include="TextManager.h" />
+    <ClInclude Include="T_Score.h" />
     <ClInclude Include="Sky.h" />
     <ClInclude Include="Skyobj.h" />
     <ClInclude Include="S_Game.h" />
@@ -261,7 +264,8 @@
     <ClInclude Include="Time.h" />
     <ClInclude Include="Title.h" />
     <ClInclude Include="TitlePush.h" />
-    <ClInclude Include="TutorialText.h" />
+    <ClInclude Include="T_Tutorial.h" />
+    <ClInclude Include="T_Loading.h" />
     <ClInclude Include="UIManager.h" />
     <ClInclude Include="Water.h" />
     <ClInclude Include="XMFLOAT_Helper.h" />

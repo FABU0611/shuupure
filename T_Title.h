@@ -6,12 +6,12 @@
 #include "DirectWriteCustomFont.h"
 
 class TitleText : public GameObject {
-	FontData* _fontdata;
-	DirectWriteCustomFont* _title;
+	FontData*				_fontdata{};
+	DirectWriteCustomFont*	_title{};
 
-	XMFLOAT2	_spos;
-	XMFLOAT2	_epos;
-	XMFLOAT2	_drawpos;
+	XMFLOAT2				_spos{};
+	XMFLOAT2				_epos{};
+	XMFLOAT2				_drawpos{};
 
 public:
 	TitleText() {}

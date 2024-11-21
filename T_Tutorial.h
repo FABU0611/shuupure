@@ -6,13 +6,13 @@
 #include "DirectWriteCustomFont.h"
 
 class TutorialText : public GameObject {
-	FontData* _fontdata;
-	DirectWriteCustomFont* _tutoT;
+	FontData*				_fontdata{};
+	DirectWriteCustomFont*	_tutoT{};
 
-	XMFLOAT2	_spos;
-	XMFLOAT2	_epos;
-	XMFLOAT2	_drawpos;
-	float	_pos;
+	XMFLOAT2				_spos{};
+	XMFLOAT2				_epos{};
+	XMFLOAT2				_drawpos{};
+	float					_pos{};
 
 public:
 	TutorialText() {}

@@ -1,7 +1,7 @@
 //TitlePush.cpp
 //20106_“c’†@˜@
 //24_09_15
-#include "TitlePush.h"
+#include "T_PushStart.h"
 #include "Manager.h"
 #include "Renderer.h"
 #include "S_Game.h"

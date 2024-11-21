@@ -102,7 +102,7 @@
     <ClCompile Include="TitlePush.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="ScoreText.cpp">
+    <ClCompile Include="T_Score.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Title.cpp">
@@ -117,7 +117,7 @@
     <ClCompile Include="Skyobj.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="TutorialText.cpp">
+    <ClCompile Include="T_Tutorial.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Fade.cpp">
@@ -145,6 +145,12 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="GUIManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="T_Loading.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="TextManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -263,7 +269,7 @@
     <ClInclude Include="TitlePush.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="ScoreText.h">
+    <ClInclude Include="T_Score.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Title.h">
@@ -281,7 +287,7 @@
     <ClInclude Include="Skyobj.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="TutorialText.h">
+    <ClInclude Include="T_Tutorial.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Fade.h">
@@ -315,6 +321,12 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="GUIManager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="T_Loading.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="TextManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
