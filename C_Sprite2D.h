@@ -6,12 +6,12 @@
 #include "C_Sprite.h"
 
 enum class DrawMode {
-	Normal = 0,
-	LeftTop,
-	LeftTopColor,
-	Color,
-	Rotate,
-	ColorRotate,
+	Normal = 0,		//中心
+	LeftTop,		//左上
+	LeftTopColor,	//左上色変更可能
+	Color,			//色変更可能
+	Rotate,			//回転
+	RotateColor,	//回転色変更可能	
 
 	ModeNum,
 };

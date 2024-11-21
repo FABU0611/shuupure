@@ -26,7 +26,7 @@ void Sprite2D::Draw(){
 		vertex[3].Position = { _pos.x + _size.x, _pos.y + _size.y, 0.0f };
 	}
 	else if (_mode == DrawMode::Rotate ||
-		_mode == DrawMode::ColorRotate) {
+		_mode == DrawMode::RotateColor) {
 		float hw, hh;
 		hw = _size.x * 0.5f;
 		hh = _size.y * 0.5f;
@@ -76,7 +76,7 @@ void Sprite2D::Draw(){
 	//êFê›íË-----------------------------------------------------------------------------
 	if (_mode == DrawMode::Color ||
 		_mode == DrawMode::LeftTopColor ||
-		_mode == DrawMode::ColorRotate) {
+		_mode == DrawMode::RotateColor) {
 		vertex[0].Diffuse = _color;
 		vertex[1].Diffuse = _color;
 		vertex[2].Diffuse = _color;
