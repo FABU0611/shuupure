@@ -3,9 +3,10 @@
 //24_09_17
 #include "Fade.h"
 #include "Renderer.h"
+#include "Manager.h"
 
 void Fade::Init(){
-	GetComponent<Sprite2D>()->LoadTexture(L"asset\\texture\\fade.png");
+	LoadTexture();
 
 	//シェーダーセット
 	Renderer::CreateVertexShader(&_vertexshader, &_vertexlayout,
@@ -13,6 +14,8 @@ void Fade::Init(){
 
 	Renderer::CreatePixelShader(&_pixelshader,
 		"shader\\UnlitTexturePS.cso");
+
+	_fadecolor = { 1.0f, 1.0f, 1.0f, 0.0f };
 }
 
 void Fade::Uninit(){
@@ -25,6 +28,34 @@ void Fade::Uninit(){
 }
 
 void Fade::Update(){
+	if (_mode == FadeMode::None) {
+		return;
+	}
+	//フェードアウト処理
+	if (_mode == FadeMode::Out) {
+		_fadecolor.w += _faderate;
+
+		if (_fadecolor.w >= 1.0f) {
+			//フェードイン処理に切り替え
+			_fadecolor.w = 1.0f;
+			_mode = FadeMode::In;
+
+			//モードを設定
+			Manager::ChangeNextScene();
+		}
+	}
+	//フェードイン処理
+	else if (_mode == FadeMode::In) {
+		_fadecolor.w -= _faderate;
+
+		if (_fadecolor.w <= 0.0f) {
+			//フェード処理終了
+			_fadecolor.w = 0.0f;
+			_mode = FadeMode::None;
+		}
+	}
+	//スプライトの色更新
+	SetColor();
 }
 
 void Fade::Draw(){

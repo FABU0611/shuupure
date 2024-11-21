@@ -5,36 +5,23 @@
 #include "C_Sprite2D.h"
 #include "DirectWriteCustomFont.h"
 #include <string>
+#include "Fade.h"
 
-class Fade;
 class Rendpoly;
 class Gaussian;
 class MotionBlur;
+class LoadingText;
 #ifdef _DEBUG
 class CheckDoF;
 #endif
 
-enum class FadeMode {
-	None,
-	In,
-	Out,
-};
 
 class Manager{
 	static Scene*	_scene;
 	static Scene*	_nextscene;
 	static Scene*	_prvscene;
 
-	static Sprite2D*	_sprite;
-	static FadeMode		_mode;
-	static XMFLOAT4		_fadecolor;
-	static float		_faderate;
-
-	static FontData*	_fontdata;
-	static DirectWriteCustomFont* _loadT;
-
-	static std::string	_loading;
-	static float		_time;
+	static LoadingText*	_loadingT;
 
 	static Fade*		_fade;
 
@@ -56,6 +43,11 @@ public:
 	static void FadeUpdate();
 
 	static Scene* GetScene() { return _scene; }
+
+	static void ChangeNextScene() {
+		_nextscene = _prvscene;
+		_prvscene = nullptr;
+	}
 	
 	template <typename T>
 	static void SetScene() { 
@@ -64,7 +56,7 @@ public:
 	template <typename T>
 	static void SetSceneFade(const float& rate) { 
 		_prvscene = new T();
-		_faderate = rate;
-		_mode = FadeMode::Out;
+		_fade->SetFaderate(rate);
+		_fade->GetFadeMode() = FadeMode::Out;
 	}
 };
