@@ -27,12 +27,12 @@ void ScoreText::Init(){
 	_backT->Init(Renderer::GetSwapChain());
 	_backT->FontLoader();
 
-	// 日本語ロケールのフォント名を取得
+	//日本語ロケールのフォント名を取得
 	_scoreT->GetFontFamilyName(_scoreT->fontCollection.Get());
 	_dotT->GetFontFamilyName(_scoreT->fontCollection.Get());
 	_backT->GetFontFamilyName(_scoreT->fontCollection.Get());
 
-	// フォントをセット
+	//フォントをセット
 	_scoreT->SetFont((*_fontdata));
 	_dotT->SetFont((*_fontdata));
 	_backT->SetFont((*_fontdata));
@@ -44,7 +44,7 @@ void ScoreText::Init(){
 
 	//セーブデータをロードする
 	DataManager::LoadData(_rot, _twist, _dot);
-	DataManager::LoadScore(_curscore);
+	DataManager::LoadScore(_prvscore);
 	//スコアの計算
 	_dot *= 10;
 	_score += _dot;
@@ -53,7 +53,7 @@ void ScoreText::Init(){
 }
 
 void ScoreText::Uninit() {
-	if (_score > _curscore) {
+	if (_score > _prvscore) {
 		DataManager::SaveScore(_score);
 	}
 }
@@ -92,7 +92,7 @@ void ScoreText::Draw(){
 	_backT->SetFont((*_fontdata));
 	_backT->DrawString("K key Back Title", XMFLOAT2((SCREEN_WIDTH * 0.5f) - 250.0f, 600.0f), D2D1_DRAW_TEXT_OPTIONS_NONE);
 
-	if (_curscore < _score && _pos >= 1.0f) {
+	if (_prvscore < _score && _pos >= 1.0f) {
 		_fontdata->Color = D2D1::ColorF(D2D1::ColorF::Gold);
 		_fontdata->fontSize = 40.0f;
 		_scoreT->SetFont((*_fontdata));

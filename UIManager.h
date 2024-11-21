@@ -22,7 +22,6 @@ class UIManager : public GameObject{
 	float					_prog{};
 	int						_rot{};
 	int						_currot{};
-	bool					_play{};
 
 public:
 	void Init()override;

@@ -27,12 +27,12 @@ void UIManager::Init(){
 	_twist->Init(Renderer::GetSwapChain());
 	_twist->FontLoader();
 
-	// 日本語ロケールのフォント名を取得
+	//日本語ロケールのフォント名を取得
 	_jump->GetFontFamilyName(_jump->fontCollection.Get());
 	_rotaion->GetFontFamilyName(_rotaion->fontCollection.Get());
 	_twist->GetFontFamilyName(_twist->fontCollection.Get());
 
-	// フォントをセット
+	//フォントをセット
 	_jump->SetFont((*_fontdata));
 	_rotaion->SetFont((*_fontdata));
 	_twist->SetFont((*_fontdata));

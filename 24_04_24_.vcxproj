@@ -203,8 +203,8 @@
     <ClCompile Include="S_Title.cpp" />
     <ClCompile Include="S_Tutorial.cpp" />
     <ClCompile Include="Time.cpp" />
-    <ClCompile Include="Title.cpp" />
-    <ClCompile Include="TitlePush.cpp" />
+    <ClCompile Include="T_Title.cpp" />
+    <ClCompile Include="T_PushStart.cpp" />
     <ClCompile Include="T_Tutorial.cpp" />
     <ClCompile Include="T_Loading.cpp" />
     <ClCompile Include="UIManager.cpp" />
@@ -262,8 +262,8 @@
     <ClInclude Include="S_Title.h" />
     <ClInclude Include="S_Tutorial.h" />
     <ClInclude Include="Time.h" />
-    <ClInclude Include="Title.h" />
-    <ClInclude Include="TitlePush.h" />
+    <ClInclude Include="T_Title.h" />
+    <ClInclude Include="T_PushStart.h" />
     <ClInclude Include="T_Tutorial.h" />
     <ClInclude Include="T_Loading.h" />
     <ClInclude Include="UIManager.h" />
