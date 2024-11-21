@@ -33,6 +33,7 @@ public:
 			for (auto o : _gameobjects[i]) {
 				o->Uninit();
 				delete o;
+				o = nullptr;
 			}
 			_gameobjects[i].clear();
 		}

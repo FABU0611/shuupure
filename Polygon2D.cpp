@@ -7,19 +7,6 @@ Polygon2D::Polygon2D(const XMFLOAT3& pos, const XMFLOAT3& size, const wchar_t* n
 	SetPosition(pos);
 	_texname = name;
 
-	//中心位置とサイズから頂点位置を計算する
-	_texpos[0].x = pos.x - size.x * 0.5f;
-	_texpos[0].y = pos.y - size.y * 0.5f;
-
-	_texpos[1].x = pos.x + size.x * 0.5f;
-	_texpos[1].y = pos.y - size.y * 0.5f;
-
-	_texpos[2].x = pos.x - size.x * 0.5f;
-	_texpos[2].y = pos.y + size.y * 0.5f;
-
-	_texpos[3].x = pos.x + size.x * 0.5f;
-	_texpos[3].y = pos.y + size.y * 0.5f;
-
 	_components.push_back(new Sprite2D(this));
 	GetComponent<Sprite2D>()->SetSize(size);
 }

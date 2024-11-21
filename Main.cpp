@@ -163,6 +163,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	default:
 		break;
 	}
+	Input::SetWindowHandle(hWnd);
 
 	return DefWindowProc(hWnd, uMsg, wParam, lParam);
 }

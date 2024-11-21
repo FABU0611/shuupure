@@ -13,7 +13,6 @@ class Polygon2D : public GameObject{
 	float						_rot{};
 
 	const wchar_t*				_texname;		//画像ファイルのパス
-	XMFLOAT3					_texpos[4];
 public:
 	Polygon2D(const XMFLOAT3& pos, const XMFLOAT3& size, const wchar_t* name);
 	~Polygon2D() {}

@@ -14,6 +14,8 @@
 #include "MotionBlur.h"
 #include "Rendpoly.h"
 
+#include "GUIManager.h"
+
 Scene* Manager::_scene{};
 Scene* Manager::_nextscene{};
 Scene* Manager::_prvscene{};
@@ -175,6 +177,7 @@ void Manager::Draw() {
 		_scene->Uninit();
 		delete _scene;
 		_scene = nullptr;
+		GUIManager::Clear();
 	}
 
 	//ƒ‚ƒfƒ‹‰ð•ú

@@ -1,7 +1,7 @@
 #pragma once
 #include <Xinput.h>
 
-#define MAX_CONTROLLERS 4 // 最大コントローラ数
+#define MAX_CONTROLLERS (4) // 最大コントローラ数
 
 static enum MOUSE_BUTTON {
 	MOUSE_LBUTTON = 0,	//左クリック
@@ -9,25 +9,27 @@ static enum MOUSE_BUTTON {
 	MOUSE_MBUTTON,		//ホイールボタン
 };
 
-struct CONTROLER_STATE{
-	XINPUT_STATE state;
-	XINPUT_STATE oldstate;
-	XINPUT_VIBRATION vibration;
-	bool bConnected;
+struct CONTROLER_STATE {
+	XINPUT_STATE		state;
+	XINPUT_STATE		oldstate;
+	XINPUT_VIBRATION	vibration;
+	bool				bConnected;
 };
 
-class Input{
-	static BYTE		_oldkeystate[256];
-	static BYTE		_keystate[256];
+class Input {
+	static HWND				_hwnd; // ウィンドウハンドルを保持
 
-	static BYTE		_oldmousestate[3];
-	static BYTE		_mousestate[3];
-	static POINT	_oldmousepos;
-	static POINT	_mousepos;
+	static BYTE				_oldkeystate[256];
+	static BYTE				_keystate[256];
 
-	static int		_mousewheeldelta;
+	static BYTE				_oldmousestate[3];
+	static BYTE				_mousestate[3];
+	static POINT			_oldmousepos;
+	static POINT			_mousepos;
 
-	static CONTROLER_STATE _Gamepad[MAX_CONTROLLERS];
+	static int				_mousewheeldelta;
+
+	static CONTROLER_STATE	_gamepad[MAX_CONTROLLERS];
 
 public:
 	static void Init();
@@ -59,4 +61,6 @@ public:
 	static void SetLeftVibration(const int& padindex, float speed);
 	static void SetRightVibration(const int& padindex, float speed);
 	static void StopVibration(const int& padindex);
+
+	static void SetWindowHandle(const HWND& hwnd) { _hwnd = hwnd; }
 };
