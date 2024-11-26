@@ -11,27 +11,30 @@ class Rendpoly;
 class Gaussian;
 class MotionBlur;
 class LoadingText;
+class TextManager;
 #ifdef _DEBUG
 class CheckDoF;
 #endif
 
 
-class Manager{
-	static Scene*	_scene;
-	static Scene*	_nextscene;
-	static Scene*	_prvscene;
+class Manager {
+	static Scene* _scene;
+	static Scene* _nextscene;
+	static Scene* _prvscene;
 
-	static LoadingText*	_loadingT;
+	static LoadingText* _loadingT;
 
-	static Fade*		_fade;
+	static Fade* _fade;
 
-	static Rendpoly*	_final;
+	static Rendpoly* _final;
 
-	static Gaussian*	_gaussian;
+	static Gaussian* _gaussian;
 
-	static MotionBlur*	_motionblur;
+	static MotionBlur* _motionblur;
+
+	static TextManager* _textmanager;
 #ifdef _DEBUG
-	static CheckDoF*	_checkdof;
+	static CheckDoF* _checkdof;
 #endif
 
 public:
@@ -43,6 +46,7 @@ public:
 	static void FadeUpdate();
 
 	static Scene* GetScene() { return _scene; }
+	static TextManager* GetTextManager() { return _textmanager; }
 
 	static void ChangeNextScene() {
 		_nextscene = _prvscene;

@@ -2,33 +2,21 @@
 //20106_ìcíÜÅ@ò@
 //24_11_21
 #pragma once
-#include "GameObject.h"
-#include "DirectWriteCustomFont.h"
 
-class LoadingText : public GameObject {
-	FontData*				_fontdata{};
-	DirectWriteCustomFont*	_loadT{};
+#include "Text.h"
 
-	std::string				_loading{};
+class LoadingText : public Text {
 	float					_time{};
 	float					_fadealpha{};
 
-	XMFLOAT2				_spos{};
-	XMFLOAT2				_epos{};
-	XMFLOAT2				_drawpos{};
-	float					_pos{};
-
 public:
 	LoadingText() {}
-	~LoadingText() {
-		delete _loadT;
-		delete _fontdata;
-	}
+	LoadingText(const float& size, const D2D1::ColorF& color)
+		:Text(size, color) {}
+	~LoadingText() {}
 
 	void Init()override;
-	void Uninit()override;
 	void Update()override;
-	void Draw()override;
 
 	void SetFadealpha(const float& alpha) { _fadealpha = alpha; }
 };

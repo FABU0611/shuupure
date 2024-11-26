@@ -2,27 +2,18 @@
 //20106_ìcíÜÅ@ò@
 //24_09_17
 #pragma once
-#include "GameObject.h"
-#include "DirectWriteCustomFont.h"
+#include "Text.h"
 
-class TutorialText : public GameObject {
-	FontData*				_fontdata{};
-	DirectWriteCustomFont*	_tutoT{};
-
+class TutorialText : public Text {
 	XMFLOAT2				_spos{};
 	XMFLOAT2				_epos{};
-	XMFLOAT2				_drawpos{};
-	float					_pos{};
 
 public:
 	TutorialText() {}
-	~TutorialText() {
-		delete _tutoT;
-		delete _fontdata;
-	}
+	TutorialText(const float& size, const D2D1::ColorF& color)
+	:Text(size, color){}
+	~TutorialText() {}
 
 	void Init()override;
-	void Uninit()override;
 	void Update()override;
-	void Draw()override;
 };

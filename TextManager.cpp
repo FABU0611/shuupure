@@ -3,10 +3,24 @@
 //24_11_21
 #include "TextManager.h"
 
-void TextManager::Init() {}
 
-void TextManager::Uninit() {}
+void TextManager::Uninit() {
+	for (auto t : _texts) {
+		t->Uninit();
+		delete t;
+		t = nullptr;
+	}
+	_texts.clear();
+}
 
-void TextManager::Update() {}
+void TextManager::Update() {
+	for (auto t : _texts) {
+		t->Update();
+	}
+}
 
-void TextManager::Draw() {}
+void TextManager::Draw() {
+	for (auto t : _texts) {
+		t->Draw();
+	}
+}

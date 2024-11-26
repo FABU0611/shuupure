@@ -2,30 +2,22 @@
 //20106_ìcíÜÅ@ò@
 //24_09_15
 #pragma once
-#include "GameObject.h"
-#include "DirectWriteCustomFont.h"
+#include "Text.h"
 
 
-class TitlePush : public GameObject {
-	FontData*				_fontdata{};
-	DirectWriteCustomFont*	_push{};
-
+class TitlePush : public Text {
 	XMFLOAT2				_spos{};
 	XMFLOAT2				_epos{};
-	XMFLOAT2				_drawpos{};
-	float					_pos{};
+	float					_time{};
 
 	int						_start{};
 
 public:
 	TitlePush() {}
-	~TitlePush() {
-		delete _push;
-		delete _fontdata;
-	}
+	TitlePush(const float& size, const D2D1::ColorF& color)
+		:Text(size, color) {}
+	~TitlePush() {}
 
 	void Init()override;
-	void Uninit()override;
 	void Update()override;
-	void Draw()override;
 };

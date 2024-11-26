@@ -8,7 +8,7 @@
 #include "Scene.h"
 
 class GUIManager {
-	static std::vector<GUI*>	_guis;
+	static std::vector<GUI*>	_guis;		//—v‘f”Ô†‚ª—~‚µ‚¢‚Ì‚Åvector
 
 public:
 	GUIManager() {}

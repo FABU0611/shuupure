@@ -1,0 +1,52 @@
+//Text.h
+//20106_“c’†@˜@
+//24_11_26
+#pragma once
+
+#include "GameObject.h"
+#include "DirectWriteCustomFont.h"
+
+class Text : public GameObject {
+protected:
+	FontData*				_fontdata{};
+	DirectWriteCustomFont*	_text{};
+
+	std::string				_str{};
+
+	float					_size = 30.0f;
+	D2D1::ColorF			_color = D2D1::ColorF::Black;
+
+
+	void SetColor(const D2D1::ColorF& color) {
+		if (!_text || !_fontdata) {
+			return;
+		}
+		_fontdata->Color = color;
+		_text->SetFont((*_fontdata));
+	}
+	void SetSize(const float& size) {
+		if (!_text || !_fontdata) {
+			return;
+		}
+		_fontdata->fontSize = size;
+		_text->SetFont((*_fontdata));
+	}
+
+public:
+	Text() {}
+	Text(const float& size, const D2D1::ColorF& color)
+		:_size(size), _color(color) {}
+	virtual ~Text() {
+		if (_text) {
+			delete _text;
+		}
+		if (_fontdata) {
+			delete _fontdata;
+		}
+	}
+
+	void Init()override;
+	void Uninit()override;
+	void Update()override;
+	void Draw()override;
+};

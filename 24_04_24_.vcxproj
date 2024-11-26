@@ -194,6 +194,7 @@
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Rendpoly.cpp" />
     <ClCompile Include="Score.cpp" />
+    <ClCompile Include="Text.cpp" />
     <ClCompile Include="TextManager.cpp" />
     <ClCompile Include="T_Score.cpp" />
     <ClCompile Include="Sky.cpp" />
@@ -253,6 +254,7 @@
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Score.h" />
+    <ClInclude Include="Text.h" />
     <ClInclude Include="TextManager.h" />
     <ClInclude Include="T_Score.h" />
     <ClInclude Include="Sky.h" />

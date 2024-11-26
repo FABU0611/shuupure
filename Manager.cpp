@@ -15,6 +15,7 @@
 #include "Rendpoly.h"
 
 #include "GUIManager.h"
+#include "TextManager.h"
 
 Scene* Manager::_scene{};
 Scene* Manager::_nextscene{};
@@ -24,6 +25,8 @@ Fade* Manager::_fade;
 Rendpoly* Manager::_final;
 Gaussian* Manager::_gaussian;
 MotionBlur* Manager::_motionblur;
+TextManager* Manager::_textmanager;
+
 #ifdef _DEBUG
 #include "CheckDoF.h"
 CheckDoF* Manager::_checkdof;
@@ -35,6 +38,8 @@ void Manager::Init() {
 	Input::Init();
 	Renderer::Init();
 	Audio::InitMaster();
+
+	_textmanager = new TextManager();
 
 	//フェード初期化
 	_fade = new Fade();
@@ -67,6 +72,9 @@ void Manager::Uninit() {
 	_checkdof->Uninit();
 	delete _checkdof;
 #endif
+	_textmanager->Uninit();
+	delete _textmanager;
+
 	_motionblur->Uninit();
 	delete _motionblur;
 
@@ -101,6 +109,7 @@ void Manager::Update() {
 
 	if (_fade->GetFadeMode() == FadeMode::None) {
 		_scene->Update();
+		_textmanager->Update();
 		_gaussian->Update();
 		_motionblur->Update();
 		_final->Update();
@@ -129,7 +138,7 @@ void Manager::Draw() {
 	_final->Draw();
 
 	//テキストのみ描画
-
+	_textmanager->Draw();
 	
 	//被写界深度範囲確認用
 #ifdef _DEBUG
@@ -151,6 +160,7 @@ void Manager::Draw() {
 	}
 	//次のシーンがセットされていたら
 	if (_scene) {
+		_textmanager->Uninit();
 		_scene->Uninit();
 		delete _scene;
 		_scene = nullptr;
@@ -162,7 +172,8 @@ void Manager::Draw() {
 	Audio::UninitAll();
 	Sprite::UninitAll();
 
-	_fade->LoadTexture();
+	_fade->Uninit();
+	_fade->Init();
 
 	//次のシーンをセット
 	_scene = _nextscene;
