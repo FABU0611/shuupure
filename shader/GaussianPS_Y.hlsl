@@ -27,4 +27,6 @@ void main(in PS_IN In, out PS_OUT Out) {
 	Out.Out0.rgb += Weights[1].y * g_Texture.Sample(g_SamplerState, In.TexCoord - float2(0.0f, 10.0f / Parameter.y)).rgb;
 	Out.Out0.rgb += Weights[1].z * g_Texture.Sample(g_SamplerState, In.TexCoord - float2(0.0f, 12.0f / Parameter.y)).rgb;
 	Out.Out0.rgb += Weights[1].w * g_Texture.Sample(g_SamplerState, In.TexCoord - float2(0.0f, 14.0f / Parameter.y)).rgb;
+	
+	Out.Out0.a = In.Diffuse.a;
 }

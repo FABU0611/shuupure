@@ -172,3 +172,12 @@ void CreateVelTex(in PS_IN In, out float4 vel) {
 	vel.b = 0.0f;
 	vel.a = 1.0f;
 }
+
+/*
+アルファクリップ
+clip(outDiffuse.a - 0.5f);
+
+アルファティザ
+float t = frac((In.TexCoord.x + In.TexCoord.y) * 200.0f);
+clip(outDiffuse - f);
+*/
