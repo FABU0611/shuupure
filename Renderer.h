@@ -135,57 +135,8 @@ public:
 	static ID3D11ShaderResourceView* GetMBTexture() { return _MBshaderresourceview; }
 
 	//レンダリングターゲットをテクスチャに切り替える
-	static void BeginPE() {
-		ID3D11RenderTargetView* mrt[3]{
-			_PErenderertargetview, _Depthrenderertargetview, _Velrenderertargetview
-		};
-		_devicecontext->OMSetRenderTargets(3,
-			&(*mrt),	//レンダリングテクスチャ 
-			_depthstencilview);		//Zバッファ
-
-		//レンダリングテクスチャクリア
-		float ClearColor[4] = { 0.0f, 0.0f, 0.5f, 1.0f };
-		_devicecontext->ClearRenderTargetView(_PErenderertargetview, ClearColor);
-		_devicecontext->ClearRenderTargetView(_Depthrenderertargetview, ClearColor);
-		_devicecontext->ClearRenderTargetView(_Velrenderertargetview, ClearColor);
-
-		//Zバッファクリア
-		_devicecontext->ClearDepthStencilView(_depthstencilview, D3D11_CLEAR_DEPTH, 1.0f, 0);
-	}
-	static void BeginBlurX() {
-		_devicecontext->OMSetRenderTargets(1,
-			&_BXrenderertargetview,	//レンダリングテクスチャ 
-			_depthstencilview);		//Zバッファ
-
-		//レンダリングテクスチャクリア
-		float ClearColor[4] = { 0.0f, 0.0f, 0.5f, 1.0f };
-		_devicecontext->ClearRenderTargetView(_BXrenderertargetview, ClearColor);
-
-		//Zバッファクリア
-		_devicecontext->ClearDepthStencilView(_depthstencilview, D3D11_CLEAR_DEPTH, 1.0f, 0);
-	}
-	static void BeginBlurY() {
-		_devicecontext->OMSetRenderTargets(1,
-			&_BYrenderertargetview,	//レンダリングテクスチャ 
-			_depthstencilview);		//Zバッファ
-
-		//レンダリングテクスチャクリア
-		float ClearColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-		_devicecontext->ClearRenderTargetView(_BYrenderertargetview, ClearColor);
-
-		//Zバッファクリア
-		_devicecontext->ClearDepthStencilView(_depthstencilview, D3D11_CLEAR_DEPTH, 1.0f, 0);
-	}
-	static void BeginMotionBlur() {
-		_devicecontext->OMSetRenderTargets(1,
-			&_MBrenderertargetview,	//レンダリングテクスチャ 
-			_depthstencilview);		//Zバッファ
-
-		//レンダリングテクスチャクリア
-		float ClearColor[4] = { 0.5f, 0.0f, 0.0f, 1.0f };
-		_devicecontext->ClearRenderTargetView(_MBrenderertargetview, ClearColor);
-
-		//Zバッファクリア
-		_devicecontext->ClearDepthStencilView(_depthstencilview, D3D11_CLEAR_DEPTH, 1.0f, 0);
-	}
+	static void BeginPE();
+	static void BeginBlurX();
+	static void BeginBlurY();
+	static void BeginMotionBlur();
 };

@@ -69,7 +69,7 @@ void Renderer::Init() {
 	swapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
 	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	swapChainDesc.OutputWindow = GetWindow();
-	swapChainDesc.SampleDesc.Count = 1;
+	swapChainDesc.SampleDesc.Count = 8;			//MSAAのサンプル回数
 	swapChainDesc.SampleDesc.Quality = 0;
 	swapChainDesc.Windowed = TRUE;
 
@@ -116,7 +116,7 @@ void Renderer::Init() {
 	// デプスステンシルビュー作成
 	D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc{};
 	depthStencilViewDesc.Format = textureDesc.Format;
-	depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;
 	depthStencilViewDesc.Flags = 0;
 	_device->CreateDepthStencilView(depthStencile, &depthStencilViewDesc, &_depthstencilview);
 	depthStencile->Release();
@@ -343,14 +343,14 @@ void Renderer::Init() {
 		D3D11_RENDER_TARGET_VIEW_DESC rtvd;
 		ZeroMemory(&rtvd, sizeof(rtvd));
 		rtvd.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-		rtvd.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+		rtvd.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DMS;
 		_device->CreateRenderTargetView(bxTexture, &rtvd, &_BXrenderertargetview);
 
 		//シェーダーリソースビューの作成
 		D3D11_SHADER_RESOURCE_VIEW_DESC srvd;
 		ZeroMemory(&srvd, sizeof(srvd));
 		srvd.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-		srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+		srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DMS;
 		srvd.Texture2D.MipLevels = 1;
 		_device->CreateShaderResourceView(bxTexture, &srvd, &_BXshaderresourceview);
 	}
@@ -384,14 +384,14 @@ void Renderer::Init() {
 		D3D11_RENDER_TARGET_VIEW_DESC rtvd;
 		ZeroMemory(&rtvd, sizeof(rtvd));
 		rtvd.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-		rtvd.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+		rtvd.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DMS;
 		_device->CreateRenderTargetView(byTexture, &rtvd, &_BYrenderertargetview);
 
 		//シェーダーリソースビューの作成
 		D3D11_SHADER_RESOURCE_VIEW_DESC srvd;
 		ZeroMemory(&srvd, sizeof(srvd));
 		srvd.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-		srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+		srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DMS;
 		srvd.Texture2D.MipLevels = 1;
 		_device->CreateShaderResourceView(byTexture, &srvd, &_BYshaderresourceview);
 	}
@@ -425,14 +425,14 @@ void Renderer::Init() {
 		D3D11_RENDER_TARGET_VIEW_DESC rtvd;
 		ZeroMemory(&rtvd, sizeof(rtvd));
 		rtvd.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-		rtvd.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+		rtvd.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DMS;
 		_device->CreateRenderTargetView(mbTexture, &rtvd, &_MBrenderertargetview);
 
 		//シェーダーリソースビューの作成
 		D3D11_SHADER_RESOURCE_VIEW_DESC srvd;
 		ZeroMemory(&srvd, sizeof(srvd));
 		srvd.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-		srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+		srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DMS;
 		srvd.Texture2D.MipLevels = 1;
 		_device->CreateShaderResourceView(mbTexture, &srvd, &_MBshaderresourceview);
 	}
@@ -446,8 +446,7 @@ void Renderer::Init() {
 		dtd.MipLevels = 1;
 		dtd.ArraySize = 1;
 		dtd.Format = DXGI_FORMAT_R32_FLOAT;		//ピクセルフォーマット
-		dtd.SampleDesc.Count = 1;
-		dtd.SampleDesc.Quality = 0;
+		dtd.SampleDesc = swapChainDesc.SampleDesc;
 		dtd.Usage = D3D11_USAGE_DEFAULT;
 		//レンダリングターゲット用の設定
 		dtd.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
@@ -462,14 +461,14 @@ void Renderer::Init() {
 		D3D11_RENDER_TARGET_VIEW_DESC rtvd;
 		ZeroMemory(&rtvd, sizeof(rtvd));
 		rtvd.Format = DXGI_FORMAT_R32_FLOAT;
-		rtvd.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+		rtvd.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DMS;
 		_device->CreateRenderTargetView(depthTexture, &rtvd, &_Depthrenderertargetview);
 
 		//シェーダーリソースビューの作成
 		D3D11_SHADER_RESOURCE_VIEW_DESC srvd;
 		ZeroMemory(&srvd, sizeof(srvd));
 		srvd.Format = DXGI_FORMAT_R32_FLOAT;
-		srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+		srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DMS;
 		srvd.Texture2D.MipLevels = 1;
 		srvd.Texture2D.MostDetailedMip = 0;
 		_device->CreateShaderResourceView(depthTexture, &srvd, &_Depthshaderresourceview);
@@ -484,8 +483,7 @@ void Renderer::Init() {
 		dtd.MipLevels = 1;
 		dtd.ArraySize = 1;
 		dtd.Format = DXGI_FORMAT_R8G8B8A8_UNORM;		//ピクセルフォーマット
-		dtd.SampleDesc.Count = 1;
-		dtd.SampleDesc.Quality = 0;
+		dtd.SampleDesc = swapChainDesc.SampleDesc;
 		dtd.Usage = D3D11_USAGE_DEFAULT;
 		//レンダリングターゲット用の設定
 		dtd.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
@@ -500,14 +498,14 @@ void Renderer::Init() {
 		D3D11_RENDER_TARGET_VIEW_DESC rtvd;
 		ZeroMemory(&rtvd, sizeof(rtvd));
 		rtvd.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-		rtvd.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+		rtvd.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DMS;
 		_device->CreateRenderTargetView(velocityTexture, &rtvd, &_Velrenderertargetview);
 
 		//シェーダーリソースビューの作成
 		D3D11_SHADER_RESOURCE_VIEW_DESC srvd;
 		ZeroMemory(&srvd, sizeof(srvd));
 		srvd.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-		srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+		srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DMS;
 		srvd.Texture2D.MipLevels = 1;
 		srvd.Texture2D.MostDetailedMip = 0;
 		_device->CreateShaderResourceView(velocityTexture, &srvd, &_Velshaderresourceview);
@@ -541,16 +539,23 @@ void Renderer::Init() {
 		D3D11_RENDER_TARGET_VIEW_DESC rtvd;
 		ZeroMemory(&rtvd, sizeof(rtvd));
 		rtvd.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-		rtvd.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+		rtvd.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DMS;
 		_device->CreateRenderTargetView(ppTexture, &rtvd, &_PErenderertargetview);
 
 		//シェーダーリソースビューの作成
 		D3D11_SHADER_RESOURCE_VIEW_DESC srvd;
 		ZeroMemory(&srvd, sizeof(srvd));
 		srvd.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-		srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+		srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DMS;
 		srvd.Texture2D.MipLevels = 1;
 		_device->CreateShaderResourceView(ppTexture, &srvd, &_PEshaderresourceview);
+	}
+
+	UINT qualityLevels = 0;
+	hr = _device->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, 4, &qualityLevels);
+	if (FAILED(hr) || qualityLevels == 0) {
+		// MSAAは使用できない
+		return;
 	}
 }
 
@@ -792,6 +797,63 @@ void Renderer::CreatePixelShader(ID3D11PixelShader** PixelShader, const char* Fi
 	_device->CreatePixelShader(buffer, fsize, NULL, PixelShader);
 
 	delete[] buffer;
+}
+
+void Renderer::BeginPE() {
+	ID3D11RenderTargetView* mrt[3]{
+		_PErenderertargetview, _Depthrenderertargetview, _Velrenderertargetview
+	};
+	_devicecontext->OMSetRenderTargets(3,
+		&(*mrt),	//レンダリングテクスチャ 
+		_depthstencilview);		//Zバッファ
+
+	//レンダリングテクスチャクリア
+	float ClearColor[4] = { 0.0f, 0.0f, 0.5f, 1.0f };
+	_devicecontext->ClearRenderTargetView(_PErenderertargetview, ClearColor);
+	_devicecontext->ClearRenderTargetView(_Depthrenderertargetview, ClearColor);
+	_devicecontext->ClearRenderTargetView(_Velrenderertargetview, ClearColor);
+
+	//Zバッファクリア
+	_devicecontext->ClearDepthStencilView(_depthstencilview, D3D11_CLEAR_DEPTH, 1.0f, 0);
+}
+
+void Renderer::BeginBlurX() {
+	_devicecontext->OMSetRenderTargets(1,
+		&_BXrenderertargetview,	//レンダリングテクスチャ 
+		_depthstencilview);		//Zバッファ
+
+	//レンダリングテクスチャクリア
+	float ClearColor[4] = { 0.0f, 0.5f, 0.0f, 1.0f };
+	_devicecontext->ClearRenderTargetView(_BXrenderertargetview, ClearColor);
+
+	//Zバッファクリア
+	_devicecontext->ClearDepthStencilView(_depthstencilview, D3D11_CLEAR_DEPTH, 1.0f, 0);
+}
+
+void Renderer::BeginBlurY() {
+	_devicecontext->OMSetRenderTargets(1,
+		&_BYrenderertargetview,	//レンダリングテクスチャ 
+		_depthstencilview);		//Zバッファ
+
+	//レンダリングテクスチャクリア
+	float ClearColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	_devicecontext->ClearRenderTargetView(_BYrenderertargetview, ClearColor);
+
+	//Zバッファクリア
+	_devicecontext->ClearDepthStencilView(_depthstencilview, D3D11_CLEAR_DEPTH, 1.0f, 0);
+}
+
+void Renderer::BeginMotionBlur() {
+	_devicecontext->OMSetRenderTargets(1,
+		&_MBrenderertargetview,	//レンダリングテクスチャ 
+		_depthstencilview);		//Zバッファ
+
+	//レンダリングテクスチャクリア
+	float ClearColor[4] = { 0.5f, 0.0f, 0.0f, 1.0f };
+	_devicecontext->ClearRenderTargetView(_MBrenderertargetview, ClearColor);
+
+	//Zバッファクリア
+	_devicecontext->ClearDepthStencilView(_depthstencilview, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
 
