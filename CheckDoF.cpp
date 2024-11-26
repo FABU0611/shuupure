@@ -44,7 +44,7 @@ void CheckDoF::Init() {
 
 	//ここにシェーダーファイルのロードを追加
 	Renderer::CreateVertexShader(&_vertexshader, &_vertexlayout, "shader\\UnlitTextureVS.cso");
-	Renderer::CreatePixelShader(&_pixelshader, "shader\\ParticlePS.cso");
+	Renderer::CreatePixelShader(&_pixelshader, "shader\\CheckDoFPS.cso");
 }
 
 void CheckDoF::Uninit() {
@@ -83,7 +83,7 @@ void CheckDoF::Draw() {
 	Renderer::SetMaterial(material);
 
 	// テクスチャ設定
-	ID3D11ShaderResourceView* ppTexture = Renderer::GetVelocityTexture();
+	ID3D11ShaderResourceView* ppTexture = Renderer::GetDepthTexture();
 	Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &ppTexture);
 
 	// プリミティブトポロジ設定
