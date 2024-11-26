@@ -11,7 +11,7 @@
 #include "C_Transform.h"
 #include "C_Collision.h"
 #include "C_Audio.h"
-#include "S_Result.h"
+#include "S_Game.h"
 
 const float Player::FALL_NUM = -98.0f;
 const float Player::JUMP_POWER = 100.0f;
@@ -85,7 +85,7 @@ void Player::Uninit() {
 
 void Player::Update() {
 	if (Input::GetKeyTrigger(VK_SPACE)) {
-		Manager::SetSceneFade<Result>(0.05f);
+		Manager::SetSceneFade<Game>(0.05f);
 	}
 	Scene* scene;
 	scene = Manager::GetScene();
