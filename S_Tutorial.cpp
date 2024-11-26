@@ -4,6 +4,7 @@
 #include "Main.h"
 #include "Manager.h"
 #include "Renderer.h"
+#include "TextManager.h"
 
 #include "S_Game.h"
 #include "S_Tutorial.h"
@@ -27,11 +28,11 @@ void Tutorial::Init() {
 
 	AddGameobject<Camera>(System);
 
-	AddGameobject<Skyobj>(BackGround, 300.0f);
+	//AddGameobject<Skyobj>(BackGround, 300.0f);
 
 	AddGameobject<Player_Tutorial>(Object, XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(1.0f, 1.0f, 1.0f));
 
-	AddGameobject<TutorialText>(UI);
+	//Manager::GetTextManager()->AddText<TutorialText>();
 }
 
 void Tutorial::Uninit(){

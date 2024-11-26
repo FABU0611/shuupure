@@ -12,4 +12,5 @@ public:
 	~Title() {}
 
 	void Init() override;
+	void Update()override;
 };
