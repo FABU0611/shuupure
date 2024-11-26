@@ -23,6 +23,10 @@ void Sky::Init() {
 }
 
 void Sky::Uninit() {
+	for (auto c : _components) {
+		c->Uninit();
+	}
+
 	_vertexshader->Release();
 	_pixelshader->Release();
 	_vertexlayout->Release();
