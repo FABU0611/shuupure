@@ -7,7 +7,7 @@
 class Easing {
 public:
 	static float EaseOutCirc(float x) {
-		x = fmax(0, fmin(1, x)); // x‚ğ0‚©‚ç1‚Ì”ÍˆÍ‚É§ŒÀ
+		x = (std::max)(0.0f, (std::min)(1.0f, x)); // x‚ğ0‚©‚ç1‚Ì”ÍˆÍ‚É§ŒÀ
 		return sqrtf(1 - powf(x - 1, 2));
 	}
 	static float EaseOutBounce(float x) {
