@@ -100,7 +100,7 @@ struct PS_IN {
 struct PS_OUT {
 	float4 Out0				: SV_Target0;	//デフォルトのびょうが
 	float Out1				: SV_Target1;	//深度マップ
-	float4 Out2				: SV_Target2;	//速度マップ
+	float2 Out2				: SV_Target2;	//速度マップ
 };
 
 void HalfVector(in float3 eyev, in float4 lv, out float3 halfv) {
@@ -163,14 +163,14 @@ void DepthofField(in float depth, out float value) {
 	value = blurFactor;
 }
 
-void CreateVelTex(in PS_IN In, out float4 vel) {
+void CreateVelTex(in PS_IN In, out float2 vel) {
 	float2 velocity = In.Velocity;
+	velocity.y = -velocity.y;
 	float2 velocityNormalized = (velocity + 1.0f) * 0.5f;
-	//float2 velocityNormalized = (velocity + float2(1.0f, 1.0f)) * float2(0.5f, 0.5f);
-	//velocityNormalized = clamp(velocityNormalized, 0.49f, 0.59f);
+	velocityNormalized = clamp(velocityNormalized, 0.39f, 0.69f);
 	vel.rg = float2(velocityNormalized);
-	vel.b = 0.0f;
-	vel.a = 1.0f;
+	//vel.b = 0.0f;
+	//vel.a = 1.0f;
 }
 
 /*

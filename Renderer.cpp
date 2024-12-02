@@ -69,7 +69,7 @@ void Renderer::Init() {
 	swapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
 	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	swapChainDesc.OutputWindow = GetWindow();
-	swapChainDesc.SampleDesc.Count = 8;			//MSAAのサンプル回数
+	swapChainDesc.SampleDesc.Count = 1;			//MSAAのサンプル回数
 	swapChainDesc.SampleDesc.Quality = 0;
 	swapChainDesc.Windowed = TRUE;
 
@@ -116,7 +116,7 @@ void Renderer::Init() {
 	// デプスステンシルビュー作成
 	D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc{};
 	depthStencilViewDesc.Format = textureDesc.Format;
-	depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;
+	depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;	//2DMSでアンチエイリアシング
 	depthStencilViewDesc.Flags = 0;
 	_device->CreateDepthStencilView(depthStencile, &depthStencilViewDesc, &_depthstencilview);
 	depthStencile->Release();
@@ -158,7 +158,7 @@ void Renderer::Init() {
 	// ブレンドステート設定
 	D3D11_BLEND_DESC blendDesc{};
 	blendDesc.AlphaToCoverageEnable = FALSE;
-	blendDesc.IndependentBlendEnable = FALSE;
+	blendDesc.IndependentBlendEnable = TRUE;
 	blendDesc.RenderTarget[0].BlendEnable = TRUE;
 	blendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;			//前景のαにかける式(* A)
 	blendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;	//背景のαにかける式(1 - A)
@@ -167,6 +167,14 @@ void Renderer::Init() {
 	blendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
 	blendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
 	blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
+	// レンダーターゲット1（デプスマップ）の設定：ブレンド無効
+	blendDesc.RenderTarget[1].BlendEnable = FALSE;
+	blendDesc.RenderTarget[1].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
+	// レンダーターゲット2（速度マップ）の設定：ブレンド無効
+	blendDesc.RenderTarget[2].BlendEnable = FALSE;
+	blendDesc.RenderTarget[2].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 
 	_device->CreateBlendState(&blendDesc, &_blendstate);
 
@@ -343,14 +351,14 @@ void Renderer::Init() {
 		D3D11_RENDER_TARGET_VIEW_DESC rtvd;
 		ZeroMemory(&rtvd, sizeof(rtvd));
 		rtvd.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-		rtvd.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DMS;
+		rtvd.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
 		_device->CreateRenderTargetView(bxTexture, &rtvd, &_BXrenderertargetview);
 
 		//シェーダーリソースビューの作成
 		D3D11_SHADER_RESOURCE_VIEW_DESC srvd;
 		ZeroMemory(&srvd, sizeof(srvd));
 		srvd.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-		srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DMS;
+		srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 		srvd.Texture2D.MipLevels = 1;
 		_device->CreateShaderResourceView(bxTexture, &srvd, &_BXshaderresourceview);
 	}
@@ -384,14 +392,14 @@ void Renderer::Init() {
 		D3D11_RENDER_TARGET_VIEW_DESC rtvd;
 		ZeroMemory(&rtvd, sizeof(rtvd));
 		rtvd.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-		rtvd.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DMS;
+		rtvd.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
 		_device->CreateRenderTargetView(byTexture, &rtvd, &_BYrenderertargetview);
 
 		//シェーダーリソースビューの作成
 		D3D11_SHADER_RESOURCE_VIEW_DESC srvd;
 		ZeroMemory(&srvd, sizeof(srvd));
 		srvd.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-		srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DMS;
+		srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 		srvd.Texture2D.MipLevels = 1;
 		_device->CreateShaderResourceView(byTexture, &srvd, &_BYshaderresourceview);
 	}
@@ -425,14 +433,14 @@ void Renderer::Init() {
 		D3D11_RENDER_TARGET_VIEW_DESC rtvd;
 		ZeroMemory(&rtvd, sizeof(rtvd));
 		rtvd.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-		rtvd.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DMS;
+		rtvd.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
 		_device->CreateRenderTargetView(mbTexture, &rtvd, &_MBrenderertargetview);
 
 		//シェーダーリソースビューの作成
 		D3D11_SHADER_RESOURCE_VIEW_DESC srvd;
 		ZeroMemory(&srvd, sizeof(srvd));
 		srvd.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-		srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DMS;
+		srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 		srvd.Texture2D.MipLevels = 1;
 		_device->CreateShaderResourceView(mbTexture, &srvd, &_MBshaderresourceview);
 	}
@@ -461,14 +469,14 @@ void Renderer::Init() {
 		D3D11_RENDER_TARGET_VIEW_DESC rtvd;
 		ZeroMemory(&rtvd, sizeof(rtvd));
 		rtvd.Format = DXGI_FORMAT_R32_FLOAT;
-		rtvd.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DMS;
+		rtvd.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
 		_device->CreateRenderTargetView(depthTexture, &rtvd, &_Depthrenderertargetview);
 
 		//シェーダーリソースビューの作成
 		D3D11_SHADER_RESOURCE_VIEW_DESC srvd;
 		ZeroMemory(&srvd, sizeof(srvd));
 		srvd.Format = DXGI_FORMAT_R32_FLOAT;
-		srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DMS;
+		srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 		srvd.Texture2D.MipLevels = 1;
 		srvd.Texture2D.MostDetailedMip = 0;
 		_device->CreateShaderResourceView(depthTexture, &srvd, &_Depthshaderresourceview);
@@ -482,7 +490,7 @@ void Renderer::Init() {
 		//作成するミップマップの数
 		dtd.MipLevels = 1;
 		dtd.ArraySize = 1;
-		dtd.Format = DXGI_FORMAT_R8G8B8A8_UNORM;		//ピクセルフォーマット
+		dtd.Format = DXGI_FORMAT_R8G8_UNORM;		//ピクセルフォーマット
 		dtd.SampleDesc = swapChainDesc.SampleDesc;
 		dtd.Usage = D3D11_USAGE_DEFAULT;
 		//レンダリングターゲット用の設定
@@ -497,15 +505,15 @@ void Renderer::Init() {
 		//レンダーターゲットビュー
 		D3D11_RENDER_TARGET_VIEW_DESC rtvd;
 		ZeroMemory(&rtvd, sizeof(rtvd));
-		rtvd.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-		rtvd.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DMS;
+		rtvd.Format = DXGI_FORMAT_R8G8_UNORM;
+		rtvd.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
 		_device->CreateRenderTargetView(velocityTexture, &rtvd, &_Velrenderertargetview);
 
 		//シェーダーリソースビューの作成
 		D3D11_SHADER_RESOURCE_VIEW_DESC srvd;
 		ZeroMemory(&srvd, sizeof(srvd));
-		srvd.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-		srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DMS;
+		srvd.Format = DXGI_FORMAT_R8G8_UNORM;
+		srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 		srvd.Texture2D.MipLevels = 1;
 		srvd.Texture2D.MostDetailedMip = 0;
 		_device->CreateShaderResourceView(velocityTexture, &srvd, &_Velshaderresourceview);
@@ -539,14 +547,14 @@ void Renderer::Init() {
 		D3D11_RENDER_TARGET_VIEW_DESC rtvd;
 		ZeroMemory(&rtvd, sizeof(rtvd));
 		rtvd.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-		rtvd.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DMS;
+		rtvd.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
 		_device->CreateRenderTargetView(ppTexture, &rtvd, &_PErenderertargetview);
 
 		//シェーダーリソースビューの作成
 		D3D11_SHADER_RESOURCE_VIEW_DESC srvd;
 		ZeroMemory(&srvd, sizeof(srvd));
 		srvd.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-		srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DMS;
+		srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 		srvd.Texture2D.MipLevels = 1;
 		_device->CreateShaderResourceView(ppTexture, &srvd, &_PEshaderresourceview);
 	}
