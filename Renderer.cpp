@@ -361,6 +361,8 @@ void Renderer::Init() {
 		srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 		srvd.Texture2D.MipLevels = 1;
 		_device->CreateShaderResourceView(bxTexture, &srvd, &_BXshaderresourceview);
+
+		bxTexture->Release();
 	}
 	//ブラーYテクスチャの作成
 	{
@@ -402,6 +404,8 @@ void Renderer::Init() {
 		srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 		srvd.Texture2D.MipLevels = 1;
 		_device->CreateShaderResourceView(byTexture, &srvd, &_BYshaderresourceview);
+
+		byTexture->Release();
 	}
 	//モーションブラー後テクスチャの作成
 	{
@@ -443,6 +447,8 @@ void Renderer::Init() {
 		srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 		srvd.Texture2D.MipLevels = 1;
 		_device->CreateShaderResourceView(mbTexture, &srvd, &_MBshaderresourceview);
+
+		mbTexture->Release();
 	}
 	{
 		//深度
@@ -480,6 +486,8 @@ void Renderer::Init() {
 		srvd.Texture2D.MipLevels = 1;
 		srvd.Texture2D.MostDetailedMip = 0;
 		_device->CreateShaderResourceView(depthTexture, &srvd, &_Depthshaderresourceview);
+
+		depthTexture->Release();
 	}
 	{
 		//速度マップ
@@ -517,6 +525,8 @@ void Renderer::Init() {
 		srvd.Texture2D.MipLevels = 1;
 		srvd.Texture2D.MostDetailedMip = 0;
 		_device->CreateShaderResourceView(velocityTexture, &srvd, &_Velshaderresourceview);
+
+		velocityTexture->Release();
 	}
 	//レンダリングテクスチャの作成
 	{
@@ -557,13 +567,8 @@ void Renderer::Init() {
 		srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 		srvd.Texture2D.MipLevels = 1;
 		_device->CreateShaderResourceView(ppTexture, &srvd, &_PEshaderresourceview);
-	}
 
-	UINT qualityLevels = 0;
-	hr = _device->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, 4, &qualityLevels);
-	if (FAILED(hr) || qualityLevels == 0) {
-		// MSAAは使用できない
-		return;
+		ppTexture->Release();
 	}
 }
 
@@ -812,7 +817,7 @@ void Renderer::BeginPE() {
 		_PErenderertargetview, _Depthrenderertargetview, _Velrenderertargetview
 	};
 	_devicecontext->OMSetRenderTargets(3,
-		&(*mrt),	//レンダリングテクスチャ 
+		mrt,	//レンダリングテクスチャ 
 		_depthstencilview);		//Zバッファ
 
 	//レンダリングテクスチャクリア
