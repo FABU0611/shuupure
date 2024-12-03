@@ -27,8 +27,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 HWND g_Window;
 
-HWND GetWindow()
-{
+HWND GetWindow() {
 	return g_Window;
 }
 
@@ -101,7 +100,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 		else {
 			dwCurrentTime = timeGetTime();
 
-			if ((dwCurrentTime - dwFPSLastTime) >= 1000){	// 1ïbÇ≤Ç∆Ç…é¿çs
+			if ((dwCurrentTime - dwFPSLastTime) >= 1000) {	// 1ïbÇ≤Ç∆Ç…é¿çs
 #ifdef _DEBUG
 				g_CountFPS = Time::GetFrameRate();
 #endif
@@ -138,18 +137,15 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
 
 
-LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
-{
+LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 
-	switch(uMsg)
-	{
+	switch (uMsg) {
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		break;
 
 	case WM_KEYDOWN:
-		switch(wParam)
-		{
+		switch (wParam) {
 		case VK_ESCAPE:
 			DestroyWindow(hWnd);
 			break;
