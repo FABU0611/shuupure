@@ -21,5 +21,5 @@ void TutorialText::Update(){
 	_spos.y += Time::GetDeltaTime();
 	GetPosition().y = cos(_spos.y * 2) + _epos.y;
 
-	_text->SetFont((*_fontdata));
+	_text->SetFont(_fontdata);
 }

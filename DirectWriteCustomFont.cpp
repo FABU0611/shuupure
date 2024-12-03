@@ -12,42 +12,34 @@ WRL::ComPtr <CustomFontCollectionLoader> pFontCollectionLoader = nullptr;
 //=============================================================================
 //		カスタムファイルローダー
 //=============================================================================
-class CustomFontFileEnumerator : public IDWriteFontFileEnumerator
-{
+class CustomFontFileEnumerator : public IDWriteFontFileEnumerator {
 public:
 	CustomFontFileEnumerator(IDWriteFactory* factory, const std::vector<std::wstring>& fontFilePaths)
-		: refCount_(0), factory_(factory), fontFilePaths_(fontFilePaths), currentFileIndex_(-1)
-	{
+		: refCount_(0), factory_(factory), fontFilePaths_(fontFilePaths), currentFileIndex_(-1) {
 		factory_->AddRef();
 	}
 
-	~CustomFontFileEnumerator()
-	{
+	~CustomFontFileEnumerator() {
 		factory_->Release();
 	}
 
-	IFACEMETHODIMP QueryInterface(REFIID iid, void** ppvObject) override
-	{
-		if (iid == __uuidof(IUnknown) || iid == __uuidof(IDWriteFontCollectionLoader))
-		{
+	IFACEMETHODIMP QueryInterface(REFIID iid, void** ppvObject) override {
+		if (iid == __uuidof(IUnknown) || iid == __uuidof(IDWriteFontCollectionLoader)) {
 			*ppvObject = this;
 			AddRef();
 			return S_OK;
 		}
-		else
-		{
+		else {
 			*ppvObject = nullptr;
 			return E_NOINTERFACE;
 		}
 	}
 
-	IFACEMETHODIMP_(ULONG) AddRef() override
-	{
+	IFACEMETHODIMP_(ULONG) AddRef() override {
 		return InterlockedIncrement(&refCount_);
 	}
 
-	IFACEMETHODIMP_(ULONG) Release() override
-	{
+	IFACEMETHODIMP_(ULONG) Release() override {
 		ULONG newCount = InterlockedDecrement(&refCount_);
 		if (newCount == 0)
 			delete this;
@@ -66,8 +58,7 @@ public:
 		}
 	}
 
-	IFACEMETHODIMP GetCurrentFontFile(OUT IDWriteFontFile** fontFile) override
-	{
+	IFACEMETHODIMP GetCurrentFontFile(OUT IDWriteFontFile** fontFile) override {
 		// フォントファイルを読み込む
 		return factory_->CreateFontFileReference(fontFilePaths_[currentFileIndex_].c_str(), nullptr, fontFile);
 	}
@@ -88,35 +79,29 @@ private:
 //=============================================================================
 //		カスタムフォントコレクションローダー
 //=============================================================================
-class CustomFontCollectionLoader : public IDWriteFontCollectionLoader
-{
+class CustomFontCollectionLoader : public IDWriteFontCollectionLoader {
 public:
 	// コンストラクタ
 	CustomFontCollectionLoader() : refCount_(0) {}
 
 	// IUnknown メソッド
-	IFACEMETHODIMP QueryInterface(REFIID iid, void** ppvObject) override
-	{
-		if (iid == __uuidof(IUnknown) || iid == __uuidof(IDWriteFontCollectionLoader))
-		{
+	IFACEMETHODIMP QueryInterface(REFIID iid, void** ppvObject) override {
+		if (iid == __uuidof(IUnknown) || iid == __uuidof(IDWriteFontCollectionLoader)) {
 			*ppvObject = this;
 			AddRef();
 			return S_OK;
 		}
-		else
-		{
+		else {
 			*ppvObject = nullptr;
 			return E_NOINTERFACE;
 		}
 	}
 
-	IFACEMETHODIMP_(ULONG) AddRef() override
-	{
+	IFACEMETHODIMP_(ULONG) AddRef() override {
 		return InterlockedIncrement(&refCount_);
 	}
 
-	IFACEMETHODIMP_(ULONG) Release() override
-	{
+	IFACEMETHODIMP_(ULONG) Release() override {
 		ULONG newCount = InterlockedDecrement(&refCount_);
 		if (newCount == 0)
 			delete this;
@@ -130,8 +115,7 @@ public:
 		IDWriteFactory* factory,
 		void const* collectionKey,
 		UINT32 collectionKeySize,
-		OUT IDWriteFontFileEnumerator** fontFileEnumerator) override
-	{
+		OUT IDWriteFontFileEnumerator** fontFileEnumerator) override {
 		// 読み込むフォントファイルのパスを渡す
 		std::vector<std::wstring> fontFilePaths(std::begin(FontList::FontPath), std::end(FontList::FontPath));
 
@@ -149,8 +133,7 @@ private:
 };
 
 // 初期化処理
-HRESULT DirectWriteCustomFont::Init(IDXGISwapChain* swapChain)
-{
+HRESULT DirectWriteCustomFont::Init(IDXGISwapChain* swapChain) {
 	HRESULT result = S_OK;
 
 	// Direct2Dファクトリ情報の初期化
@@ -205,9 +188,10 @@ HRESULT DirectWriteCustomFont::Init(IDXGISwapChain* swapChain)
 	return result;
 }
 
+void DirectWriteCustomFont::Uninit() {}
+
 // 指定されたパスのフォントを読み込む
-HRESULT DirectWriteCustomFont::FontLoader()
-{
+HRESULT DirectWriteCustomFont::FontLoader() {
 	HRESULT result = S_OK;
 
 	// カスタムフォントコレクションの作成
@@ -228,17 +212,14 @@ HRESULT DirectWriteCustomFont::FontLoader()
 }
 
 // フォント名を取得する
-std::wstring DirectWriteCustomFont::GetFontName(int num)
-{
+std::wstring DirectWriteCustomFont::GetFontName(int num) {
 	// フォント名のリストが空だった場合
-	if (fontNamesList.empty())
-	{
+	if (fontNamesList.empty()) {
 		return L"";
 	}
 
 	// リストのサイズを超えていた場合
-	if (num >= static_cast<int>(fontNamesList.size()))
-	{
+	if (num >= static_cast<int>(fontNamesList.size())) {
 		return fontNamesList[0];
 	}
 
@@ -246,15 +227,13 @@ std::wstring DirectWriteCustomFont::GetFontName(int num)
 }
 
 // 読み込んだフォント名の数を取得する
-int DirectWriteCustomFont::GetFontNameNum()
-{
+int DirectWriteCustomFont::GetFontNameNum() {
 	return fontNamesList.size();
 }
 
 // フォント設定
 // 第1引数：フォントデータ構造体
-HRESULT DirectWriteCustomFont::SetFont(FontData set)
-{
+HRESULT DirectWriteCustomFont::SetFont(FontData set) {
 	HRESULT result = S_OK;
 
 	// 設定をコピー
@@ -315,8 +294,7 @@ HRESULT DirectWriteCustomFont::SetFont(FontData set)
 //=================================================================================================================================
 HRESULT DirectWriteCustomFont::SetFont(WCHAR const* fontname, DWRITE_FONT_WEIGHT fontWeight, DWRITE_FONT_STYLE fontStyle,
 	DWRITE_FONT_STRETCH fontStretch, FLOAT fontSize, WCHAR const* localeName,
-	DWRITE_TEXT_ALIGNMENT textAlignment, D2D1_COLOR_F Color, D2D1_COLOR_F shadowColor, D2D1_POINT_2F shadowOffset)
-{
+	DWRITE_TEXT_ALIGNMENT textAlignment, D2D1_COLOR_F Color, D2D1_COLOR_F shadowColor, D2D1_POINT_2F shadowOffset) {
 	HRESULT result = S_OK;
 
 	pDWriteFactory->CreateTextFormat(GetFontFileNameWithoutExtension(fontname), fontCollection.Get(), fontWeight, fontStyle, fontStretch, fontSize, localeName, &pTextFormat);
@@ -340,8 +318,7 @@ HRESULT DirectWriteCustomFont::SetFont(WCHAR const* fontname, DWRITE_FONT_WEIGHT
 // pos：描画ポジション
 // options：テキストの整形
 //====================================
-HRESULT DirectWriteCustomFont::DrawString(std::string str, DirectX::XMFLOAT2 pos, D2D1_DRAW_TEXT_OPTIONS options, bool shadow)
-{
+HRESULT DirectWriteCustomFont::DrawString(std::string str, DirectX::XMFLOAT2 pos, D2D1_DRAW_TEXT_OPTIONS options, bool shadow) {
 	HRESULT result = S_OK;
 
 	// 文字列の変換
@@ -355,7 +332,7 @@ HRESULT DirectWriteCustomFont::DrawString(std::string str, DirectX::XMFLOAT2 pos
 	if (pTextLayout.Get()) {
 		pTextLayout->Release();
 	}
-	
+
 
 	// テキストレイアウトを作成
 	result = pDWriteFactory->CreateTextLayout(wstr.c_str(), static_cast<UINT32>(wstr.length()), pTextFormat.Get(), TargetSize.width, TargetSize.height, pTextLayout.GetAddressOf());
@@ -370,8 +347,7 @@ HRESULT DirectWriteCustomFont::DrawString(std::string str, DirectX::XMFLOAT2 pos
 	pRenderTarget->BeginDraw();
 
 	// 影を描画する場合
-	if (shadow)
-	{
+	if (shadow) {
 		// 影の描画
 		pRenderTarget->DrawTextLayout(D2D1::Point2F(point.x - Setting.shadowOffset.x, point.y - Setting.shadowOffset.y),
 			pTextLayout.Get(),
@@ -380,7 +356,6 @@ HRESULT DirectWriteCustomFont::DrawString(std::string str, DirectX::XMFLOAT2 pos
 	}
 	else {
 		pRenderTarget->DrawTextLayout(point, pTextLayout.Get(), pBrush.Get(), options);
-
 	}
 
 	// 描画の終了
@@ -397,8 +372,7 @@ HRESULT DirectWriteCustomFont::DrawString(std::string str, DirectX::XMFLOAT2 pos
 // rect：領域指定
 // options：テキストの整形
 	//====================================
-HRESULT DirectWriteCustomFont::DrawString(std::string str, D2D1_RECT_F rect, D2D1_DRAW_TEXT_OPTIONS options, bool shadow)
-{
+HRESULT DirectWriteCustomFont::DrawString(std::string str, D2D1_RECT_F rect, D2D1_DRAW_TEXT_OPTIONS options, bool shadow) {
 	HRESULT result = S_OK;
 
 	// 文字列の変換
@@ -407,8 +381,7 @@ HRESULT DirectWriteCustomFont::DrawString(std::string str, D2D1_RECT_F rect, D2D
 	// 描画の開始
 	pRenderTarget->BeginDraw();
 
-	if (shadow)
-	{
+	if (shadow) {
 		// 影の描画
 		pRenderTarget->DrawText(wstr.c_str(),
 			wstr.size(),
@@ -429,8 +402,7 @@ HRESULT DirectWriteCustomFont::DrawString(std::string str, D2D1_RECT_F rect, D2D
 }
 
 // フォント名を取得
-HRESULT DirectWriteCustomFont::GetFontFamilyName(IDWriteFontCollection* customFontCollection, const WCHAR* locale)
-{
+HRESULT DirectWriteCustomFont::GetFontFamilyName(IDWriteFontCollection* customFontCollection, const WCHAR* locale) {
 	HRESULT result = S_OK;
 
 	// フォントファミリー名一覧をリセット
@@ -439,8 +411,7 @@ HRESULT DirectWriteCustomFont::GetFontFamilyName(IDWriteFontCollection* customFo
 	// フォントの数を取得
 	UINT32 familyCount = customFontCollection->GetFontFamilyCount();
 
-	for (UINT32 i = 0; i < familyCount; i++)
-	{
+	for (UINT32 i = 0; i < familyCount; i++) {
 		// フォントファミリーの取得
 		WRL::ComPtr <IDWriteFontFamily> fontFamily = nullptr;
 		result = customFontCollection->GetFontFamily(i, fontFamily.GetAddressOf());
@@ -458,8 +429,7 @@ HRESULT DirectWriteCustomFont::GetFontFamilyName(IDWriteFontCollection* customFo
 		if (FAILED(result)) { return result; }
 
 		// 指定されたロケールが見つからなかった場合は、デフォルトのロケールを使用
-		if (!exists)
-		{
+		if (!exists) {
 			result = familyNames->FindLocaleName(L"en-us", &index, &exists);
 			if (FAILED(result)) { return result; }
 		}
@@ -485,8 +455,7 @@ HRESULT DirectWriteCustomFont::GetFontFamilyName(IDWriteFontCollection* customFo
 }
 
 // 全てのフォント名を取得
-HRESULT DirectWriteCustomFont::GetAllFontFamilyName(IDWriteFontCollection* customFontCollection)
-{
+HRESULT DirectWriteCustomFont::GetAllFontFamilyName(IDWriteFontCollection* customFontCollection) {
 	HRESULT result = S_OK;
 
 	// フォントファミリー名一覧をリセット
@@ -495,8 +464,7 @@ HRESULT DirectWriteCustomFont::GetAllFontFamilyName(IDWriteFontCollection* custo
 	// フォントファミリーの数を取得
 	UINT32 familyCount = customFontCollection->GetFontFamilyCount();
 
-	for (UINT32 i = 0; i < familyCount; i++)
-	{
+	for (UINT32 i = 0; i < familyCount; i++) {
 		// フォントファミリーの取得
 		WRL::ComPtr <IDWriteFontFamily> fontFamily = nullptr;
 		result = customFontCollection->GetFontFamily(i, fontFamily.GetAddressOf());
@@ -511,8 +479,7 @@ HRESULT DirectWriteCustomFont::GetAllFontFamilyName(IDWriteFontCollection* custo
 		UINT32 nameCount = familyNames->GetCount();
 
 		// フォントファミリー名の数だけ繰り返す
-		for (UINT32 j = 0; j < nameCount; ++j)
-		{
+		for (UINT32 j = 0; j < nameCount; ++j) {
 			// フォントファミリー名の長さを取得
 			UINT32 length = 0;
 			result = familyNames->GetStringLength(j, &length);
@@ -536,8 +503,7 @@ HRESULT DirectWriteCustomFont::GetAllFontFamilyName(IDWriteFontCollection* custo
 
 
 // 拡張子を除くファイル名を返す
-WCHAR* DirectWriteCustomFont::GetFontFileNameWithoutExtension(const std::wstring& filePath)
-{
+WCHAR* DirectWriteCustomFont::GetFontFileNameWithoutExtension(const std::wstring& filePath) {
 	// 末尾から検索してファイル名と拡張子の位置を取得
 	size_t start = filePath.find_last_of(L"/\\") + 1;
 	size_t end = filePath.find_last_of(L'.');
@@ -556,8 +522,7 @@ WCHAR* DirectWriteCustomFont::GetFontFileNameWithoutExtension(const std::wstring
 }
 
 // stringをwstringへ変換する
-std::wstring DirectWriteCustomFont::StringToWString(std::string oString)
-{
+std::wstring DirectWriteCustomFont::StringToWString(std::string oString) {
 	// SJIS → wstring
 	int iBufferSize = MultiByteToWideChar(CP_ACP, 0, oString.c_str(), -1, (wchar_t*)NULL, 0);
 

@@ -11,7 +11,9 @@ class TextManager {
 
 public:
 	TextManager() {}
-	~TextManager() {}
+	~TextManager() {
+		Uninit();
+	}
 
 	void Uninit();
 	void Update();

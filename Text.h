@@ -8,7 +8,7 @@
 
 class Text : public GameObject {
 protected:
-	FontData*				_fontdata{};
+	FontData				_fontdata{};
 	DirectWriteCustomFont*	_text{};
 
 	std::string				_str{};
@@ -18,18 +18,18 @@ protected:
 
 
 	void SetColor(const D2D1::ColorF& color) {
-		if (!_text || !_fontdata) {
+		if (!_text) {
 			return;
 		}
-		_fontdata->Color = color;
-		_text->SetFont((*_fontdata));
+		_fontdata.Color = color;
+		_text->SetFont(_fontdata);
 	}
 	void SetSize(const float& size) {
-		if (!_text || !_fontdata) {
+		if (!_text) {
 			return;
 		}
-		_fontdata->fontSize = size;
-		_text->SetFont((*_fontdata));
+		_fontdata.fontSize = size;
+		_text->SetFont(_fontdata);
 	}
 
 public:
@@ -37,12 +37,7 @@ public:
 	Text(const float& size, const D2D1::ColorF& color)
 		:_size(size), _color(color) {}
 	virtual ~Text() {
-		if (_text) {
-			delete _text;
-		}
-		if (_fontdata) {
-			delete _fontdata;
-		}
+		Uninit();
 	}
 
 	void Init()override;
