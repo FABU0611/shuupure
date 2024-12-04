@@ -8,22 +8,25 @@
 #include "Scene.h"
 
 class GUIManager {
-	static std::vector<GUI*>	_guis;		//óvëfî‘çÜÇ™ó~ÇµÇ¢ÇÃÇ≈vector
+	std::vector<GUI*>	_guis;		//óvëfî‘çÜÇ™ó~ÇµÇ¢ÇÃÇ≈vector
 
 public:
 	GUIManager() {}
 	~GUIManager() {}
 
-	template <typename T, typename... Args>
-	static int AddGUI(Args&& ...args) {
-		//åªç›ÇÃÉVÅ[ÉìÇ…GUIÇí«â¡
-		Scene* scene = Manager::GetScene();
-		GUI* gui = scene->AddGameobject<T>(std::forward<Args>(args)...);
+	void Init();
+	void Uninit();
+	void Update();
+	void Draw();
 
-		//GUIManagerÇ…ìoò^
+	template <typename T, typename... Args>
+	int AddGUI(Args&& ...args) {
+		GUI* gui = new T(std::forward<Args>(args)...);
 		_guis.push_back(gui);
+		gui->Init();
+
 		return _guis.size() - 1;
 	}
-	static GUI* GetGUI(const int& index);
-	static void Clear();
+	GUI* GetGUI(const int& index);
+	void Clear();
 };

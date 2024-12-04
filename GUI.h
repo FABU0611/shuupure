@@ -16,8 +16,14 @@ protected:
 
 public:
 	GUI() {};
+	GUI(const XMFLOAT3& pos, const XMFLOAT3& size, const wchar_t* texname);
 	virtual ~GUI() {}
 
+	virtual void Init();
+	virtual void Uninit();
+	virtual void Update() override{}
+	virtual void Draw();
 
-	virtual bool IsHovered(const POINT pos) = 0;	//マウスが重なっているか
+	virtual bool IsHovered(const POINT pos);	//マウスが重なっているか
+	virtual bool OnClicked(const int& mousebutton) = 0;
 };

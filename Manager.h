@@ -11,6 +11,7 @@ class Rendpoly;
 class Gaussian;
 class MotionBlur;
 class LoadingText;
+class GUIManager;
 class TextManager;
 #ifdef _DEBUG
 class CheckDoF;
@@ -32,6 +33,8 @@ class Manager {
 
 	static MotionBlur* _motionblur;
 
+	static GUIManager* _guimanager;
+
 	static TextManager* _textmanager;
 #ifdef _DEBUG
 	static CheckDoF* _checkdof;
@@ -52,6 +55,8 @@ public:
 		_nextscene = _prvscene;
 		_prvscene = nullptr;
 	}
+
+	static GUIManager* GetGUIManager() { return _guimanager; }
 	
 	template <typename T>
 	static void SetScene() { 

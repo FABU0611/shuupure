@@ -25,6 +25,7 @@ Fade* Manager::_fade;
 Rendpoly* Manager::_final;
 Gaussian* Manager::_gaussian;
 MotionBlur* Manager::_motionblur;
+GUIManager* Manager::_guimanager;
 TextManager* Manager::_textmanager;
 
 #ifdef _DEBUG
@@ -38,6 +39,8 @@ void Manager::Init() {
 	Input::Init();
 	Renderer::Init();
 	Audio::InitMaster();
+
+	_guimanager = new GUIManager();
 
 	_textmanager = new TextManager();
 
@@ -72,8 +75,6 @@ void Manager::Uninit() {
 	_checkdof->Uninit();
 	delete _checkdof;
 #endif
-	_textmanager->Uninit();
-	delete _textmanager;
 
 	_motionblur->Uninit();
 	delete _motionblur;
@@ -94,6 +95,12 @@ void Manager::Uninit() {
 	_fade->Uninit();
 	delete _fade;
 
+	_textmanager->Uninit();
+	delete _textmanager;
+
+	_guimanager->Uninit();
+	delete _guimanager;
+
 	//使用していたリソース解放
 	ModelRenderer::UnloadAll();
 	Audio::UninitAll();
@@ -109,6 +116,7 @@ void Manager::Update() {
 
 	if (_fade->GetFadeMode() == FadeMode::None) {
 		_scene->Update();
+		_guimanager->Update();
 		_textmanager->Update();
 		_gaussian->Update();
 		_motionblur->Update();
@@ -137,6 +145,9 @@ void Manager::Draw() {
 	Renderer::Begin();
 	_final->Draw();
 
+	//GUI描画
+	_guimanager->Draw();
+
 	//テキストのみ描画
 	_textmanager->Draw();
 	
@@ -161,10 +172,10 @@ void Manager::Draw() {
 	//次のシーンがセットされていたら
 	if (_scene) {
 		_textmanager->Uninit();
+		_guimanager->Uninit();
 		_scene->Uninit();
 		delete _scene;
 		_scene = nullptr;
-		GUIManager::Clear();
 	}
 
 	//シーンで利用していたリソース解放
@@ -178,6 +189,10 @@ void Manager::Draw() {
 	//次のシーンをセット
 	_scene = _nextscene;
 	_scene->Init();
+
+#ifdef _DEBUG
+	_checkdof->Init();
+#endif
 
 	_nextscene = nullptr;
 }
