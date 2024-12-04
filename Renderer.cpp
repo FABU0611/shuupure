@@ -168,13 +168,9 @@ void Renderer::Init() {
 	blendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
 	blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 
-	// レンダーターゲット1（デプスマップ）の設定：ブレンド無効
+	// レンダーターゲット1（速度マップ）の設定：ブレンド無効
 	blendDesc.RenderTarget[1].BlendEnable = FALSE;
 	blendDesc.RenderTarget[1].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-
-	// レンダーターゲット2（速度マップ）の設定：ブレンド無効
-	blendDesc.RenderTarget[2].BlendEnable = FALSE;
-	blendDesc.RenderTarget[2].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 
 	_device->CreateBlendState(&blendDesc, &_blendstate);
 
