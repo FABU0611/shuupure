@@ -12,6 +12,8 @@ class CheckDoF {
 	ID3D11PixelShader*	_pixelshader{};	//ピクセルシェーダーオブジェクトポインタ
 	ID3D11InputLayout*	_vertexlayout{};	//頂点レイアウトオブジェクト
 
+	int					_screen{};
+
 public:
 	CheckDoF() {}
 	~CheckDoF() {}
