@@ -179,8 +179,10 @@
     <ClCompile Include="Gaussian.cpp" />
     <ClCompile Include="GaussianX.cpp" />
     <ClCompile Include="GaussianY.cpp" />
+    <ClCompile Include="GUI.cpp" />
     <ClCompile Include="GUIManager.cpp" />
     <ClCompile Include="G_Button.cpp" />
+    <ClCompile Include="G_CheckBox.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Manager.cpp" />
@@ -233,6 +235,7 @@
     <ClInclude Include="GUI.h" />
     <ClInclude Include="GUIManager.h" />
     <ClInclude Include="G_Button.h" />
+    <ClInclude Include="G_CheckBox.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="Manager.h" />
