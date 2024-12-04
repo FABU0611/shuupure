@@ -18,8 +18,6 @@ void main(in PS_IN In, out PS_OUT Out) {
 		Out.Out0 = In.Diffuse;
 	}
 	Out.Out0.a = In.Diffuse.a;
-	
-	Out.Out1 = In.Position.z;
-	
-	CreateVelTex(In, Out.Out2);
+		
+	CreateVelTex(In, Out.Out1);
 }

@@ -92,8 +92,6 @@ void main(in PS_IN In, out PS_OUT Out) {
 	float fresnel = 0.02 + (1.0 - 0.02) * pow(1.0 - vdotn, 500);
 	fresnel = min(fresnel, 1) * 0.075f;
 	Out.Out0.rgb = lerp(Out.Out0.rgb, float3(1.0f, 1.0f, 1.0f), fresnel);
-	
-	Out.Out1 = In.Position.z;
-	
-	CreateVelTex(In, Out.Out2);
+		
+	CreateVelTex(In, Out.Out1);
 }

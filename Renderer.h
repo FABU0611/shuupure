@@ -82,7 +82,7 @@ private:
 	static ID3D11RenderTargetView* _PErenderertargetview;
 	static ID3D11ShaderResourceView* _PEshaderresourceview;
 
-	static ID3D11RenderTargetView* _Depthrenderertargetview;
+	static ID3D11DepthStencilView* _Depthstencilview;
 	static ID3D11ShaderResourceView* _Depthshaderresourceview;
 	static ID3D11RenderTargetView* _BXrenderertargetview;
 	static ID3D11ShaderResourceView* _BXshaderresourceview;

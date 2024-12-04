@@ -69,8 +69,6 @@ void main(in PS_IN In, out PS_OUT Out) {
 	specular = pow(specular, 50);
 
 	Out.Out0.rgb += (specular * ofs);
-	
-	Out.Out1 = In.Position.z;
-	
-	CreateVelTex(In, Out.Out2);
+		
+	CreateVelTex(In, Out.Out1);
 }
