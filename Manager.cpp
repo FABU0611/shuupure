@@ -171,6 +171,9 @@ void Manager::Draw() {
 	}
 	//次のシーンがセットされていたら
 	if (_scene) {
+#ifdef _DEBUG
+		_checkdof->Uninit();
+#endif
 		_textmanager->Uninit();
 		_guimanager->Uninit();
 		_scene->Uninit();

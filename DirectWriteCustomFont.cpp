@@ -188,7 +188,9 @@ HRESULT DirectWriteCustomFont::Init(IDXGISwapChain* swapChain) {
 	return result;
 }
 
-void DirectWriteCustomFont::Uninit() {}
+void DirectWriteCustomFont::Uninit() {
+	pTextLayout.Reset();
+}
 
 // 指定されたパスのフォントを読み込む
 HRESULT DirectWriteCustomFont::FontLoader() {
