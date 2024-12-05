@@ -93,6 +93,8 @@ private:
 	static ID3D11RenderTargetView* _MBrenderertargetview;
 	static ID3D11ShaderResourceView* _MBshaderresourceview;
 
+	static ID3D11Texture2D* _RendertargetTEX;
+
 public:
 	static void Init();
 	static void Uninit();
@@ -133,6 +135,9 @@ public:
 	static ID3D11ShaderResourceView* GetDepthTexture() { return _Depthshaderresourceview; }
 	static ID3D11ShaderResourceView* GetVelocityTexture() { return _Velshaderresourceview; }
 	static ID3D11ShaderResourceView* GetMBTexture() { return _MBshaderresourceview; }
+
+	static ID3D11Texture2D* GetRendertargetTEX() { return _RendertargetTEX; }
+	static void TakeingPic();
 
 	//レンダリングターゲットをテクスチャに切り替える
 	static void BeginPE();

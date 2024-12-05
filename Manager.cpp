@@ -145,6 +145,10 @@ void Manager::Draw() {
 	Renderer::Begin();
 	_final->Draw();
 
+	if (Input::GetKeyTrigger('T')) {
+		Renderer::TakeingPic();
+	}
+
 	//GUI•`‰æ
 	_guimanager->Draw();
 

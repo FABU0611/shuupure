@@ -1,6 +1,8 @@
 #include "Main.h"
 #include "Renderer.h"
 #include <io.h>
+#include <string>
+#include <filesystem>
 
 
 D3D_FEATURE_LEVEL       Renderer::_featurelevel = D3D_FEATURE_LEVEL_11_0;
@@ -51,6 +53,7 @@ ID3D11ShaderResourceView* Renderer::_Velshaderresourceview = NULL;
 ID3D11RenderTargetView* Renderer::_MBrenderertargetview = NULL;
 ID3D11ShaderResourceView* Renderer::_MBshaderresourceview = NULL;
 
+ID3D11Texture2D* Renderer::_RendertargetTEX = NULL;
 
 
 void Renderer::Init() {
@@ -95,6 +98,9 @@ void Renderer::Init() {
 	ID3D11Texture2D* renderTarget{};
 	_swapchain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&renderTarget);
 	_device->CreateRenderTargetView(renderTarget, NULL, &_rendertargetview);
+
+	_RendertargetTEX = renderTarget;
+
 	renderTarget->Release();
 
 
@@ -597,6 +603,7 @@ void Renderer::Uninit() {
 	_PEshaderresourceview->Release();
 	_PErenderertargetview->Release();
 
+	_RendertargetTEX->Release();
 
 	_devicecontext->ClearState();
 	_rendertargetview->Release();
@@ -806,6 +813,54 @@ void Renderer::CreatePixelShader(ID3D11PixelShader** PixelShader, const char* Fi
 	_device->CreatePixelShader(buffer, fsize, NULL, PixelShader);
 
 	delete[] buffer;
+}
+
+void Renderer::TakeingPic() {
+	D3D11_TEXTURE2D_DESC desc;
+	_RendertargetTEX->GetDesc(&desc);
+	desc.Usage = D3D11_USAGE_STAGING;
+	desc.BindFlags = 0;
+	desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
+	desc.MiscFlags = 0;
+
+	ID3D11Texture2D* stagingTexture = nullptr;
+	HRESULT hr = _device->CreateTexture2D(&desc, nullptr, &stagingTexture);
+	if (FAILED(hr)) {
+		// エラーハンドリング
+		return;
+	}
+
+	//レンダリングターゲットからステージングバッファにコピー
+	_devicecontext->CopyResource(stagingTexture, _RendertargetTEX);
+
+	//ステージングバッファからデータを取得
+	D3D11_MAPPED_SUBRESOURCE mappedResource;
+	hr = _devicecontext->Map(stagingTexture, 0, D3D11_MAP_READ, 0, &mappedResource);
+	if (FAILED(hr)) {
+		stagingTexture->Release();
+		// エラーハンドリング
+		return;
+	}
+
+	//DirectXTexを使用してJPEGに保存
+	DirectX::Image image;
+	image.width = desc.Width;
+	image.height = desc.Height;
+	image.format = desc.Format;
+	image.rowPitch = mappedResource.RowPitch;
+	image.slicePitch = mappedResource.DepthPitch;
+	image.pixels = reinterpret_cast<uint8_t*>(mappedResource.pData);
+
+	std::wstring filename = L"photo\\output.jpg";
+	hr = DirectX::SaveToWICFile(image, DirectX::WIC_FLAGS_NONE, DirectX::GetWICCodec(DirectX::WIC_CODEC_JPEG), filename.c_str());
+	if (hr == HRESULT_FROM_WIN32(ERROR_PATH_NOT_FOUND)) {
+		std::filesystem::create_directory("photo");
+		DirectX::SaveToWICFile(image, DirectX::WIC_FLAGS_NONE, DirectX::GetWICCodec(DirectX::WIC_CODEC_JPEG), filename.c_str());
+		// エラーハンドリング
+	}
+
+	_devicecontext->Unmap(stagingTexture, 0);
+	stagingTexture->Release();
 }
 
 void Renderer::BeginPE() {
