@@ -3,6 +3,8 @@
 //24_11_21
 #include "T_Loading.h"
 
+const float LoadingText::STEP_TIME = 0.2f;
+
 void LoadingText::Init() {
 	Text::Init();
 
@@ -12,30 +14,15 @@ void LoadingText::Init() {
 
 void LoadingText::Update() {
 	_time += 0.1f;
-	if (_time >= 0.2f) {
-		_str = "L";
+
+	int idx = (int)_time / STEP_TIME;
+	if (idx < 8) {
+		_str = _strings[idx];
 	}
-	if (_time >= 0.4f) {
-		_str = "Lo";
-	}
-	if (_time >= 0.6f) {
-		_str = "Loa";
-	}
-	if (_time >= 0.8f) {
-		_str = "Load";
-	}
-	if (_time >= 1.0f) {
-		_str = "Loadi";
-	}
-	if (_time >= 1.2f) {
-		_str = "Loadin";
-	}
-	if (_time >= 1.4f) {
-		_str = "Loading";
-	}
-	if (_time >= 1.6f) {
+	else {
 		_time = 0.0f;
-		_str = "";
+		_str = _strings[0];
 	}
+
 	SetColor(D2D1::ColorF(0.0f, 0.0f, 0.0f, _fadealpha));
 }

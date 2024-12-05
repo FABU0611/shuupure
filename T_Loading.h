@@ -9,6 +9,12 @@ class LoadingText : public Text {
 	float					_time{};
 	float					_fadealpha{};
 
+	const std::string		_strings[8] = {
+		"L", "Lo", "Loa", "Load", "Loadi", "Loadin", "Loading", ""
+	};
+
+	static const float		STEP_TIME;
+
 public:
 	LoadingText() {}
 	LoadingText(const float& size, const D2D1::ColorF& color)
