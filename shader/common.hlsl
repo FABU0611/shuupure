@@ -1,5 +1,6 @@
 
 
+static float PI = 3.14159265359f;
 
 cbuffer WorldBuffer : register(b0) {
 	matrix World;
@@ -109,7 +110,7 @@ void HalfVector(in float3 eyev, in float4 lv, out float3 halfv) {
 
 //カメラからのベクトル
 void EyeVector(in PS_IN In, out float3 eyevec) {
-	eyevec = CameraPosition.xyz - In.WorldPosition.xyz;
+	eyevec = In.WorldPosition.xyz - CameraPosition.xyz;
 	eyevec = normalize(eyevec);
 }
 

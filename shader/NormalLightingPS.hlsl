@@ -16,7 +16,7 @@ void main(in PS_IN In, out PS_OUT Out) {
 	float4 normal = normalize(In.Normal);
 	
 	//光源計算
-	float light = 0.5f - 0.5f * dot(normal.xyz, lv.xyz);
+	float light = 0.5f - 0.5f * dot(lv.xyz, normal.xyz);
 	
 	//テクスチャのピクセルの処理
 	Out.Out0 = g_Texture.Sample(g_SamplerState, In.TexCoord);
@@ -31,12 +31,12 @@ void main(in PS_IN In, out PS_OUT Out) {
 	EyeVector(In, eyev);
 	
 	//ハーフベクトルを計算
-	float3 halfv = -lv.xyz + eyev;
+	float3 halfv = lv.xyz + eyev;
 	//正規化
 	halfv = normalize(halfv);
 	
 	//スペキュラ
-	float specular = dot(normal.xyz, halfv);
+	float specular = -dot(halfv, normal.xyz);
 	specular = saturate(specular);
 	specular = pow(specular, 50);
 

@@ -42,7 +42,7 @@ void main(in PS_IN In, out PS_OUT Out) {
 	normal = normalize(normal);
 	
 	//光源計算
-	float light = 0.5f - 0.5f * dot(normal.xyz, lv.xyz);
+	float light = 0.5f - 0.5f * dot(lv.xyz, normal.xyz);
 	//減衰率を乗算
 	light *= ofs;
 	
@@ -59,12 +59,12 @@ void main(in PS_IN In, out PS_OUT Out) {
 	EyeVector(In, eyev);
 	
 	//ハーフベクトルを計算
-	float3 halfv = -lv.xyz + eyev;
+	float3 halfv = lv.xyz + eyev;
 	//正規化
 	halfv = normalize(halfv);
 	
 	//スペキュラ
-	float specular = dot(normal.xyz, halfv);
+	float specular = -dot(halfv, normal.xyz);
 	specular = saturate(specular);
 	specular = pow(specular, 50);
 
