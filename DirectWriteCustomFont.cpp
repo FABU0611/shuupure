@@ -189,7 +189,16 @@ HRESULT DirectWriteCustomFont::Init(IDXGISwapChain* swapChain) {
 }
 
 void DirectWriteCustomFont::Uninit() {
+	pDWriteFactory->UnregisterFontCollectionLoader(pFontCollectionLoader.Get());
+	pFontCollectionLoader.Reset();
+	pRenderTarget.Reset();
+	pD2DFactory.Reset();
+	pBrush.Reset();
+	pShadowBrush.Reset();
+	pDWriteFactory.Reset();
+	pTextFormat.Reset();
 	pTextLayout.Reset();
+	pBackBuffer.Reset();
 }
 
 // 指定されたパスのフォントを読み込む
