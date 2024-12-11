@@ -65,3 +65,17 @@ public:
 	void PlayAudioSml();
 	void PlayAudioJump();
 };
+
+/*
+*セーブする際、シリアライズをはさむことでマルチプラットフォームに対応
+Playerとか
+↓
+シリアライズ	
+↓
+ファイル
+
+・データフォーマット
+　・バイナリ
+　・XML			テキスト
+　・Json		テキスト
+*/
