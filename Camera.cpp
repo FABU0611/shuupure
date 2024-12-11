@@ -10,7 +10,7 @@
 #include "Scene.h"
 #include "Time.h"
 
-void Camera::Init(){
+void Camera::Init() {
 	SetPosition({ 0.0f, 25.0f, 30.0f });
 	_target = { 0.0f, 0.0f, 0.0f };
 
@@ -25,8 +25,7 @@ void Camera::Init(){
 	_cameraspeed = 0.07f;
 }
 
-void Camera::Uninit(){
-}
+void Camera::Uninit() {}
 
 void Camera::Update() {
 	//仮のターゲットを作って線形補間で滑らかにカメラ移動ができる
@@ -40,19 +39,20 @@ void Camera::Update() {
 	player = scene->GetGameobject<Player>();
 
 
-	// 現在のターゲット位置を取得
-	XMVECTOR currentTargetPosition = XMLoadFloat3(&_target);
+	if (player) {
+		//現在のターゲット位置を取得
+		XMVECTOR currentTargetPosition = XMLoadFloat3(&_target);
 
-	// プレイヤーの現在の位置をターゲットに設定
-	XMVECTOR playerPosition = XMLoadFloat3(&player->GetPosition());
-	//コピーを作る
-	XMVECTOR desiredTargetPosition = playerPosition;
+		//プレイヤーの現在の位置をターゲットに設定
+		XMVECTOR playerPosition = XMLoadFloat3(&player->GetPosition());
+		//コピーを作る
+		XMVECTOR desiredTargetPosition = playerPosition;
+		//線形補間を使ってターゲット位置を更新
+		XMVECTOR interpolatedTargetPosition = XMVectorLerp(currentTargetPosition, desiredTargetPosition, 15.0f * dt);
 
-	// 線形補間を使ってターゲット位置を更新
-	XMVECTOR interpolatedTargetPosition = XMVectorLerp(currentTargetPosition, desiredTargetPosition, 15.0f * dt);
-
-	// ターゲット位置を設定
-	XMStoreFloat3(&_target, interpolatedTargetPosition);
+		//ターゲット位置を設定
+		XMStoreFloat3(&_target, interpolatedTargetPosition);
+	}
 
 
 	//カメラ回転
@@ -61,7 +61,7 @@ void Camera::Update() {
 		GetRotation().x -= (XM_PIDIV4 * 0.05f);
 	}
 	//下
-	if (Input::GetKeyPress('K')) {
+	else if (Input::GetKeyPress('M')) {
 		GetRotation().x += (XM_PIDIV4 * 0.05f);
 	}
 	if (Input::GetRightStickX(0) < -STICK_DEADZONE ||
@@ -73,31 +73,38 @@ void Camera::Update() {
 		GetRotation().y += (XM_PIDIV2 * 0.05f);
 	}
 	//右
-	if (Input::GetKeyPress('J')) {
+	else if (Input::GetKeyPress('J')) {
 		GetRotation().y -= (XM_PIDIV2 * 0.05f);
 	}
 	if (Input::GetRightStickY(0) < -STICK_DEADZONE ||
 		Input::GetRightStickY(0) > STICK_DEADZONE) {
 		GetRotation().x -= Input::GetRightStickY(0) * _cameraspeed;
 	}
+	if (Input::GetKeyPress(VK_SPACE)) {
+		_target.y += 1.0f * dt;
+	}
+	else if (Input::GetKeyPress(VK_SHIFT)) {
+		_target.y -= 1.0f * dt;
+	}
 
 
-	if (GetRotation().x < -XM_PIDIV2){
+	if (GetRotation().x < -XM_PIDIV2) {
 		GetRotation().x = -XM_PIDIV2;
 	}
-	if (GetRotation().x > XM_PIDIV2){
+	if (GetRotation().x > XM_PIDIV2) {
 		GetRotation().x = XM_PIDIV2;
 	}
-	if (GetRotation().y > XM_2PI){
+	if (GetRotation().y > XM_2PI) {
 		GetRotation().y -= XM_2PI;
 	}
-	if (GetRotation().y < -XM_2PI){
+	if (GetRotation().y < -XM_2PI) {
 		GetRotation().y += XM_2PI;
 	}
 
+	XMFLOAT3 rot = GetRotation();
 
 	// 回転行列の計算
-	XMMATRIX rotationMatrix = XMMatrixRotationRollPitchYaw(GetRotation().x, GetRotation().y, 0.0f);
+	XMMATRIX rotationMatrix = XMMatrixRotationRollPitchYaw(rot.x, rot.y, 0.0f);
 
 	// 基本のカメラ位置
 	XMVECTOR defaultPosition = XMVectorSet(0.0f, 0.0f, -_length, 0.0f);
@@ -118,7 +125,7 @@ void Camera::Update() {
 	}
 }
 
-void Camera::Draw(){
+void Camera::Draw() {
 	//ビューマトリクス設定
 	XMFLOAT3 up{ 0.0f, 1.0f, 0.0f };
 	XMMATRIX viewmatrix = XMMatrixLookAtLH(XMLoadFloat3(&GetPosition()), XMLoadFloat3(&_target), XMLoadFloat3(&up));
