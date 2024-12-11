@@ -13,6 +13,13 @@ void Water::Init(){
 	Renderer::CreatePixelShader(&_pixelshader,
 		"shader\\WaterSurfacePS.cso");
 
+	//テクスチャ読み込み
+	TexMetadata metadata;
+	ScratchImage image;
+	LoadFromWICFile(L"asset\\model\\sky02.jpg", WIC_FLAGS_NONE, &metadata, image);
+	CreateShaderResourceView(Renderer::GetDevice(), image.GetImages(), image.GetImageCount(), metadata, &_envtexture);
+	assert(_envtexture);
+
 	SetRotation({ 90.0f, 0.0f, 0.0f });
 	SetPosition({ 15.0f, -0.05f, 0.0 });
 
@@ -42,6 +49,8 @@ void Water::Draw(){
 	//シェーダ設定
 	Renderer::GetDeviceContext()->VSSetShader(_vertexshader, NULL, 0);
 	Renderer::GetDeviceContext()->PSSetShader(_pixelshader, NULL, 0);
+
+	Renderer::GetDeviceContext()->PSSetShaderResources(2, 1, &_envtexture);
 
 	//Zバッファ無効
 	Renderer::SetDepthEnable(false);	//パーティクルをZソートするのは負荷が高い

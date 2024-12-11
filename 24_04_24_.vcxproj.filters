@@ -162,6 +162,12 @@
     <ClCompile Include="GUI.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Wave.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshField.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Main.h">
@@ -344,6 +350,12 @@
     <ClInclude Include="G_CheckBox.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="Wave.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshField.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shader\common.hlsl">
@@ -390,6 +402,9 @@
     </FxCompile>
     <FxCompile Include="shader\MotionBlurPS.hlsl">
       <Filter>シェーダー\PS</Filter>
+    </FxCompile>
+    <FxCompile Include="shader\VertexLightingVS.hlsl">
+      <Filter>シェーダー\VS</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
