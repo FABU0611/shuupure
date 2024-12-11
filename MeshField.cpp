@@ -2,8 +2,8 @@
 //20106_田中　蓮
 //24_09_17
 #include "MeshField.h"
-#include "Renderer.h"
 #include "Manager.h"
+#include "ShaderManager.h"
 #include "Scene.h"
 #include "Camera.h"
 
@@ -144,11 +144,11 @@ void MeshField::Init() {
 	assert(_texture);
 
 
-	Renderer::CreateVertexShader(&_vertexShader, &_vertexLayout,
-		"shader\\UnlitTextureVS.cso");
+	//Renderer::CreateVertexShader(&_vertexShader, &_vertexLayout,
+	//	"shader\\UnlitTextureVS.cso");
 
-	Renderer::CreatePixelShader(&_pixelShader,
-		"shader\\UnlitTexturePS.cso");
+	//Renderer::CreatePixelShader(&_pixelShader,
+	//	"shader\\UnlitTexturePS.cso");
 
 	XMFLOAT3 pos = _vertex[28][18].Position;
 	pos.y = 5.0f;
@@ -159,21 +159,18 @@ void MeshField::Init() {
 void MeshField::Uninit() {
 	_vertexbuffer->Release();
 	_texture->Release();
-
-	_vertexShader->Release();
-	_pixelShader->Release();
-	_vertexLayout->Release();
 }
 
 void MeshField::Update() {}
 
 void MeshField::Draw() {
+	_shader = Shader::GetShader(ShaderName::dirlit);
 	//入力レイアウト設定
-	Renderer::GetDeviceContext()->IASetInputLayout(_vertexLayout);
+	Renderer::GetDeviceContext()->IASetInputLayout(_shader->vertexLayout);
 
 	//シェーダ設定
-	Renderer::GetDeviceContext()->VSSetShader(_vertexShader, NULL, 0);
-	Renderer::GetDeviceContext()->PSSetShader(_pixelShader, NULL, 0);
+	Renderer::GetDeviceContext()->VSSetShader(_shader->vertexShader, NULL, 0);
+	Renderer::GetDeviceContext()->PSSetShader(_shader->pixelShader, NULL, 0);
 
 
 	//ワールドマトリクス設定

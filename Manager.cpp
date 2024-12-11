@@ -14,6 +14,7 @@
 #include "MotionBlur.h"
 #include "Rendpoly.h"
 
+#include "ShaderManager.h"
 #include "GUIManager.h"
 #include "TextManager.h"
 
@@ -39,6 +40,7 @@ void Manager::Init() {
 	Input::Init();
 	Renderer::Init();
 	Audio::InitMaster();
+	Shader::LoadShader();
 
 	_guimanager = new GUIManager();
 
@@ -102,6 +104,7 @@ void Manager::Uninit() {
 	delete _guimanager;
 
 	//使用していたリソース解放
+	Shader::UninitAll();
 	ModelRenderer::UnloadAll();
 	Audio::UninitAll();
 	Sprite::UninitAll();

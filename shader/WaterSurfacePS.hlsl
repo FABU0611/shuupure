@@ -35,11 +35,7 @@ void main(in PS_IN In, out PS_OUT Out) {
 	float4 normal1 = float4(localnormal1.r, localnormal1.g, sqrt(saturate(1.0f - dot(localnormal1.r, localnormal1.g))), 0.0f);
 	float4 normal2 = float4(localnormal2.r, localnormal2.g, sqrt(saturate(1.0f - dot(localnormal2.r, localnormal2.g))), 0.0f);
 	float4 normal3 = float4(localnormal3.r, localnormal3.g, sqrt(saturate(1.0f - dot(localnormal3.r, localnormal3.g))), 0.0f);
-	
-	//normal1 = (normal1 * 2.0f) - 1.0f; //-1Å`1Ç…Ç∑ÇÈ
-	//normal2 = (normal2 * 2.0f) - 1.0f; //-1Å`1Ç…Ç∑ÇÈ
-	//normal3 = (normal3 * 2.0f) - 1.0f; //-1Å`1Ç…Ç∑ÇÈ
-	
+		
 	normal2 += normal1;
 	normal2 += normal3;
 	normal2 = normalize(normal2);

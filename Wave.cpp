@@ -3,8 +3,9 @@
 //24_11_11
 #include "Wave.h"
 #include "Time.h"
+#include "ShaderManager.h"
 
-const float Wave::WAVE_AMPLITUDE = 0.5f;
+const float Wave::WAVE_AMPLITUDE = 100.0f;
 const float Wave::WAVE_LENGTH = 70.0f;
 const float Wave::WAVE_CYCLE = 2.0f;
 
@@ -108,12 +109,6 @@ void Wave::Init() {
 	LoadFromWICFile(L"asset\\model\\sky02.jpg", WIC_FLAGS_NONE, &metadata, image);
 	CreateShaderResourceView(Renderer::GetDevice(), image.GetImages(), image.GetImageCount(), metadata, &_envtexture);
 	assert(_envtexture);
-
-	Renderer::CreateVertexShader(&_vertexShader, &_vertexLayout,
-		"shader\\WaterSurfaceVS.cso");
-
-	Renderer::CreatePixelShader(&_pixelShader,
-		"shader\\WaterSurfacePS.cso");
 }
 
 void Wave::Uninit() {
@@ -121,10 +116,6 @@ void Wave::Uninit() {
 	_texture->Release();
 	_normaltexture->Release();
 	_envtexture->Release();
-
-	_vertexShader->Release();
-	_pixelShader->Release();
-	_vertexLayout->Release();
 }
 
 void Wave::Update() {
@@ -138,7 +129,7 @@ void Wave::Update() {
 			dz = _vertex[z][x].Position.z - (_vertex[0][0].Position.z + 2.5f);
 			length = sqrtf(dx * dx + dz * dz);
 
-			_vertex[z][x].Position.y = WAVE_AMPLITUDE /*/ length*/ * sinf(XM_2PI * (length / WAVE_LENGTH) - (_time / WAVE_CYCLE));
+			_vertex[z][x].Position.y = WAVE_AMPLITUDE / length * sinf(XM_2PI * (length / WAVE_LENGTH) - (_time / WAVE_CYCLE));
 		}
 	}
 	for (int x = 1; x < VERTEX_NUM - 1; x++) {
@@ -197,12 +188,13 @@ void Wave::Update() {
 }
 
 void Wave::Draw() {
+	_shader = Shader::GetShader(ShaderName::water);
 	//入力レイアウト設定
-	Renderer::GetDeviceContext()->IASetInputLayout(_vertexLayout);
+	Renderer::GetDeviceContext()->IASetInputLayout(_shader->vertexLayout);
 
 	//シェーダ設定
-	Renderer::GetDeviceContext()->VSSetShader(_vertexShader, NULL, 0);
-	Renderer::GetDeviceContext()->PSSetShader(_pixelShader, NULL, 0);
+	Renderer::GetDeviceContext()->VSSetShader(_shader->vertexShader, NULL, 0);
+	Renderer::GetDeviceContext()->PSSetShader(_shader->pixelShader, NULL, 0);
 
 
 	//ワールドマトリクス設定
