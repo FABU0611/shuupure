@@ -39,8 +39,8 @@ void Title::Init(){
 	//AddGameobject<Polygon2D>(BackGround, XMFLOAT3((SCREEN_WIDTH * 0.5f), (SCREEN_HEIGHT * 0.5f), 0.0f), XMFLOAT3(SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f), L"asset\\texture\\title_back.png");
 
 	TextManager* tm = Manager::GetTextManager();
-	tm->AddText<TitlePush>(60.0f, D2D1::ColorF::Yellow);
-	tm->AddText<TitleText>(120.0f, D2D1::ColorF::GreenYellow);
+	tm->AddText<TitlePush>(60.0f, D2D1::ColorF::Yellow, TextAnchor::Center);
+	tm->AddText<TitleText>(120.0f, D2D1::ColorF::GreenYellow, TextAnchor::Center);
 }
 void Title::Uninit() {
 	delete _light;

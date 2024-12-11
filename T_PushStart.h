@@ -14,8 +14,8 @@ class TitlePush : public Text {
 
 public:
 	TitlePush() {}
-	TitlePush(const float& size, const D2D1::ColorF& color)
-		:Text(size, color) {}
+	TitlePush(const float& size, const D2D1::ColorF& color, const TextAnchor& anchor)
+		:Text(size, color, anchor) {}
 	~TitlePush() {}
 
 	void Init()override;

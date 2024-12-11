@@ -15,7 +15,7 @@ void LoadingText::Init() {
 void LoadingText::Update() {
 	_time += 0.1f;
 
-	int idx = (int)_time / STEP_TIME;
+	int idx = (int)(_time / STEP_TIME);
 	if (idx < 8) {
 		_str = _strings[idx];
 	}

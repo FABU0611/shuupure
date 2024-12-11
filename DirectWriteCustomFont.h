@@ -27,6 +27,19 @@ using namespace Microsoft;
 
 class CustomFontCollectionLoader;
 
+//描画基準位置
+enum class TextAnchor {
+	TopLeft,       //左上
+	TopCenter,     //上中央
+	TopRight,      //右上
+	CenterLeft,    //中央左
+	Center,        //中央
+	CenterRight,   //中央右
+	BottomLeft,    //左下
+	BottomCenter,  //下中央
+	BottomRight    //右下
+};
+
 //=============================================================================
 //		フォントの保存場所
 //=============================================================================
@@ -50,6 +63,7 @@ struct FontData {
 	FLOAT fontSize;								//フォントサイズ
 	WCHAR const* localeName;					//ロケール名
 	DWRITE_TEXT_ALIGNMENT textAlignment;		//テキストの配置
+	DWRITE_PARAGRAPH_ALIGNMENT paragraphAlignment;	//テキストの垂直配置
 	D2D1_COLOR_F Color;							//フォントの色
 
 	D2D1_COLOR_F shadowColor;					//影の色
@@ -65,6 +79,7 @@ struct FontData {
 		fontSize = 20;
 		localeName = L"ja-jp";
 		textAlignment = DWRITE_TEXT_ALIGNMENT::DWRITE_TEXT_ALIGNMENT_LEADING;
+		paragraphAlignment = DWRITE_PARAGRAPH_ALIGNMENT_NEAR;
 		Color = D2D1::ColorF(D2D1::ColorF::White);
 
 		shadowColor = D2D1::ColorF(D2D1::ColorF::Black);
@@ -152,6 +167,12 @@ public:
 	//pos：描画ポジション
 	//options：テキストの整形
 	HRESULT DrawString(std::string str, DirectX::XMFLOAT2 pos, D2D1_DRAW_TEXT_OPTIONS options, bool shadow = false);
+
+	//文字描画
+	//string：文字列
+	//pos：描画ポジション
+	//options：テキストの整形
+	HRESULT DrawString(std::string str, DirectX::XMFLOAT2 pos, D2D1_DRAW_TEXT_OPTIONS options, const TextAnchor& anchor, bool shadow = false);
 
 	//文字描画
 	//string：文字列

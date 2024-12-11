@@ -16,6 +16,8 @@ protected:
 	float					_size = 30.0f;
 	D2D1::ColorF			_color = D2D1::ColorF::Black;
 
+	TextAnchor				_anchor;
+
 
 	void SetColor(const D2D1::ColorF& color) {
 		if (!_text) {
@@ -34,8 +36,10 @@ protected:
 
 public:
 	Text() {}
+	Text(const float& size, const D2D1::ColorF& color, const TextAnchor& anchor)
+		:_size(size), _color(color), _anchor(anchor) {}
 	Text(const float& size, const D2D1::ColorF& color)
-		:_size(size), _color(color) {}
+		:_size(size), _color(color), _anchor(TextAnchor::TopLeft) {}
 	virtual ~Text() {
 		Uninit();
 	}

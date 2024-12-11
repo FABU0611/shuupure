@@ -4,7 +4,7 @@
 #pragma once
 
 #include "DirectWriteCustomFont.h"
-#include "main.h"
+#include "Main.h"
 
 // フォントコレクションローダー
 WRL::ComPtr <CustomFontCollectionLoader> pFontCollectionLoader = nullptr;
@@ -13,6 +13,17 @@ WRL::ComPtr <CustomFontCollectionLoader> pFontCollectionLoader = nullptr;
 //		カスタムファイルローダー
 //=============================================================================
 class CustomFontFileEnumerator : public IDWriteFontFileEnumerator {
+	ULONG refCount_;
+
+	// DirectWriteファクトリ
+	IDWriteFactory* factory_;
+
+	// フォントファイルのパス
+	std::vector<std::wstring> fontFilePaths_;
+
+	// 現在のファイルインデックス
+	int currentFileIndex_;
+
 public:
 	CustomFontFileEnumerator(IDWriteFactory* factory, const std::vector<std::wstring>& fontFilePaths)
 		: refCount_(0), factory_(factory), fontFilePaths_(fontFilePaths), currentFileIndex_(-1) {
@@ -62,24 +73,14 @@ public:
 		// フォントファイルを読み込む
 		return factory_->CreateFontFileReference(fontFilePaths_[currentFileIndex_].c_str(), nullptr, fontFile);
 	}
-
-private:
-	ULONG refCount_;
-
-	// DirectWriteファクトリ
-	IDWriteFactory* factory_;
-
-	// フォントファイルのパス
-	std::vector<std::wstring> fontFilePaths_;
-
-	// 現在のファイルインデックス
-	int currentFileIndex_;
 };
 
 //=============================================================================
 //		カスタムフォントコレクションローダー
 //=============================================================================
 class CustomFontCollectionLoader : public IDWriteFontCollectionLoader {
+	ULONG refCount_;
+
 public:
 	// コンストラクタ
 	CustomFontCollectionLoader() : refCount_(0) {}
@@ -127,9 +128,6 @@ public:
 
 		return S_OK;
 	}
-
-private:
-	ULONG refCount_;
 };
 
 // 初期化処理
@@ -278,6 +276,10 @@ HRESULT DirectWriteCustomFont::SetFont(FontData set) {
 	result = pTextFormat->SetTextAlignment(Setting.textAlignment);
 	if (FAILED(result)) { return result; }
 
+	//垂直配置
+	result = pTextFormat->SetParagraphAlignment(Setting.paragraphAlignment);
+	if (FAILED(result)) { return result; }
+
 	//関数CreateSolidColorBrush()
 	//第1引数：フォント色（D2D1::ColorF(D2D1::ColorF::Black)：黒, D2D1::ColorF(D2D1::ColorF(0.0f, 0.2f, 0.9f, 1.0f))：RGBA指定）
 	result = pRenderTarget->CreateSolidColorBrush(Setting.Color, pBrush.GetAddressOf());
@@ -374,6 +376,88 @@ HRESULT DirectWriteCustomFont::DrawString(std::string str, DirectX::XMFLOAT2 pos
 	if (FAILED(result)) { return result; }
 
 	return S_OK;
+}
+
+HRESULT DirectWriteCustomFont::DrawString(std::string str, DirectX::XMFLOAT2 pos, D2D1_DRAW_TEXT_OPTIONS options, const TextAnchor& anchor, bool shadow) {
+	HRESULT result = S_OK;
+
+	// 文字列をワイド文字列に変換
+	std::wstring wstr = StringToWString(str.c_str());
+
+	// ターゲットサイズの取得
+	D2D1_SIZE_F targetSize = pRenderTarget->GetSize();
+
+	// 既存のTextLayoutを解放
+	if (pTextLayout.Get()) {
+		pTextLayout->Release();
+	}
+
+	// テキストレイアウトを作成
+	result = pDWriteFactory->CreateTextLayout(wstr.c_str(), static_cast<UINT32>(wstr.length()),
+		pTextFormat.Get(), targetSize.width, targetSize.height,
+		pTextLayout.GetAddressOf());
+	if (FAILED(result)) { return result; }
+
+	// テキストのメトリクスを取得
+	DWRITE_TEXT_METRICS textMetrics;
+	result = pTextLayout->GetMetrics(&textMetrics);
+	if (FAILED(result)) { return result; }
+
+	// 基準位置に基づいて描画位置を調整
+	D2D1_POINT_2F adjustedPos;
+	adjustedPos.x = pos.x;
+	adjustedPos.y = pos.y;
+
+	switch (anchor) {
+	case TextAnchor::TopLeft:
+		// そのまま
+		break;
+	case TextAnchor::TopCenter:
+		adjustedPos.x -= textMetrics.width / 2;
+		break;
+	case TextAnchor::TopRight:
+		adjustedPos.x -= textMetrics.width;
+		break;
+	case TextAnchor::CenterLeft:
+		adjustedPos.y -= textMetrics.height / 2;
+		break;
+	case TextAnchor::Center:
+		adjustedPos.x -= textMetrics.width / 2;
+		adjustedPos.y -= textMetrics.height / 2;
+		break;
+	case TextAnchor::CenterRight:
+		adjustedPos.x -= textMetrics.width;
+		adjustedPos.y -= textMetrics.height / 2;
+		break;
+	case TextAnchor::BottomLeft:
+		adjustedPos.y -= textMetrics.height;
+		break;
+	case TextAnchor::BottomCenter:
+		adjustedPos.x -= textMetrics.width / 2;
+		//adjustedPos.y -= textMetrics.height;
+		break;
+	case TextAnchor::BottomRight:
+		adjustedPos.x -= textMetrics.width;
+		adjustedPos.y -= textMetrics.height;
+		break;
+	}
+
+	// 描画の開始
+	pRenderTarget->BeginDraw();
+
+	if (shadow) {
+		// 影を描画
+		pRenderTarget->DrawTextLayout(D2D1::Point2F(adjustedPos.x - Setting.shadowOffset.x, adjustedPos.y - Setting.shadowOffset.y),
+			pTextLayout.Get(), pShadowBrush.Get(), options);
+	}
+
+	// 本体の描画
+	pRenderTarget->DrawTextLayout(adjustedPos, pTextLayout.Get(), pBrush.Get(), options);
+
+	// 描画の終了
+	result = pRenderTarget->EndDraw();
+
+	return result;
 }
 
 

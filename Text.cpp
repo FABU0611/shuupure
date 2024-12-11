@@ -34,5 +34,5 @@ void Text::Draw() {
 		return;
 	}
 	XMFLOAT2 pos = { GetPosition().x, GetPosition().y };
-	_text->DrawString(_str, pos, D2D1_DRAW_TEXT_OPTIONS_NONE);
+	_text->DrawString(_str, pos, D2D1_DRAW_TEXT_OPTIONS_NONE, _anchor);
 }

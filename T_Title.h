@@ -11,8 +11,8 @@ class TitleText : public Text {
 
 public:
 	TitleText() {}
-	TitleText(const float& size, const D2D1::ColorF& color)
-		:Text(size, color) {}
+	TitleText(const float& size, const D2D1::ColorF& color, const TextAnchor& anchor)
+		:Text(size, color, anchor) {}
 	~TitleText() {}
 
 	void Init()override;

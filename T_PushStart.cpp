@@ -22,11 +22,11 @@ void TitlePush::Init(){
 	GetComponent<Audio>()->SetVolume("asset\\audio\\bgm002.wav", 0.2f);
 	GetComponent<Audio>()->Play("asset\\audio\\bgm002.wav", false);
 
-	_spos.x = _epos.x = GetPosition().x = (SCREEN_WIDTH * 0.5f) - 190.0f;
+	_spos.x = _epos.x = GetPosition().x = (SCREEN_WIDTH * 0.5f);
 	_spos.y = SCREEN_HEIGHT + 100.0f;
 	_epos.y = 600.0f;
 
-	_start = Manager::GetGUIManager()->AddGUI<Button>(XMFLOAT3(200.0f, 200.0f, 0.0f), XMFLOAT3(100.0f, 100.0f, 100.0f), L"asset\\texture\\particle.png");
+	_start = Manager::GetGUIManager()->AddGUI<Button>(XMFLOAT3((SCREEN_WIDTH * 0.5f), 100.0f, 0.0f), XMFLOAT3(100.0f, 100.0f, 100.0f), L"asset\\texture\\particle.png");
 
 	_str = "Push K key";
 }

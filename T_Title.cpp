@@ -8,7 +8,7 @@
 void TitleText::Init(){
 	Text::Init();
 
-	_spos.x = _epos.x = GetPosition().x = (SCREEN_WIDTH * 0.5f) - 330.0f;
+	_spos.x = _epos.x = GetPosition().x = (SCREEN_WIDTH * 0.5f);
 	_spos.y = 100.0f;
 	_epos.y = 100.0f;
 
