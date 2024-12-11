@@ -32,6 +32,7 @@ public:
 	using Component::Component;
 	void LoadTexture(const wchar_t* filename);
 	void LoadNormalTexture(const wchar_t* filename);
+	void LoadNormalTexturedds(const wchar_t* filename);
 	void Uninit()override;
 	void Draw()override {}
 	static void UninitAll();

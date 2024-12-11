@@ -85,6 +85,28 @@ void Sprite::LoadNormalTexture(const wchar_t* filename){
 	_textureindex++;
 }
 
+void Sprite::LoadNormalTexturedds(const wchar_t* filename) {
+	CreateVertexBuffer();
+
+	for (int i = 0; i < _textureindex; i++) {
+		if (_texname[i] == filename) {
+			_normaltexture = _textures[i];
+			return;
+		}
+	}
+
+	//テクスチャ読み込み
+	TexMetadata metadata;
+	ScratchImage image;
+	LoadFromDDSFile(filename, DDS_FLAGS_NONE, &metadata, image);
+	CreateShaderResourceView(Renderer::GetDevice(), image.GetImages(), image.GetImageCount(), metadata, &_normaltexture);
+	assert(_normaltexture);
+
+	_texname[_textureindex] = filename;
+	_textures[_textureindex] = _normaltexture;
+	_textureindex++;
+}
+
 
 void Sprite::Uninit() {
 	if (_vertexbuffer != NULL) {
