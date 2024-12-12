@@ -72,7 +72,7 @@ void Player::Init(){
 
 	_smoke = Manager::GetScene()->AddGameobject<Smoke>(Effect, XMFLOAT3(0.0f, 0.0f, 0.0f), 0.5f, XMFLOAT4(0.1f, 0.1f, 0.1f, 1.0f));
 
-	_smokepos = GetPosition() + (GetRight() * 1.6f) - (GetForward() * (0.8f)) + (GetUp() * 4.5f);
+	_smokepos = GetPosition() + (GetRight() * 1.4f) - (GetForward() * (0.75f)) + (GetUp() * 4.5f);
 
 	_smoke->SetPosition(_smokepos);
 }
