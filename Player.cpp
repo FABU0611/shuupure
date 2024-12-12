@@ -4,14 +4,18 @@
 #include "Main.h"
 #include "Renderer.h"
 #include "Manager.h"
+#include "ShaderManager.h"
 #include "Scene.h"
 #include "Input.h"
 #include "Player.h"
+#include "ParticleSmoke.h"
 #include "C_AnimationModel.h"
 #include "C_Transform.h"
 #include "C_Collision.h"
 #include "C_Audio.h"
+#include "S_Title.h"
 #include "S_Game.h"
+#include "ParticleSmoke.h"
 
 const float Player::FALL_NUM = -98.0f;
 const float Player::JUMP_POWER = 100.0f;
@@ -26,8 +30,6 @@ _state(nullptr){
 }
 
 void Player::Init(){
-	GetPosition().y = 0.0f;
-
 	//Playerが持っていることを教える
 	AddComponent<AnimationModel>(this);
 	AddComponent<Collision>(this);
@@ -54,12 +56,6 @@ void Player::Init(){
 	GetComponent<Audio>()->SetVolume("asset\\audio\\bgm003.wav", 0.1f);
 	GetComponent<Audio>()->Play("asset\\audio\\bgm003.wav");
 
-	//シェーダーセット
-	Renderer::CreateVertexShader(&_vertexshader, &_vertexlayout,
-		"shader\\NormalLightingVS.cso");
-
-	Renderer::CreatePixelShader(&_pixelshader,
-		"shader\\NormalLightingPS.cso");
 
 	_accel.x = 25.0f;
 	_accel.y = FALL_NUM;
@@ -69,26 +65,42 @@ void Player::Init(){
 
 	//Y軸周りに90度回転させてX方向を向かせる
 	XMVECTOR yAxis = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-	XMVECTOR rotationQuat = XMQuaternionRotationAxis(yAxis, XM_PIDIV2);
+	XMVECTOR rotationQuat = XMQuaternionRotationAxis(yAxis, -XM_PIDIV4);
 	XMStoreFloat4(&GetQuaternion(), rotationQuat);
+
+	GetComponent<Transform>()->Update();
+
+	_smoke = Manager::GetScene()->AddGameobject<Smoke>(Effect, XMFLOAT3(0.0f, 0.0f, 0.0f), 0.5f, XMFLOAT4(0.1f, 0.1f, 0.1f, 1.0f));
+
+	_smokepos = GetPosition() + (GetRight() * 1.6f) - (GetForward() * (0.8f)) + (GetUp() * 4.5f);
+
+	_smoke->SetPosition(_smokepos);
 }
 
 void Player::Uninit() {
 	for (auto c : _components) {
 		c->Uninit();
 	}
-
-	_vertexshader->Release();
-	_pixelshader->Release();
-	_vertexlayout->Release();
 }
 
 void Player::Update() {
+	Scene* scene = Manager::GetScene();
+	if (scene) {
+		Title* title = dynamic_cast<Title*>(scene);
+		if (!title) {
+		}
+		return;
+	}
+
 	if (Input::GetKeyTrigger(VK_SPACE)) {
 		Manager::SetSceneFade<Game>(0.05f);
 	}
-	Scene* scene;
-	scene = Manager::GetScene();
+
+	_smokepos += GetRight() * 0.47f;
+	_smokepos += GetForward() * -1.4f;
+	_smokepos += GetUp() * 4.3f;
+
+	_smoke->SetPosition(_smokepos);
 
 	XMFLOAT3 oldPos = GetPosition();
 
@@ -115,12 +127,13 @@ void Player::Update() {
 }
 
 void Player::Draw(){
+	_shader = Shader::GetShader(ShaderName::Normallit);
 	//入力レイアウト設定
-	Renderer::GetDeviceContext()->IASetInputLayout(_vertexlayout);
+	Renderer::GetDeviceContext()->IASetInputLayout(_shader->vertexLayout);
 
 	//シェーダ設定
-	Renderer::GetDeviceContext()->VSSetShader(_vertexshader, NULL, 0);
-	Renderer::GetDeviceContext()->PSSetShader(_pixelshader, NULL, 0);
+	Renderer::GetDeviceContext()->VSSetShader(_shader->vertexShader, NULL, 0);
+	Renderer::GetDeviceContext()->PSSetShader(_shader->pixelShader, NULL, 0);
 
 	//ワールドマトリクス設定
 	XMMATRIX world, scale, rot, trans;

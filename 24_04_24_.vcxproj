@@ -166,6 +166,9 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CameraState_Game1.cpp" />
+    <ClCompile Include="CameraState_Title1.cpp" />
+    <ClCompile Include="CameraState_Title2.cpp" />
     <ClCompile Include="CheckDoF.cpp" />
     <ClCompile Include="C_AnimationModel.cpp" />
     <ClCompile Include="C_Audio.cpp" />
@@ -217,6 +220,10 @@
     <ClCompile Include="Wave.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CameraState.h" />
+    <ClInclude Include="CameraState_Game1.h" />
+    <ClInclude Include="CameraState_Title1.h" />
+    <ClInclude Include="CameraState_Title2.h" />
     <ClInclude Include="CheckDoF.h" />
     <ClInclude Include="C_AnimationModel.h" />
     <ClInclude Include="C_Audio.h" />
@@ -249,6 +256,7 @@
     <ClInclude Include="ParticleFireup.h" />
     <ClInclude Include="ParticleFireworks.h" />
     <ClInclude Include="ParticleJump.h" />
+    <ClInclude Include="ParticleSmoke.h" />
     <ClInclude Include="ParticleSpraywarter.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerState.h" />
@@ -418,7 +426,12 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
-    <FxCompile Include="shader\VertexLightingVS.hlsl" />
+    <FxCompile Include="shader\VertexLightingVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
     <FxCompile Include="shader\WaterSurfacePS.hlsl">
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">shader\%(Filename).cso</ObjectFileOutput>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">shader\%(Filename).cso</ObjectFileOutput>

@@ -13,6 +13,7 @@
 #include "Wave.h"
 #include "Sky.h"
 #include "MeshField.h"
+#include "Player.h"
 #include "Polygon2D.h"
 #include "T_Pushstart.h"
 #include "T_Title.h"
@@ -23,7 +24,7 @@ void Title::Init(){
 	_light = new LIGHT();
 
 	_light->Enable = true;
-	_light->Direction = XMFLOAT4(-1.0f, -1.0f, -0.5f, 0.0f);
+	_light->Direction = XMFLOAT4(1.0f, -1.0f, 0.5f, 0.0f);
 	_light->Ambient = XMFLOAT4(0.1f, 0.1f, 0.1f, 1.0f);
 	_light->Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 
@@ -32,11 +33,12 @@ void Title::Init(){
 
 	AddGameobject<Camera>(System);
 
+	AddGameobject<MeshField>(Object);
+	AddGameobject<Player>(Object, XMFLOAT3(35.0f, 7.0f, 5.0f), XMFLOAT3(1.0f, 1.0f, 1.0f));
+
 	AddGameobject<Wave>(Transparency);
 
-	AddGameobject<Sky>(BackGround, 200.0f);
-	AddGameobject<MeshField>(Object);
-	//AddGameobject<Polygon2D>(BackGround, XMFLOAT3((SCREEN_WIDTH * 0.5f), (SCREEN_HEIGHT * 0.5f), 0.0f), XMFLOAT3(SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f), L"asset\\texture\\title_back.png");
+	AddGameobject<Sky>(BackGround, 100.0f);
 
 	TextManager* tm = Manager::GetTextManager();
 	tm->AddText<TitlePush>(60.0f, D2D1::ColorF::Yellow, TextAnchor::Center);
@@ -55,7 +57,7 @@ void Title::Update() {
 
 	Scene::Update();
 	if (Input::GetKeyTrigger('K')) {
-		Manager::SetSceneFade<Title>(0.05f);
+		Manager::SetSceneFade<Tutorial>(0.05f);
 	}
 }
 

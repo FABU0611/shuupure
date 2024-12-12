@@ -50,6 +50,7 @@ public:
 
 	static Scene* GetScene() { return _scene; }
 	static TextManager* GetTextManager() { return _textmanager; }
+	static Gaussian* GetGaussian() { return _gaussian; }
 
 	static void ChangeNextScene() {
 		_nextscene = _prvscene;

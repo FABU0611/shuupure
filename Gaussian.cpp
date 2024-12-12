@@ -6,6 +6,9 @@
 #include "GaussianX.h"
 #include "GaussianY.h"
 #include "Input.h"
+#include "Manager.h"
+#include "Scene.h"
+#include "S_Title.h"
 
 void Gaussian::CalcGaussianweight(float dispersion) {
 	float total = 0;
@@ -38,6 +41,16 @@ void Gaussian::Init() {
 	_param.x = SCREEN_WIDTH;
 	_param.y = SCREEN_HEIGHT;
 	Renderer::SetParameter(_param);
+
+	Scene* scene = Manager::GetScene();
+	if (scene) {
+		Title* title = dynamic_cast<Title*>(scene);
+		if (title) {
+			_param.z = 10.0f;
+			_dof.x = 0.03f;
+			_dof.y = 0.05f;
+		}
+	}
 }
 
 void Gaussian::Uninit() {

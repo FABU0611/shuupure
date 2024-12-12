@@ -8,13 +8,15 @@
 #include "Camera.h"
 #include "Player.h"
 #include "Scene.h"
+#include "S_Title.h"
 #include "Time.h"
+#include "CameraState_Title1.h"
 
 void Camera::Init() {
 	SetPosition({ 0.0f, 25.0f, 30.0f });
-	_target = { 0.0f, 0.0f, 0.0f };
+	_target = { 35.0f, 6.3f, 15.0f };
 
-	GetRotation().x = XM_PIDIV4;
+	GetRotation() = { -0.76f, -0.8f, 0.6f };
 
 	// 視点と注視点の距離を計算
 	float vx, vz;
@@ -23,83 +25,22 @@ void Camera::Init() {
 	_length = sqrtf(vx * vx + vz * vz);
 
 	_cameraspeed = 0.07f;
-}
-
-void Camera::Uninit() {}
-
-void Camera::Update() {
-	//仮のターゲットを作って線形補間で滑らかにカメラ移動ができる
-
-	float dt = Time::GetDeltaTime();
 
 	Scene* scene;
 	scene = Manager::GetScene();
 
-	Player* player;
-	player = scene->GetGameobject<Player>();
+	Title* title = dynamic_cast<Title*>(scene);
+	if (title) {
+		_state = new TitleState1(this);
+	}
+}
 
+void Camera::Uninit() {
+	delete _state;
+}
 
-	if (player) {
-		//現在のターゲット位置を取得
-		XMVECTOR currentTargetPosition = XMLoadFloat3(&_target);
-
-		//プレイヤーの現在の位置をターゲットに設定
-		XMVECTOR playerPosition = XMLoadFloat3(&player->GetPosition());
-		//コピーを作る
-		XMVECTOR desiredTargetPosition = playerPosition;
-		//線形補間を使ってターゲット位置を更新
-		XMVECTOR interpolatedTargetPosition = XMVectorLerp(currentTargetPosition, desiredTargetPosition, 15.0f * dt);
-
-		//ターゲット位置を設定
-		XMStoreFloat3(&_target, interpolatedTargetPosition);
-	}
-
-
-	//カメラ回転
-	//上
-	if (Input::GetKeyPress('I')) {
-		GetRotation().x -= (XM_PIDIV4 * 0.05f);
-	}
-	//下
-	else if (Input::GetKeyPress('M')) {
-		GetRotation().x += (XM_PIDIV4 * 0.05f);
-	}
-	if (Input::GetRightStickX(0) < -STICK_DEADZONE ||
-		Input::GetRightStickX(0) > STICK_DEADZONE) {
-		GetRotation().y += Input::GetRightStickX(0) * _cameraspeed;
-	}
-	//左
-	if (Input::GetKeyPress('L')) {
-		GetRotation().y += (XM_PIDIV2 * 0.05f);
-	}
-	//右
-	else if (Input::GetKeyPress('J')) {
-		GetRotation().y -= (XM_PIDIV2 * 0.05f);
-	}
-	if (Input::GetRightStickY(0) < -STICK_DEADZONE ||
-		Input::GetRightStickY(0) > STICK_DEADZONE) {
-		GetRotation().x -= Input::GetRightStickY(0) * _cameraspeed;
-	}
-	if (Input::GetKeyPress(VK_SPACE)) {
-		_target.y += 1.0f * dt;
-	}
-	else if (Input::GetKeyPress(VK_SHIFT)) {
-		_target.y -= 1.0f * dt;
-	}
-
-
-	if (GetRotation().x < -XM_PIDIV2) {
-		GetRotation().x = -XM_PIDIV2;
-	}
-	if (GetRotation().x > XM_PIDIV2) {
-		GetRotation().x = XM_PIDIV2;
-	}
-	if (GetRotation().y > XM_2PI) {
-		GetRotation().y -= XM_2PI;
-	}
-	if (GetRotation().y < -XM_2PI) {
-		GetRotation().y += XM_2PI;
-	}
+void Camera::Update() {
+	_state->Update();
 
 	XMFLOAT3 rot = GetRotation();
 

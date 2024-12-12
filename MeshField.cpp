@@ -142,18 +142,6 @@ void MeshField::Init() {
 	LoadFromDDSFile(_texname, DDS_FLAGS_NONE, &metadata, image);
 	CreateShaderResourceView(Renderer::GetDevice(), image.GetImages(), image.GetImageCount(), image.GetMetadata(), &_texture);
 	assert(_texture);
-
-
-	//Renderer::CreateVertexShader(&_vertexShader, &_vertexLayout,
-	//	"shader\\UnlitTextureVS.cso");
-
-	//Renderer::CreatePixelShader(&_pixelShader,
-	//	"shader\\UnlitTexturePS.cso");
-
-	XMFLOAT3 pos = _vertex[28][18].Position;
-	pos.y = 5.0f;
-	Manager::GetScene()->GetGameobject<Camera>()->SetTarget(pos);
-	Manager::GetScene()->GetGameobject<Camera>()->SetRotation(XMFLOAT3(-0.06f, -1.0f, 0.6f));
 }
 
 void MeshField::Uninit() {
@@ -164,7 +152,7 @@ void MeshField::Uninit() {
 void MeshField::Update() {}
 
 void MeshField::Draw() {
-	_shader = Shader::GetShader(ShaderName::dirlit);
+	_shader = Shader::GetShader(ShaderName::Dirlit);
 	//入力レイアウト設定
 	Renderer::GetDeviceContext()->IASetInputLayout(_shader->vertexLayout);
 
@@ -209,8 +197,8 @@ void MeshField::Draw() {
 float MeshField::GetHeight(const XMFLOAT3& pos) {
 	int x, z;
 	//ブロック番号算出
-	x = pos.x / 5.0f + 10.0f;
-	z = pos.z / -5.0f + 10.0f;
+	x = pos.x / 5.0f + (VERTEX_NUM * 0.5f);
+	z = pos.z / -5.0f + (VERTEX_NUM * 0.5f);
 
 	XMFLOAT3 pos0, pos1, pos2, pos3;
 	pos0 = _vertex[x][z].Position;

@@ -46,7 +46,7 @@ void TitlePush::Update(){
 		return;
 	}
 	//ƒV[ƒ“‘JˆÚ
-	if (Input::GetKeyTrigger('K') || button->OnClicked(VK_LBUTTON)) {
+	if (button->OnClicked(VK_LBUTTON)) {
 		GetComponent<Audio>()->Play("asset\\audio\\push.wav", false);
 		Manager::SetSceneFade<Title>(0.05f);
 	}

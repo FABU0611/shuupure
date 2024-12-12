@@ -22,11 +22,12 @@ void Shader::AddShader(const std::string& VSpath, const std::string& PSpath, con
 }
 
 void Shader::LoadShader() {
-	AddShader("shader\\UnlitTextureVS.cso", "shader\\UnlitTexturePS.cso", ShaderName::unlit);
-	AddShader("shader\\TangentNormalLightingVS.cso", "shader\\WaterSurfacePS.cso", ShaderName::water);
-	AddShader("shader\\NormalLightingVS.cso", "shader\\NormalLightingPS.cso", ShaderName::lit);
-	AddShader("shader\\TangentNormalLightingVS.cso", "shader\\TangentNormalLightingPS.cso", ShaderName::tangentlit);
-	AddShader("shader\\VertexLightingVS.cso", "shader\\VertexLightingPS.cso", ShaderName::dirlit);
+	AddShader("shader\\UnlitTextureVS.cso", "shader\\UnlitTexturePS.cso", ShaderName::Unlit);
+	AddShader("shader\\TangentNormalLightingVS.cso", "shader\\WaterSurfacePS.cso", ShaderName::Water);
+	AddShader("shader\\NormalLightingVS.cso", "shader\\NormalLightingPS.cso", ShaderName::Normallit);
+	AddShader("shader\\TangentNormalLightingVS.cso", "shader\\TangentNormalLightingPS.cso", ShaderName::Tangentlit);
+	AddShader("shader\\VertexLightingVS.cso", "shader\\VertexLightingPS.cso", ShaderName::Dirlit);
+    AddShader("shader\\UnlitTextureVS.cso", "shader\\ParticlePS.cso", ShaderName::Particle);
 }
 
 void Shader::UninitAll() {
@@ -53,6 +54,6 @@ ShaderPack* Shader::GetShader(const ShaderName& name) {
         return _shaders.at(name);
     }
     else {
-        return _shaders.at(ShaderName::unlit);
+        return _shaders.at(ShaderName::Unlit);
     }
 }

@@ -6,12 +6,12 @@
 #include "GameObject.h"
 #include "Time.h"
 
+struct ShaderPack;
 class PlayerState;
+class Smoke;
 
 class Player : public GameObject {
-	ID3D11VertexShader*	_vertexshader{};
-	ID3D11PixelShader*	_pixelshader{};
-	ID3D11InputLayout*	_vertexlayout{};
+	ShaderPack*			_shader{};
 
 	PlayerState*		_state{};
 
@@ -20,6 +20,9 @@ class Player : public GameObject {
 	XMFLOAT3			_move{};
 
 	XMMATRIX			_prevworld{};
+
+	XMFLOAT3			_smokepos{};
+	Smoke*				_smoke{};
 
 	static const float FALL_NUM;
 	static const float JUMP_POWER;

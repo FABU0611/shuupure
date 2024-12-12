@@ -25,4 +25,7 @@ public:
 	void Uninit();
 	void Update();
 	void Draw();
+
+	void SetDof(const XMFLOAT2& dof) { _dof = dof; }
+	void SetBoke(const float& boke) { _param.z = boke; }
 };

@@ -8,13 +8,12 @@
 #include <d3d11.h>
 
 enum class ShaderName : short {
-	unlit,
-	water,
-	lit,
-	tangentlit,
-	dirlit,
-
-	max,
+	Unlit,
+	Water,
+	Normallit,
+	Tangentlit,
+	Dirlit,
+	Particle,
 };
 
 struct ShaderPack {

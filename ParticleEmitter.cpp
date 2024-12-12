@@ -8,6 +8,7 @@
 #include "Scene.h"
 #include <random>
 #include "ParticleFireworks.h"
+#include "ShaderManager.h"
 
 //初期化処理
 void ParticleEmitter::Init() {
@@ -50,13 +51,6 @@ void ParticleEmitter::Init() {
 	LoadFromWICFile(_texname, WIC_FLAGS_NONE, &metadata, image);
 	CreateShaderResourceView(Renderer::GetDevice(), image.GetImages(), image.GetImageCount(), metadata, &_texture);
 	assert(_texture);
-
-
-	Renderer::CreateVertexShader(&_vertexshader, &_vertexlayout,
-		"shader\\UnlitTextureVS.cso");
-
-	Renderer::CreatePixelShader(&_pixelshader,
-		"shader\\ParticlePS.cso");
 }
 
 //終了処理
@@ -67,10 +61,6 @@ void ParticleEmitter::Uninit() {
 
 	_vertexbuffer->Release();
 	_texture->Release();
-
-	_vertexshader->Release();
-	_pixelshader->Release();
-	_vertexlayout->Release();
 }
 
 //更新処理
@@ -78,12 +68,13 @@ void ParticleEmitter::Update() {}
 
 //描画処理
 void ParticleEmitter::Draw() {
+	_shader = Shader::GetShader(ShaderName::Particle);
 	//入力レイアウト設定
-	Renderer::GetDeviceContext()->IASetInputLayout(_vertexlayout);
+	Renderer::GetDeviceContext()->IASetInputLayout(_shader->vertexLayout);
 
 	//シェーダ設定
-	Renderer::GetDeviceContext()->VSSetShader(_vertexshader, NULL, 0);
-	Renderer::GetDeviceContext()->PSSetShader(_pixelshader, NULL, 0);
+	Renderer::GetDeviceContext()->VSSetShader(_shader->vertexShader, NULL, 0);
+	Renderer::GetDeviceContext()->PSSetShader(_shader->pixelShader, NULL, 0);
 
 	//カメラのビューマトリクス取得
 	Scene* scene = Manager::GetScene();

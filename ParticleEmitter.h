@@ -5,18 +5,15 @@
 
 #include "GameObject.h"
 
+struct ShaderPack;
+
 class ParticleEmitter : public GameObject {
 	ID3D11Buffer*				_vertexbuffer = NULL;
 	ID3D11ShaderResourceView*	_texture = NULL;
 
-	ID3D11VertexShader* _vertexshader{};
-	ID3D11PixelShader*	_pixelshader{};
-	ID3D11InputLayout*	_vertexlayout{};
-
-	float				_size{};
 	const wchar_t*		_texname{};		//画像ファイルのパス
-	XMFLOAT4			_color{};
 
+	ShaderPack*			_shader{};
 
 	//生成するパーティクル
 	struct PARTICLE{
@@ -33,6 +30,8 @@ class ParticleEmitter : public GameObject {
 
 protected:
 	PARTICLE			_particle[PARTICLE_MAX]{};
+	float				_size{};
+	XMFLOAT4			_color{};
 
 public:
 	ParticleEmitter() {}
