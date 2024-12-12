@@ -11,6 +11,7 @@
 #include "S_Title.h"
 #include "Time.h"
 #include "CameraState_Title1.h"
+#include "CameraState_Game1.h"
 
 void Camera::Init() {
 	SetPosition({ 0.0f, 25.0f, 30.0f });
@@ -32,6 +33,10 @@ void Camera::Init() {
 	Title* title = dynamic_cast<Title*>(scene);
 	if (title) {
 		_state = new TitleState1(this);
+		return;
+	}
+	else {
+		_state = new GameState1(this);
 	}
 }
 
