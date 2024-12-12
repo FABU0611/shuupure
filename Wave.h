@@ -9,7 +9,7 @@
 struct ShaderPack;
 
 class Wave : public GameObject {
-	static const int			VERTEX_NUM = 84;
+	static const int			VERTEX_NUM = 42;
 	static const float			WAVE_AMPLITUDE;					// ウェーブポイントの振幅
 	static const float			WAVE_LENGTH;					// ウェーブポイントの波長
 	static const float			WAVE_CYCLE;						// ウェーブポイントの周期

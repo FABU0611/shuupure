@@ -19,7 +19,7 @@ void Wave::Init() {
 				_vertex[x][z].Position = XMFLOAT3((x - (VERTEX_NUM * 0.5f)) * 5.0f, 0.0f, (z - (VERTEX_NUM * 0.5f)) * -5.0f);
 				_vertex[x][z].Normal = XMFLOAT3(0.0f, 1.0f, 0.0f);
 				_vertex[x][z].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-				_vertex[x][z].TexCoord = XMFLOAT2(x, z);
+				_vertex[x][z].TexCoord = XMFLOAT2(x * 0.5f, z * 0.5f);
 				_vertex[x][z].Tangent = { 1.0f, 0.0f, 0.0f };
 			}
 		}
@@ -188,7 +188,7 @@ void Wave::Update() {
 }
 
 void Wave::Draw() {
-	_shader = Shader::GetShader(ShaderName::water);
+	_shader = Shader::GetShader(ShaderName::Water);
 	//入力レイアウト設定
 	Renderer::GetDeviceContext()->IASetInputLayout(_shader->vertexLayout);
 
