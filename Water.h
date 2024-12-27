@@ -24,7 +24,7 @@ public:
 		GetComponent<Sprite3D>()->LoadTexture(_texname);
 		GetComponent<Sprite3D>()->SetTangent({ 1.0f, 0.0f, 0.0f });
 		GetComponent<Sprite3D>()->SetNormal({ 0.0f, 0.0f, -1.0f });
-		GetComponent<Sprite3D>()->LoadNormalTexturedds(L"asset\\texture\\water_normal.dds");
+		GetComponent<Sprite3D>()->LoadNormalTexture(L"asset\\texture\\water_normal.dds");
 		GetComponent<Sprite3D>()->SetDrawMode(DrawMode3D::Normal);
 	}
 	~Water() {}

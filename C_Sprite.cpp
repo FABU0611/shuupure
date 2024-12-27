@@ -4,10 +4,36 @@
 #include "Main.h"
 #include "Renderer.h"
 #include "C_Sprite.h"
+#include <string>
+#include <cwchar>
 
 int Sprite::_textureindex = 0;
 const wchar_t* Sprite::_texname[MAX_TEXTURE]{};
 ID3D11ShaderResourceView* Sprite::_textures[MAX_TEXTURE]{};
+
+
+void Sprite::CheckFileextension(const wchar_t*& filename, ID3D11ShaderResourceView*& texture) {
+	std::wstring file(filename);
+	size_t pos = file.rfind(L'.');
+
+	std::wstring extension = file.substr(pos);
+
+	//拡張子を調べてテクスチャ読み込み
+	if (extension == L".png") {
+		TexMetadata metadata;
+		ScratchImage image;
+		LoadFromWICFile(filename, WIC_FLAGS_NONE, &metadata, image);
+		CreateShaderResourceView(Renderer::GetDevice(), image.GetImages(), image.GetImageCount(), metadata, &texture);
+		assert(texture);
+	}
+	else if (extension == L".dds") {
+		TexMetadata metadata;
+		ScratchImage image;
+		LoadFromDDSFile(filename, DDS_FLAGS_NONE, &metadata, image);
+		CreateShaderResourceView(Renderer::GetDevice(), image.GetImages(), image.GetImageCount(), metadata, &texture);
+		assert(texture);
+	}
+}
 
 void Sprite::CreateVertexBuffer(){
 	VERTEX_3D vertex[4];
@@ -42,8 +68,6 @@ void Sprite::CreateVertexBuffer(){
 void Sprite::LoadTexture(const wchar_t* filename) {
 	CreateVertexBuffer();
 
-	//読みこむファイルがすでに読みこんでいるかを調べる
-	//Drawで_textureを使っているんだからそれを保存しておかないとだめ
 	for (int i = 0; i < _textureindex; i++) {
 		if (_texname[i] == filename) {
 			_texture = _textures[i];
@@ -51,17 +75,14 @@ void Sprite::LoadTexture(const wchar_t* filename) {
 		}
 	}
 
-	//テクスチャ読み込み
-	TexMetadata metadata;
-	ScratchImage image;
-	LoadFromWICFile(filename, WIC_FLAGS_NONE, &metadata, image);
-	CreateShaderResourceView(Renderer::GetDevice(), image.GetImages(), image.GetImageCount(), metadata, &_texture);
-	assert(_texture);
+	CheckFileextension(filename, _texture);
+
 
 	_texname[_textureindex] = filename;
 	_textures[_textureindex] = _texture;
 	_textureindex++;
 }
+
 
 void Sprite::LoadNormalTexture(const wchar_t* filename){
 	CreateVertexBuffer();
@@ -73,34 +94,7 @@ void Sprite::LoadNormalTexture(const wchar_t* filename){
 		}
 	}
 
-	//テクスチャ読み込み
-	TexMetadata metadata;
-	ScratchImage image;
-	LoadFromWICFile(filename, WIC_FLAGS_NONE, &metadata, image);
-	CreateShaderResourceView(Renderer::GetDevice(), image.GetImages(), image.GetImageCount(), metadata, &_normaltexture);
-	assert(_normaltexture);
-
-	_texname[_textureindex] = filename;
-	_textures[_textureindex] = _normaltexture;
-	_textureindex++;
-}
-
-void Sprite::LoadNormalTexturedds(const wchar_t* filename) {
-	CreateVertexBuffer();
-
-	for (int i = 0; i < _textureindex; i++) {
-		if (_texname[i] == filename) {
-			_normaltexture = _textures[i];
-			return;
-		}
-	}
-
-	//テクスチャ読み込み
-	TexMetadata metadata;
-	ScratchImage image;
-	LoadFromDDSFile(filename, DDS_FLAGS_NONE, &metadata, image);
-	CreateShaderResourceView(Renderer::GetDevice(), image.GetImages(), image.GetImageCount(), metadata, &_normaltexture);
-	assert(_normaltexture);
+	CheckFileextension(filename, _normaltexture);
 
 	_texname[_textureindex] = filename;
 	_textures[_textureindex] = _normaltexture;
