@@ -133,16 +133,42 @@ void Manager::Update() {
 }
 
 void Manager::Draw() {
+	LIGHT light;
+	light.Enable = true;
+	light.Ambient = { 0.1f, 0.1f, 0.1f, 1.0f };
+	light.Diffuse = { 1.0f, 1.0f, 1.0f, 1.0f };
+
+	XMFLOAT3 lightpos = { 100.0f, 100.0f, 100.0f };
+	XMFLOAT3 lighttarget = { 0.0f, 0.0f, 0.0f };
+	XMFLOAT3 lightup = { 0.0f, 1.0f, 0.0f };
+
+	XMFLOAT3 lightdir = lighttarget - lightpos;
+	light.Direction = { lightdir.x, lightdir.y, lightdir.z, 0.0f };
+	light.Direction = VectorNormalize(light.Direction);
+
+	XMMATRIX lightview = XMMatrixLookAtLH(XMLoadFloat3(&lightpos), XMLoadFloat3(&lighttarget), XMLoadFloat3(&lightup));
+	XMMATRIX lightprojection = XMMatrixOrthographicLH(100.0f, 100.0f, 1.0f, 300.0f);		//正射影
+
+	light.ViewMatrix = XMMatrixTranspose(lightview);
+	light.ProjectionMatrix = XMMatrixTranspose(lightprojection);
+	Renderer::SetLight(light);
+
+	//ライトからの深度マップを作成
+	Renderer::BeginLightDepth(lightview, lightprojection);
+	_scene->DrawAtLight();	//カメラ以外のオブジェクト描画
+
 	//オブジェクトの描画、深度マップの作成、速度マップの作成
 	Renderer::BeginPE();
 	_scene->Draw();
+	
 
-	//ガウシアンブラーを掛ける
+	//シーンにガウシアンブラーを掛ける
 	_gaussian->Draw();
 
 	//モーションブラーを掛ける
 	Renderer::BeginMotionBlur();
 	_motionblur->Draw();
+
 
 	//最終的な描画
 	Renderer::Begin();
@@ -158,7 +184,8 @@ void Manager::Draw() {
 	//テキストのみ描画
 	_textmanager->Draw();
 	
-	//被写界深度範囲確認用
+
+	//確認用
 #ifdef _DEBUG
 	_checkdof->Draw();
 #endif

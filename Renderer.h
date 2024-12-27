@@ -37,7 +37,9 @@ struct LIGHT {
 	XMFLOAT4	GroundNormal;
 	XMFLOAT4	Position;			//光源の座標
 	XMFLOAT4	PointLightParam;	//光の範囲
-	XMFLOAT4	Angle;	//光の範囲
+	XMFLOAT4	Angle;				//光の角度
+	XMMATRIX	ViewMatrix;
+	XMMATRIX	ProjectionMatrix;
 };
 
 
@@ -67,9 +69,9 @@ private:
 	static ID3D11Buffer* _weightsbuffer;
 	static ID3D11Buffer* _dofbuffer;
 
-	static XMMATRIX						_prevworld;
-	static XMMATRIX						_prevview;
-	static XMMATRIX						_prevprojection;
+	static XMFLOAT4X4				_prevworld;
+	static XMFLOAT4X4				_prevview;
+	static XMFLOAT4X4				_prevprojection;
 
 	static ID3D11DepthStencilState* _depthstateenable;
 	static ID3D11DepthStencilState* _depthstatedisable;
@@ -84,6 +86,8 @@ private:
 
 	static ID3D11DepthStencilView* _Depthstencilview;
 	static ID3D11ShaderResourceView* _Depthshaderresourceview;
+	static ID3D11DepthStencilView* _CameraDepthstencilview;
+	static ID3D11ShaderResourceView* _CameraDepthshaderresourceview;
 	static ID3D11RenderTargetView* _BXrenderertargetview;
 	static ID3D11ShaderResourceView* _BXshaderresourceview;
 	static ID3D11RenderTargetView* _BYrenderertargetview;
@@ -133,15 +137,19 @@ public:
 	static ID3D11ShaderResourceView* GetBXTexture() { return _BXshaderresourceview; }
 	static ID3D11ShaderResourceView* GetBYTexture() { return _BYshaderresourceview; }
 	static ID3D11ShaderResourceView* GetDepthTexture() { return _Depthshaderresourceview; }
+	static ID3D11ShaderResourceView* GetCameraDepthTexture() { return _CameraDepthshaderresourceview; }
 	static ID3D11ShaderResourceView* GetVelocityTexture() { return _Velshaderresourceview; }
 	static ID3D11ShaderResourceView* GetMBTexture() { return _MBshaderresourceview; }
 
 	static ID3D11Texture2D* GetRendertargetTEX() { return _RendertargetTEX; }
 	static void TakeingPic();
 
+	static void SetViewportSize(const XMFLOAT2& size);
+
 	//レンダリングターゲットをテクスチャに切り替える
 	static void BeginPE();
 	static void BeginBlurX();
 	static void BeginBlurY();
 	static void BeginMotionBlur();
+	static void BeginLightDepth(const XMMATRIX& ViewMatrix, const XMMATRIX& ProjectionMatrix);
 };

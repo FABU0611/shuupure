@@ -14,10 +14,10 @@ void Pool::Init(){
 
 	//シェーダーセット
 	Renderer::CreateVertexShader(&_vertexshader, &_vertexlayout,
-		"shader\\TangentNormalLightingVS.cso");
+		"shader\\DepthShadowVS.cso");
 
 	Renderer::CreatePixelShader(&_pixelshader,
-		"shader\\TangentNormalLightingPS.cso");
+		"shader\\DepthShadowPS.cso");
 }
 
 void Pool::Uninit(){
@@ -51,6 +51,7 @@ void Pool::Draw(){
 	trans = XMMatrixTranslation(GetPosition().x, GetPosition().y, GetPosition().z);
 	world = scale * rot * trans;
 	Renderer::SetWorldMatrix(world, _prevworld);
+
 
 	for (auto c : _components) {
 		c->Draw();

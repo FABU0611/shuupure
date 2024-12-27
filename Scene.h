@@ -64,10 +64,26 @@ public:
 			}
 		}
 	};
+	virtual void DrawAtLight() {
+		ZSort();
+
+		for (int i = 0; i < MAX_LAYER; i++) {
+			for (auto o : _gameobjects[i]) {
+				if (i == System) {
+					Camera* camera = dynamic_cast<Camera*>(o);
+					if (camera) {
+						continue;
+					}
+				}
+				//•`‰æˆ—
+				o->Draw();
+			}
+		}
+	}
 
 	template <typename T, typename... Args>
 	T* AddGameobject(const int& layer, Args&& ...args) {
-		T* gameobject = new T(std::forward<Args>(args)...);
+		T* gameobject = new T(std::forward<Args>(args)...);		//Memo:new‚ÍCPU•‰‰×‚ª‚‚­‚È‚é‚Ì‚ÅŽ©ìnew‚·‚éBplasement newBhttps://logicalbeat.jp/blog/5016/ https://github.com/microsoft/mimalloc
 		_gameobjects[layer].push_back(gameobject);
 		gameobject->Init();
 

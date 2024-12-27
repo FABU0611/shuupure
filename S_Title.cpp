@@ -14,11 +14,11 @@
 #include "Sky.h"
 #include "MeshField.h"
 #include "Player.h"
+#include "Pool.h"
+#include "DivingBoard.h"
 #include "Polygon2D.h"
 #include "T_Pushstart.h"
 #include "T_Title.h"
-
-#include "Input.h"
 
 void Title::Init(){
 	_light = new LIGHT();
@@ -33,12 +33,14 @@ void Title::Init(){
 
 	AddGameobject<Camera>(System);
 
-	AddGameobject<MeshField>(Object);
+	//AddGameobject<MeshField>(Object);
 	AddGameobject<Player>(Object, XMFLOAT3(35.0f, 7.0f, 5.0f), XMFLOAT3(1.0f, 1.0f, 1.0f));
+	AddGameobject<Pool>(Object, XMFLOAT3(0.0f, 0.0f, 0.0f));
+	AddGameobject<DivingBoard>(Object, XMFLOAT3(-30.0f, 0.0f, 0.0f));
 
-	AddGameobject<Wave>(Transparency);
+	//AddGameobject<Wave>(Transparency);
 
-	AddGameobject<Sky>(BackGround, 100.0f);
+	//AddGameobject<Sky>(BackGround, 100.0f);
 
 	TextManager* tm = Manager::GetTextManager();
 	tm->AddText<TitlePush>(60.0f, D2D1::ColorF::Yellow, TextAnchor::Center);
@@ -56,14 +58,11 @@ void Title::Update() {
 	_light->PointLightParam.z += 0.01f;
 
 	Scene::Update();
-	if (Input::GetKeyTrigger('K')) {
-		Manager::SetSceneFade<Tutorial>(0.05f);
-	}
 }
 
 
 void Title::Draw() {
-	Renderer::SetLight((*_light));
+	//Renderer::SetLight((*_light));
 
 	Scene::Draw();
 }

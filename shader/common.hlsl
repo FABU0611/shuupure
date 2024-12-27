@@ -52,7 +52,9 @@ struct LIGHT {
 	float4 GroundNormal;	//地面法線
 	float4 Position;
 	float4 PointParam;
-	float4 Angle;
+	float4 Angle;	
+	matrix ViewMatrix;
+	matrix ProjectionMatrix;
 };
 
 cbuffer LightBuffer : register(b4) {
@@ -97,6 +99,7 @@ struct PS_IN {
 	float4 Tangent			: TANGENT0;		//タンジェント
 	float4 Binormal			: BINORMAL0;	//バイノーマル
 	float2 Velocity			: TEXCOORD1;	//ピクセルの座標
+	float4 LightPosition	: POSITION1;	//ライト空間座標	
 };
 struct PS_OUT {
 	float4 Out0				: SV_Target0;	//デフォルトのびょうが

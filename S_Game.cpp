@@ -53,7 +53,7 @@ void Game::Update(){
 }
 
 void Game::Draw(){
-	Renderer::SetLight((*_light));
+	//Renderer::SetLight((*_light));
 
 	Scene::Draw();
 }

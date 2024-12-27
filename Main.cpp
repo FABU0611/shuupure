@@ -37,7 +37,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	//_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
 	DWORD dwFPSLastTime;
-	DWORD dwFrameCount;
 
 	WNDCLASSEX wcex;
 	{
@@ -82,7 +81,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	timeBeginPeriod(1);
 	dwExecLastTime = dwFPSLastTime = timeGetTime();
 	dwCurrentTime = 0;
-	dwFrameCount = 0;
 
 
 
@@ -105,21 +103,26 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 				g_CountFPS = Time::GetFrameRate();
 #endif
 				dwFPSLastTime = dwCurrentTime;				// FPSを測定した時刻を保存
-				dwFrameCount = 0;							// カウントをクリア
 			}
 
-			if ((dwCurrentTime - dwExecLastTime) >= (1000 / 60)) {
-				dwExecLastTime = dwCurrentTime;
+			//if ((dwCurrentTime - dwExecLastTime) >= (1000 / 60)) {
 
 #ifdef _DEBUG	// デバッグ版の時だけFPSを表示する
 				sprintf_s(g_DebugStr, " FPS:%.0f", g_CountFPS);
 				SetWindowText(g_Window, g_DebugStr);
 #endif
+
+				//float fps = 1000.0f / (dwCurrentTime - dwExecLastTime);
+				//std::string title;
+				//title = "Game" + std::to_string(fps) + "fps";
+				//SetWindowText(g_Window, title.c_str());
+
+				dwExecLastTime = dwCurrentTime;
+
 				Time::Update();
 				Manager::Update();
 				Manager::Draw();
-				dwFrameCount++;
-			}
+			//}
 		}
 	}
 

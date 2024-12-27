@@ -49,7 +49,7 @@ void AnimationModel::Draw() {
 		}
 		//上書きすれば他のモデルのテクスチャが貼られることはないっぽい
 
-		ID3D11ShaderResourceView* shadow = Renderer::GetDepthTexture();
+		ID3D11ShaderResourceView* shadow = Renderer::GetCameraDepthTexture();
 		Renderer::GetDeviceContext()->PSSetShaderResources(2, 1, &shadow);
 
 		//if (texture == aiString(""))

@@ -47,7 +47,7 @@ void Tutorial::Update(){
 }
 
 void Tutorial::Draw(){
-	Renderer::SetLight((*_light));
+	//Renderer::SetLight((*_light));
 
 	Scene::Draw();
 }

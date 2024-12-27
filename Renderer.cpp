@@ -26,9 +26,9 @@ ID3D11Buffer* Renderer::_parameterbuffer{};
 ID3D11Buffer* Renderer::_weightsbuffer{};
 ID3D11Buffer* Renderer::_dofbuffer{};
 
-XMMATRIX Renderer::_prevworld;
-XMMATRIX Renderer::_prevview;
-XMMATRIX Renderer::_prevprojection;
+XMFLOAT4X4 Renderer::_prevworld;
+XMFLOAT4X4 Renderer::_prevview;
+XMFLOAT4X4 Renderer::_prevprojection;
 
 ID3D11DepthStencilState* Renderer::_depthstateenable{};
 ID3D11DepthStencilState* Renderer::_depthstatedisable{};
@@ -44,6 +44,8 @@ ID3D11ShaderResourceView* Renderer::_PEshaderresourceview = NULL;
 
 ID3D11DepthStencilView* Renderer::_Depthstencilview = NULL;
 ID3D11ShaderResourceView* Renderer::_Depthshaderresourceview = NULL;
+ID3D11DepthStencilView* Renderer::_CameraDepthstencilview = NULL;
+ID3D11ShaderResourceView* Renderer::_CameraDepthshaderresourceview = NULL;
 ID3D11RenderTargetView* Renderer::_BXrenderertargetview = NULL;
 ID3D11ShaderResourceView* Renderer::_BXshaderresourceview = NULL;
 ID3D11RenderTargetView* Renderer::_BYrenderertargetview = NULL;
@@ -59,8 +61,15 @@ ID3D11Texture2D* Renderer::_RendertargetTEX = NULL;
 void Renderer::Init() {
 	HRESULT hr = S_OK;
 
+	IDXGIAdapter* pAdapter;
+	IDXGIFactory* pFactory;
 
-
+	//GPUの一覧を取得して最適なものを選んだ方がいい
+	CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&pFactory);
+	hr = pFactory->EnumAdapters(0, &pAdapter);	//0番は標準のGPU
+	if (hr == DXGI_ERROR_NOT_FOUND) {
+		pFactory->EnumAdapters(0, &pAdapter);
+	}
 
 	// デバイス、スワップチェーン作成
 	DXGI_SWAP_CHAIN_DESC swapChainDesc{};
@@ -76,8 +85,8 @@ void Renderer::Init() {
 	swapChainDesc.SampleDesc.Quality = 0;
 	swapChainDesc.Windowed = TRUE;
 
-	hr = D3D11CreateDeviceAndSwapChain(NULL,
-		D3D_DRIVER_TYPE_HARDWARE,
+	hr = D3D11CreateDeviceAndSwapChain(NULL,		//pAdapter
+		D3D_DRIVER_TYPE_HARDWARE,					//D3D_DRIVER_TYPE_UNKNOWN
 		NULL,
 		D3D10_CREATE_DEVICE_BGRA_SUPPORT,
 		NULL,
@@ -134,16 +143,8 @@ void Renderer::Init() {
 
 
 
-	// ビューポート設定
-	D3D11_VIEWPORT viewport;
-	viewport.Width = (FLOAT)SCREEN_WIDTH;
-	viewport.Height = (FLOAT)SCREEN_HEIGHT;
-	viewport.MinDepth = 0.0f;
-	viewport.MaxDepth = 1.0f;
-	viewport.TopLeftX = 0;
-	viewport.TopLeftY = 0;
-	_devicecontext->RSSetViewports(1, &viewport);
-
+	//ビューポート設定
+	SetViewportSize({ (FLOAT)SCREEN_WIDTH, (FLOAT)SCREEN_HEIGHT });
 
 
 	// ラスタライザステート設定
@@ -492,6 +493,45 @@ void Renderer::Init() {
 		depthTexture->Release();
 	}
 	{
+		//ライトからの深度
+		ID3D11Texture2D* depthTexture = NULL;
+		D3D11_TEXTURE2D_DESC	dtd;			//テクスチャ作成用デスクリプタ構造体
+		ZeroMemory(&dtd, sizeof(dtd));
+
+		dtd.Width = 1024;
+		dtd.Height = 1024;
+		//作成するミップマップの数
+		dtd.MipLevels = 1;
+		dtd.ArraySize = 1;
+		dtd.Format = DXGI_FORMAT_R32_TYPELESS;		//ピクセルフォーマット
+		dtd.SampleDesc = swapChainDesc.SampleDesc;
+		dtd.Usage = D3D11_USAGE_DEFAULT;
+		//レンダリングターゲット用の設定
+		dtd.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
+		dtd.CPUAccessFlags = 0;
+		dtd.MiscFlags = 0;
+
+		//テクスチャの作成
+		_device->CreateTexture2D(&dtd, NULL, &depthTexture);
+		//レンダーターゲットビュー
+		D3D11_DEPTH_STENCIL_VIEW_DESC dsvd;
+		ZeroMemory(&dsvd, sizeof(dsvd));
+		dsvd.Format = DXGI_FORMAT_D32_FLOAT;
+		dsvd.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+		_device->CreateDepthStencilView(depthTexture, &dsvd, &_CameraDepthstencilview);
+
+		//シェーダーリソースビューの作成
+		D3D11_SHADER_RESOURCE_VIEW_DESC srvd;
+		ZeroMemory(&srvd, sizeof(srvd));
+		srvd.Format = DXGI_FORMAT_R32_FLOAT;
+		srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+		srvd.Texture2D.MipLevels = 1;
+		srvd.Texture2D.MostDetailedMip = 0;
+		_device->CreateShaderResourceView(depthTexture, &srvd, &_CameraDepthshaderresourceview);
+
+		depthTexture->Release();
+	}
+	{
 		//速度マップ
 		D3D11_TEXTURE2D_DESC	dtd;			//テクスチャ作成用デスクリプタ構造体
 		ZeroMemory(&dtd, sizeof(dtd));
@@ -594,6 +634,8 @@ void Renderer::Uninit() {
 	_Velrenderertargetview->Release();
 	_MBshaderresourceview->Release();
 	_MBrenderertargetview->Release();
+	_CameraDepthshaderresourceview->Release();
+	_CameraDepthstencilview->Release();
 	_Depthshaderresourceview->Release();
 	_Depthstencilview->Release();
 	_BXshaderresourceview->Release();
@@ -627,7 +669,7 @@ void Renderer::Begin() {
 
 
 void Renderer::End() {
-	_swapchain->Present(1, 0);
+	_swapchain->Present(1, 0);	//第一引数を０にすると垂直同期オフ
 }
 
 
@@ -663,12 +705,16 @@ void Renderer::SetBlendAddEnable(bool Enable) {
 }
 
 void Renderer::SetWorldViewProjection2D() {
-	SetWorldMatrix(XMMatrixIdentity(), _prevworld);
-	SetViewMatrix(XMMatrixIdentity(), _prevview);
+	XMMATRIX prevworld = XMLoadFloat4x4(&_prevworld);
+	XMMATRIX prevview = XMLoadFloat4x4(&_prevview);
+
+	SetWorldMatrix(XMMatrixIdentity(), prevworld);
+	SetViewMatrix(XMMatrixIdentity(), prevview);
 
 	XMMATRIX projection;
+	XMMATRIX prevprojection = XMLoadFloat4x4(&_prevprojection);
 	projection = XMMatrixOrthographicOffCenterLH(0.0f, SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f, 0.0f, 1.0f);
-	SetProjectionMatrix(projection, _prevprojection);
+	SetProjectionMatrix(projection, prevprojection);
 }
 
 
@@ -863,9 +909,23 @@ void Renderer::TakeingPic() {
 	stagingTexture->Release();
 }
 
+void Renderer::SetViewportSize(const XMFLOAT2& size) {
+	// ビューポート設定
+	D3D11_VIEWPORT viewport;
+	viewport.Width = size.x;
+	viewport.Height = size.y;
+	viewport.MinDepth = 0.0f;
+	viewport.MaxDepth = 1.0f;
+	viewport.TopLeftX = 0;
+	viewport.TopLeftY = 0;
+	_devicecontext->RSSetViewports(1, &viewport);
+}
+
 void Renderer::BeginPE() {
-	ID3D11RenderTargetView* mrt[3]{
-		_PErenderertargetview, /*_Depthrenderertargetview,*/ _Velrenderertargetview
+	SetViewportSize({ (FLOAT)SCREEN_WIDTH, (FLOAT)SCREEN_HEIGHT });
+
+	ID3D11RenderTargetView* mrt[2]{
+		_PErenderertargetview, _Velrenderertargetview
 	};
 	_devicecontext->OMSetRenderTargets(2,
 		mrt,	//レンダリングテクスチャ 
@@ -874,7 +934,6 @@ void Renderer::BeginPE() {
 	//レンダリングテクスチャクリア
 	float ClearColor[4] = { 0.0f, 0.0f, 0.5f, 1.0f };
 	_devicecontext->ClearRenderTargetView(_PErenderertargetview, ClearColor);
-	//_devicecontext->ClearRenderTargetView(_Depthrenderertargetview, ClearColor);
 	_devicecontext->ClearRenderTargetView(_Velrenderertargetview, ClearColor);
 
 	//Zバッファクリア
@@ -918,6 +977,16 @@ void Renderer::BeginMotionBlur() {
 
 	//Zバッファクリア
 	_devicecontext->ClearDepthStencilView(_depthstencilview, D3D11_CLEAR_DEPTH, 1.0f, 0);
+}
+
+void Renderer::BeginLightDepth(const XMMATRIX& ViewMatrix, const XMMATRIX& ProjectionMatrix) {
+	Renderer::SetViewMatrix(ViewMatrix);
+	Renderer::SetProjectionMatrix(ProjectionMatrix);
+
+	SetViewportSize({ 1024.0f, 1024.0f });
+
+	_devicecontext->OMSetRenderTargets(0, NULL,	_CameraDepthstencilview);
+	_devicecontext->ClearDepthStencilView(_CameraDepthstencilview, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
 

@@ -14,10 +14,10 @@ void DivingBoard::Init(){
 
 	//シェーダーセット
 	Renderer::CreateVertexShader(&_vertexshader, &_vertexlayout,
-		"shader\\NormalLightingVS.cso");
+		"shader\\DepthShadowVS.cso");
 
 	Renderer::CreatePixelShader(&_pixelshader,
-		"shader\\NormalLightingPS.cso");
+		"shader\\DepthShadowPS.cso");
 }
 
 void DivingBoard::Uninit(){
