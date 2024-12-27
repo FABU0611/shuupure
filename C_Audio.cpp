@@ -6,12 +6,12 @@
 
 
 
-IXAudio2*				Audio::_xaudio = NULL;
-IXAudio2MasteringVoice*	Audio::_masteringvoice = NULL;
+IXAudio2* Audio::_xaudio = NULL;
+IXAudio2MasteringVoice* Audio::_masteringvoice = NULL;
 std::unordered_map<std::string, Sound*> Audio::_audiopool;
 
 
-void Audio::InitMaster(){
+void Audio::InitMaster() {
 	// COM初期化
 	CoInitializeEx(NULL, COINIT_MULTITHREADED);
 
@@ -23,7 +23,7 @@ void Audio::InitMaster(){
 }
 
 
-void Audio::UninitMaster(){
+void Audio::UninitMaster() {
 	_masteringvoice->DestroyVoice();
 	_xaudio->Release();
 	CoUninitialize();
@@ -37,7 +37,7 @@ void Audio::UninitMaster(){
 
 
 
-void Audio::Load(const char *FileName){
+void Audio::Load(const char* FileName) {
 
 	// サウンドデータ読込
 	WAVEFORMATEX wfx = { 0 };
@@ -71,10 +71,10 @@ void Audio::Load(const char *FileName){
 		mmckinfo.ckid = mmioFOURCC('f', 'm', 't', ' ');
 		mmioDescend(hmmio, &mmckinfo, &riffchunkinfo, MMIO_FINDCHUNK);
 
-		if (mmckinfo.cksize >= sizeof(WAVEFORMATEX)){
+		if (mmckinfo.cksize >= sizeof(WAVEFORMATEX)) {
 			mmioRead(hmmio, (HPSTR)&wfx, sizeof(wfx));
 		}
-		else{
+		else {
 			PCMWAVEFORMAT pcmwf = { 0 };
 			mmioRead(hmmio, (HPSTR)&pcmwf, sizeof(pcmwf));
 			memset(&wfx, 0x00, sizeof(wfx));
@@ -107,7 +107,7 @@ void Audio::Load(const char *FileName){
 }
 
 
-void Audio::UninitAll(){
+void Audio::UninitAll() {
 	//すべてのSoundの終了処理をする
 	for (std::pair<const std::string, Sound*> pair : _audiopool) {
 		pair.second->SourceVoice->Stop();
@@ -125,8 +125,11 @@ void Audio::UninitAll(){
 
 
 
-void Audio::Play(const char* FileName, bool Loop)
-{
+void Audio::Play(const char* FileName, bool Loop) {
+	if (!_audiopool.contains(FileName)) {
+		return;
+	}
+
 	_audiopool[FileName]->SourceVoice->Stop();
 	_audiopool[FileName]->SourceVoice->FlushSourceBuffers();
 
@@ -141,7 +144,7 @@ void Audio::Play(const char* FileName, bool Loop)
 	bufinfo.PlayLength = _audiopool[FileName]->PlayLength;
 
 	// ループ設定
-	if (Loop){
+	if (Loop) {
 		bufinfo.LoopBegin = 0;
 		bufinfo.LoopLength = _audiopool[FileName]->PlayLength;
 		bufinfo.LoopCount = XAUDIO2_LOOP_INFINITE;
@@ -149,11 +152,11 @@ void Audio::Play(const char* FileName, bool Loop)
 
 	_audiopool[FileName]->SourceVoice->SubmitSourceBuffer(&bufinfo, NULL);
 
-/*
-	float outputMatrix[4] = { 0.0f , 0.0f, 1.0f , 0.0f };
-	m_SourceVoice->SetOutputMatrix(m_MasteringVoice, 2, 2, outputMatrix);
-	//m_SourceVoice->SetVolume(0.1f);
-*/
+	/*
+		float outputMatrix[4] = { 0.0f , 0.0f, 1.0f , 0.0f };
+		m_SourceVoice->SetOutputMatrix(m_MasteringVoice, 2, 2, outputMatrix);
+		//m_SourceVoice->SetVolume(0.1f);
+	*/
 
 
 	// 再生
@@ -161,34 +164,54 @@ void Audio::Play(const char* FileName, bool Loop)
 
 }
 
-void Audio::StopAudio(const char* FileName){
+void Audio::StopAudio(const char* FileName) {
+	if (!_audiopool.contains(FileName)) {
+		return;
+	}
+
 	_audiopool[FileName]->SourceVoice->Stop();
 }
 
-void Audio::SetVolume(const char* FileName, const float& volume){
+void Audio::SetVolume(const char* FileName, const float& volume) {
+	if (!_audiopool.contains(FileName)) {
+		return;
+	}
+
 	_audiopool[FileName]->SourceVoice->SetVolume(volume);
 }
 
-bool Audio::IsPlaying(const char* FileName){
+bool Audio::IsPlaying(const char* FileName) {
+	if (!_audiopool.contains(FileName)) {
+		return false;
+	}
+
 	XAUDIO2_VOICE_STATE xa2state;
 
-	// 状態取得
+	//状態取得
 	_audiopool[FileName]->SourceVoice->GetState(&xa2state);
 
 	return (xa2state.BuffersQueued != 0);
 }
 
-void Audio::FadeOut(const char* FileName, const float& rate){
+void Audio::FadeOut(const char* FileName, const float& rate) {
+	if (!_audiopool.contains(FileName)) {
+		return;
+	}
+
 	float volume;
-	 _audiopool[FileName]->SourceVoice->GetVolume(&volume);
-	 if (volume <= 0.0f) {
-		 return;
-	 }
-	 volume -= rate;
-	 _audiopool[FileName]->SourceVoice->SetVolume(volume);
+	_audiopool[FileName]->SourceVoice->GetVolume(&volume);
+	if (volume <= 0.0f) {
+		return;
+	}
+	volume -= rate;
+	_audiopool[FileName]->SourceVoice->SetVolume(volume);
 }
 
-void Audio::FadeIn(const char* FileName, const float& rate){
+void Audio::FadeIn(const char* FileName, const float& rate) {
+	if (!_audiopool.contains(FileName)) {
+		return;
+	}
+
 	float volume;
 	_audiopool[FileName]->SourceVoice->GetVolume(&volume);
 	if (volume >= 1.0f) {
