@@ -2,12 +2,11 @@
 #include "renderer.h"
 #include "C_AnimationModel.h"
 
-void AnimationModel::Draw()
-{
+void AnimationModel::Draw() {
 	// プリミティブトポロジ設定
 	Renderer::GetDeviceContext()->IASetPrimitiveTopology(
 		D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	
+
 	// マテリアル設定
 	MATERIAL material;
 	ZeroMemory(&material, sizeof(material));
@@ -16,8 +15,7 @@ void AnimationModel::Draw()
 	material.TextureEnable = true;
 	Renderer::SetMaterial(material);
 
-	for (unsigned int m = 0; m < _aiscene->mNumMeshes; m++)
-	{
+	for (unsigned int m = 0; m < _aiscene->mNumMeshes; m++) {
 		aiMesh* mesh = _aiscene->mMeshes[m];
 
 
@@ -33,30 +31,26 @@ void AnimationModel::Draw()
 		aimaterial->Get(AI_MATKEY_OPACITY, opacity);
 
 		//Diffuse (アルベド) テクスチャを取得
-		if (AI_SUCCESS == aimaterial->GetTexture(aiTextureType_DIFFUSE, 0, &diffuseTexture))
-		{
+		if (AI_SUCCESS == aimaterial->GetTexture(aiTextureType_DIFFUSE, 0, &diffuseTexture)) {
 			Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &_texture[diffuseTexture.data]);
 		}
-		else
-		{
+		else {
 			Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &_dummytex);
 			material.TextureEnable = false; // ディフューズテクスチャがない場合の処理
-			//テクスチャが無いとき他のテクスチャが来ないように上書きしたい
 		}
 
 		//Normal map (ノーマルマップ) を取得
-		if (AI_SUCCESS == aimaterial->GetTexture(aiTextureType_NORMALS, 0, &normalTexture))
-		{
+		if (AI_SUCCESS == aimaterial->GetTexture(aiTextureType_NORMALS, 0, &normalTexture)) {
 			Renderer::GetDeviceContext()->PSSetShaderResources(1, 1, &_texture[normalTexture.data]);
 		}
-		else
-		{
+		else {
 			Renderer::GetDeviceContext()->PSSetShaderResources(1, 1, &_dummyntex);
-			//テクスチャが無いとき他のテクスチャが来ないように上書きしたい
-			//nullptrとかNULLだとアクセス違反が起きる
+			//nullptrとかNULLだとアクセス違反が起きるので上書き
 		}
 		//上書きすれば他のモデルのテクスチャが貼られることはないっぽい
 
+		ID3D11ShaderResourceView* shadow = Renderer::GetDepthTexture();
+		Renderer::GetDeviceContext()->PSSetShaderResources(2, 1, &shadow);
 
 		//if (texture == aiString(""))
 		//{
@@ -86,26 +80,22 @@ void AnimationModel::Draw()
 	}
 }
 
-void AnimationModel::LoadAnimation(const char* FileName, const char* Name)
-{
+void AnimationModel::LoadAnimation(const char* FileName, const char* Name) {
 	_animation[Name] = aiImportFile(FileName, aiProcess_ConvertToLeftHanded);
 	assert(_animation[Name]);
 }
 
-void AnimationModel::CreateBone(aiNode* node)
-{
+void AnimationModel::CreateBone(aiNode* node) {
 	BONE bone;
 
 	_bone[node->mName.C_Str()] = bone;
 
-	for (unsigned int n = 0; n < node->mNumChildren; n++)
-	{
+	for (unsigned int n = 0; n < node->mNumChildren; n++) {
 		CreateBone(node->mChildren[n]);
 	}
 }
 
-void AnimationModel::UpdateBoneMatrix(aiNode* node, aiMatrix4x4 matrix)
-{
+void AnimationModel::UpdateBoneMatrix(aiNode* node, aiMatrix4x4 matrix) {
 	//再帰的に実行することで親子関係をもって繋がる
 	BONE* bone = &_bone[node->mName.C_Str()];
 
@@ -120,21 +110,19 @@ void AnimationModel::UpdateBoneMatrix(aiNode* node, aiMatrix4x4 matrix)
 	bone->Matrix = worldMatrix;
 	bone->Matrix *= bone->OffsetMatrix;
 
-	for (unsigned int n = 0; n < node->mNumChildren; n++)
-	{
+	for (unsigned int n = 0; n < node->mNumChildren; n++) {
 		UpdateBoneMatrix(node->mChildren[n], worldMatrix);
 	}
 }
 
-void AnimationModel::Load( const char *FileName )
-{
-	const std::string modelPath( FileName );
+void AnimationModel::Load(const char* FileName) {
+	const std::string modelPath(FileName);
 
 	_aiscene = aiImportFile(FileName, aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_ConvertToLeftHanded);
 	assert(_aiscene);
 
-	_vertexbuffer = new ID3D11Buffer*[_aiscene->mNumMeshes];
-	_indexbuffer = new ID3D11Buffer*[_aiscene->mNumMeshes];
+	_vertexbuffer = new ID3D11Buffer * [_aiscene->mNumMeshes];
+	_indexbuffer = new ID3D11Buffer * [_aiscene->mNumMeshes];
 
 
 	//変形後頂点配列生成
@@ -143,16 +131,14 @@ void AnimationModel::Load( const char *FileName )
 	//再帰的にボーン生成
 	CreateBone(_aiscene->mRootNode);
 
-	for (unsigned int m = 0; m < _aiscene->mNumMeshes; m++)
-	{
+	for (unsigned int m = 0; m < _aiscene->mNumMeshes; m++) {
 		aiMesh* mesh = _aiscene->mMeshes[m];
 
 		// 頂点バッファ生成
 		{
 			VERTEX_3D* vertex = new VERTEX_3D[mesh->mNumVertices];
 
-			for (unsigned int v = 0; v < mesh->mNumVertices; v++)
-			{
+			for (unsigned int v = 0; v < mesh->mNumVertices; v++) {
 				vertex[v].Position = XMFLOAT3(mesh->mVertices[v].x, mesh->mVertices[v].y, mesh->mVertices[v].z);
 				vertex[v].Normal = XMFLOAT3(mesh->mNormals[v].x, mesh->mNormals[v].y, mesh->mNormals[v].z);
 				vertex[v].TexCoord = XMFLOAT2(mesh->mTextureCoords[0][v].x, mesh->mTextureCoords[0][v].y);
@@ -175,7 +161,7 @@ void AnimationModel::Load( const char *FileName )
 			sd.pSysMem = vertex;
 
 			Renderer::GetDevice()->CreateBuffer(&bd, &sd,
-											&_vertexbuffer[m]);
+				&_vertexbuffer[m]);
 
 			delete[] vertex;
 		}
@@ -185,8 +171,7 @@ void AnimationModel::Load( const char *FileName )
 		{
 			unsigned int* index = new unsigned int[mesh->mNumFaces * 3];
 
-			for (unsigned int f = 0; f < mesh->mNumFaces; f++)
-			{
+			for (unsigned int f = 0; f < mesh->mNumFaces; f++) {
 				const aiFace* face = &mesh->mFaces[f];
 
 				assert(face->mNumIndices == 3);
@@ -215,15 +200,13 @@ void AnimationModel::Load( const char *FileName )
 
 
 		//変形後頂点データ初期化
-		for (unsigned int v = 0; v < mesh->mNumVertices; v++)
-		{
+		for (unsigned int v = 0; v < mesh->mNumVertices; v++) {
 			DEFORM_VERTEX deformVertex;
 			deformVertex.Position = mesh->mVertices[v];
 			deformVertex.Normal = mesh->mNormals[v];
 			deformVertex.BoneNum = 0;
 
-			for (unsigned int b = 0; b < 4; b++)
-			{
+			for (unsigned int b = 0; b < 4; b++) {
 				deformVertex.BoneName[b] = "";
 				deformVertex.BoneWeight[b] = 0.0f;
 			}
@@ -233,15 +216,13 @@ void AnimationModel::Load( const char *FileName )
 
 
 		//ボーンデータ初期化
-		for (unsigned int b = 0; b < mesh->mNumBones; b++)
-		{
+		for (unsigned int b = 0; b < mesh->mNumBones; b++) {
 			aiBone* bone = mesh->mBones[b];
 
 			_bone[bone->mName.C_Str()].OffsetMatrix = bone->mOffsetMatrix;
 
 			//変形後頂点にボーンデータ格納
-			for (unsigned int w = 0; w < bone->mNumWeights; w++)
-			{
+			for (unsigned int w = 0; w < bone->mNumWeights; w++) {
 				aiVertexWeight weight = bone->mWeights[w];
 
 				int num = _deformvertex[m][weight.mVertexId].BoneNum;
@@ -258,8 +239,7 @@ void AnimationModel::Load( const char *FileName )
 
 
 	//テクスチャ読み込み
-	for(int i = 0; i < _aiscene->mNumTextures; i++)
-	{
+	for (int i = 0; i < _aiscene->mNumTextures; i++) {
 		aiTexture* aitexture = _aiscene->mTextures[i];
 
 		ID3D11ShaderResourceView* texture;
@@ -294,10 +274,8 @@ void AnimationModel::Load( const char *FileName )
 
 
 
-void AnimationModel::Uninit()
-{
-	for (unsigned int m = 0; m < _aiscene->mNumMeshes; m++)
-	{
+void AnimationModel::Uninit() {
+	for (unsigned int m = 0; m < _aiscene->mNumMeshes; m++) {
 		_vertexbuffer[m]->Release();
 		_indexbuffer[m]->Release();
 	}
@@ -308,8 +286,7 @@ void AnimationModel::Uninit()
 	delete[] _deformvertex;
 
 
-	for (std::pair<const std::string, ID3D11ShaderResourceView*> pair : _texture)
-	{
+	for (std::pair<const std::string, ID3D11ShaderResourceView*> pair : _texture) {
 		pair.second->Release();
 	}
 
@@ -318,15 +295,13 @@ void AnimationModel::Uninit()
 	aiReleaseImport(_aiscene);
 
 
-	for (std::pair<const std::string, const aiScene*> pair : _animation)
-	{
+	for (std::pair<const std::string, const aiScene*> pair : _animation) {
 		aiReleaseImport(pair.second);
 	}
 
 }
 
-void AnimationModel::Update(const char* AnimationName1, int Frame1)
-{
+void AnimationModel::Update(const char* AnimationName1, int Frame1) {
 	if (_animation.count(AnimationName1) == 0)
 		return;
 
@@ -337,16 +312,13 @@ void AnimationModel::Update(const char* AnimationName1, int Frame1)
 	aiAnimation* animation1 = _animation[AnimationName1]->mAnimations[0];
 
 
-	for (auto pair : _bone)
-	{
+	for (auto pair : _bone) {
 		BONE* bone = &_bone[pair.first];
 
 		aiNodeAnim* nodeAnim1 = nullptr;
 
-		for (unsigned int c = 0; c < animation1->mNumChannels; c++)
-		{
-			if (animation1->mChannels[c]->mNodeName == aiString(pair.first))
-			{
+		for (unsigned int c = 0; c < animation1->mNumChannels; c++) {
+			if (animation1->mChannels[c]->mNodeName == aiString(pair.first)) {
 				nodeAnim1 = animation1->mChannels[c];
 				break;
 			}
@@ -357,8 +329,7 @@ void AnimationModel::Update(const char* AnimationName1, int Frame1)
 		aiQuaternion rot1;
 		aiVector3D pos1;
 
-		if (nodeAnim1)
-		{
+		if (nodeAnim1) {
 			f = Frame1 % nodeAnim1->mNumRotationKeys;	//簡易実装
 			rot1 = nodeAnim1->mRotationKeys[f].mValue;
 
@@ -375,8 +346,7 @@ void AnimationModel::Update(const char* AnimationName1, int Frame1)
 
 	//頂点変換(CPUスキニング)皮膚をくっつける
 	//メッシュの数だけループ　人と武器とか
-	for (unsigned int m = 0; m < _aiscene->mNumMeshes; m++)
-	{
+	for (unsigned int m = 0; m < _aiscene->mNumMeshes; m++) {
 		aiMesh* mesh = _aiscene->mMeshes[m];
 
 		D3D11_MAPPED_SUBRESOURCE ms;
@@ -385,8 +355,7 @@ void AnimationModel::Update(const char* AnimationName1, int Frame1)
 
 		VERTEX_3D* vertex = (VERTEX_3D*)ms.pData;
 
-		for (unsigned int v = 0; v < mesh->mNumVertices; v++)
-		{
+		for (unsigned int v = 0; v < mesh->mNumVertices; v++) {
 			DEFORM_VERTEX* deformVertex = &_deformvertex[m][v];
 
 			aiMatrix4x4 matrix[4];
