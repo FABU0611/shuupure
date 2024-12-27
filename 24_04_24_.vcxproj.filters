@@ -439,6 +439,12 @@
     <FxCompile Include="shader\VertexLightingPS.hlsl">
       <Filter>シェーダー\PS</Filter>
     </FxCompile>
+    <FxCompile Include="shader\DepthShadowPS.hlsl">
+      <Filter>シェーダー\PS</Filter>
+    </FxCompile>
+    <FxCompile Include="shader\DepthShadowVS.hlsl">
+      <Filter>シェーダー\VS</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="24_04_24_.rc">
