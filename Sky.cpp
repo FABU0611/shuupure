@@ -20,6 +20,8 @@ void Sky::Init() {
 
 	Renderer::CreatePixelShader(&_pixelshader,
 		"shader\\UnlitTexturePS.cso");
+
+	GetRotation().y = XM_PI * 0.5f;
 }
 
 void Sky::Uninit() {
