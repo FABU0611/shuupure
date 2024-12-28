@@ -6,10 +6,6 @@
 
 
 class TitlePush : public Text {
-	XMFLOAT2				_spos{};
-	XMFLOAT2				_epos{};
-	float					_time{};
-
 	int						_start{};
 
 public:
