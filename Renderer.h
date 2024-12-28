@@ -69,9 +69,9 @@ private:
 	static ID3D11Buffer* _weightsbuffer;
 	static ID3D11Buffer* _dofbuffer;
 
-	static XMFLOAT4X4				_prevworld;
-	static XMFLOAT4X4				_prevview;
-	static XMFLOAT4X4				_prevprojection;
+	static XMMATRIX				_prevworld;
+	static XMMATRIX				_prevview;
+	static XMMATRIX				_prevprojection;
 
 	static ID3D11DepthStencilState* _depthstateenable;
 	static ID3D11DepthStencilState* _depthstatedisable;

@@ -3,6 +3,10 @@
 #include <io.h>
 #include <string>
 #include <filesystem>
+#include <vector>
+
+#define IntelGPU (0x8086)
+#define NVIDIAGPU (0x10DE)
 
 
 D3D_FEATURE_LEVEL       Renderer::_featurelevel = D3D_FEATURE_LEVEL_11_0;
@@ -26,9 +30,9 @@ ID3D11Buffer* Renderer::_parameterbuffer{};
 ID3D11Buffer* Renderer::_weightsbuffer{};
 ID3D11Buffer* Renderer::_dofbuffer{};
 
-XMFLOAT4X4 Renderer::_prevworld;
-XMFLOAT4X4 Renderer::_prevview;
-XMFLOAT4X4 Renderer::_prevprojection;
+XMMATRIX Renderer::_prevworld;
+XMMATRIX Renderer::_prevview;
+XMMATRIX Renderer::_prevprojection;
 
 ID3D11DepthStencilState* Renderer::_depthstateenable{};
 ID3D11DepthStencilState* Renderer::_depthstatedisable{};
@@ -61,14 +65,41 @@ ID3D11Texture2D* Renderer::_RendertargetTEX = NULL;
 void Renderer::Init() {
 	HRESULT hr = S_OK;
 
-	IDXGIAdapter* pAdapter;
-	IDXGIFactory* pFactory;
+	IDXGIAdapter* pAdapter{};
+	IDXGIAdapter* pSelectAdapter{};
+	IDXGIFactory* pFactory{};
+	std::vector<IDXGIAdapter*> vAdapters;
 
 	//GPUの一覧を取得して最適なものを選んだ方がいい
 	CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&pFactory);
-	hr = pFactory->EnumAdapters(0, &pAdapter);	//0番は標準のGPU
-	if (hr == DXGI_ERROR_NOT_FOUND) {
-		pFactory->EnumAdapters(0, &pAdapter);
+	for (int i = 0; pFactory->EnumAdapters(i, &pAdapter) != DXGI_ERROR_NOT_FOUND; ++i){	//0番は標準のGPU
+		vAdapters.push_back(pAdapter);
+	}
+	for (auto& adapter : vAdapters) {
+		DXGI_ADAPTER_DESC desc;
+		if (SUCCEEDED(adapter->GetDesc(&desc))) {
+			if (desc.VendorId == IntelGPU) {
+				pSelectAdapter = adapter;
+				break;
+			}
+		}
+	}
+	if (pAdapter) {
+		pAdapter->Release();
+	}
+
+	if (!pSelectAdapter) {
+		pFactory->EnumAdapters(0, &pSelectAdapter);
+	}
+
+	for (auto& adapter : vAdapters) {
+		if (adapter == pSelectAdapter) {
+			continue;
+		}
+		adapter->Release();
+	}
+	if (pFactory) {
+		pFactory->Release();
 	}
 
 	// デバイス、スワップチェーン作成
@@ -85,8 +116,8 @@ void Renderer::Init() {
 	swapChainDesc.SampleDesc.Quality = 0;
 	swapChainDesc.Windowed = TRUE;
 
-	hr = D3D11CreateDeviceAndSwapChain(NULL,		//pAdapter
-		D3D_DRIVER_TYPE_HARDWARE,					//D3D_DRIVER_TYPE_UNKNOWN
+	hr = D3D11CreateDeviceAndSwapChain(pSelectAdapter,		//pAdapter	NULL
+		D3D_DRIVER_TYPE_UNKNOWN,							//D3D_DRIVER_TYPE_UNKNOWN	D3D_DRIVER_TYPE_HARDWARE
 		NULL,
 		D3D10_CREATE_DEVICE_BGRA_SUPPORT,
 		NULL,
@@ -99,6 +130,9 @@ void Renderer::Init() {
 		&_devicecontext);
 
 
+	if (pSelectAdapter) {
+		pSelectAdapter->Release();
+	}
 
 
 
@@ -705,22 +739,18 @@ void Renderer::SetBlendAddEnable(bool Enable) {
 }
 
 void Renderer::SetWorldViewProjection2D() {
-	XMMATRIX prevworld = XMLoadFloat4x4(&_prevworld);
-	XMMATRIX prevview = XMLoadFloat4x4(&_prevview);
-
-	SetWorldMatrix(XMMatrixIdentity(), prevworld);
-	SetViewMatrix(XMMatrixIdentity(), prevview);
+	SetWorldMatrix(XMMatrixIdentity(), _prevworld);
+	SetViewMatrix(XMMatrixIdentity(), _prevview);
 
 	XMMATRIX projection;
-	XMMATRIX prevprojection = XMLoadFloat4x4(&_prevprojection);
 	projection = XMMatrixOrthographicOffCenterLH(0.0f, SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f, 0.0f, 1.0f);
-	SetProjectionMatrix(projection, prevprojection);
+	SetProjectionMatrix(projection, _prevprojection);
 }
 
 
 void Renderer::SetWorldMatrix(XMMATRIX WorldMatrix) {
 	XMFLOAT4X4 worldf;
-	
+
 	XMStoreFloat4x4(&worldf, XMMatrixTranspose(WorldMatrix));
 	_devicecontext->UpdateSubresource(_worldbuffer, 0, NULL, &worldf, 0, 0);
 }
@@ -740,7 +770,7 @@ void Renderer::SetWorldMatrix(XMMATRIX WorldMatrix, XMMATRIX& PrevWorld) {
 
 void Renderer::SetViewMatrix(XMMATRIX ViewMatrix) {
 	XMFLOAT4X4 viewf;
-	
+
 	XMStoreFloat4x4(&viewf, XMMatrixTranspose(ViewMatrix));
 	_devicecontext->UpdateSubresource(_viewbuffer, 0, NULL, &viewf, 0, 0);
 }
@@ -749,7 +779,7 @@ void Renderer::SetViewMatrix(XMMATRIX ViewMatrix, XMMATRIX& PrevView) {
 
 	XMStoreFloat4x4(&viewf, XMMatrixTranspose(PrevView));
 	_devicecontext->UpdateSubresource(_prevviewbuffer, 0, NULL, &viewf, 0, 0);
-	
+
 	XMStoreFloat4x4(&viewf, XMMatrixTranspose(ViewMatrix));
 	_devicecontext->UpdateSubresource(_viewbuffer, 0, NULL, &viewf, 0, 0);
 
@@ -884,12 +914,11 @@ void Renderer::TakeingPic() {
 	hr = _devicecontext->Map(stagingTexture, 0, D3D11_MAP_READ, 0, &mappedResource);
 	if (FAILED(hr)) {
 		stagingTexture->Release();
-		// エラーハンドリング
 		return;
 	}
 
 	//DirectXTexを使用してJPEGに保存
-	DirectX::Image image;
+	Image image;
 	image.width = desc.Width;
 	image.height = desc.Height;
 	image.format = desc.Format;
@@ -898,11 +927,10 @@ void Renderer::TakeingPic() {
 	image.pixels = reinterpret_cast<uint8_t*>(mappedResource.pData);
 
 	std::wstring filename = L"photo\\output.jpg";
-	hr = DirectX::SaveToWICFile(image, DirectX::WIC_FLAGS_NONE, DirectX::GetWICCodec(DirectX::WIC_CODEC_JPEG), filename.c_str());
+	hr = SaveToWICFile(image, WIC_FLAGS_NONE, GetWICCodec(WIC_CODEC_JPEG), filename.c_str());
 	if (hr == HRESULT_FROM_WIN32(ERROR_PATH_NOT_FOUND)) {
 		std::filesystem::create_directory("photo");
-		DirectX::SaveToWICFile(image, DirectX::WIC_FLAGS_NONE, DirectX::GetWICCodec(DirectX::WIC_CODEC_JPEG), filename.c_str());
-		// エラーハンドリング
+		SaveToWICFile(image, WIC_FLAGS_NONE, GetWICCodec(WIC_CODEC_JPEG), filename.c_str());
 	}
 
 	_devicecontext->Unmap(stagingTexture, 0);
