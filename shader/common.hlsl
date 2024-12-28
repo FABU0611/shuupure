@@ -98,7 +98,8 @@ struct PS_IN {
 	float2 TexCoord			: TEXCOORD0;	//ピクセルのテクスチャ座標
 	float4 Tangent			: TANGENT0;		//タンジェント
 	float4 Binormal			: BINORMAL0;	//バイノーマル
-	float2 Velocity			: TEXCOORD1;	//ピクセルの座標
+	float4 CurPosition		: TEXCOORD1;	//今フレームピクセルの座標
+	float4 PrevPosition		: TEXCOORD2;	//前フレームピクセルの座標
 	float4 LightPosition	: POSITION1;	//ライト空間座標	
 };
 struct PS_OUT {
@@ -167,13 +168,11 @@ void DepthofField(in float depth, out float value) {
 }
 
 void CreateVelTex(in PS_IN In, out float2 vel) {
-	float2 velocity = In.Velocity;
+	float2 velocity = (In.CurPosition.xy / In.CurPosition.w) - (In.PrevPosition.xy / In.PrevPosition.w);
 	velocity.y = -velocity.y;
 	float2 velocityNormalized = (velocity + 1.0f) * 0.5f;
 	velocityNormalized = clamp(velocityNormalized, 0.39f, 0.69f);
 	vel.rg = float2(velocityNormalized);
-	//vel.b = 0.0f;
-	//vel.a = 1.0f;
 }
 
 /*
