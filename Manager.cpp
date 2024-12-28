@@ -135,19 +135,19 @@ void Manager::Update() {
 void Manager::Draw() {
 	LIGHT light;
 	light.Enable = true;
+	light.Direction = { -1.0f, -1.0f, -0.5f, 0.0f };
 	light.Ambient = { 0.1f, 0.1f, 0.1f, 1.0f };
 	light.Diffuse = { 1.0f, 1.0f, 1.0f, 1.0f };
 
-	XMFLOAT3 lightpos = { 100.0f, 100.0f, 100.0f };
 	XMFLOAT3 lighttarget = { 0.0f, 0.0f, 0.0f };
 	XMFLOAT3 lightup = { 0.0f, 1.0f, 0.0f };
 
-	XMFLOAT3 lightdir = lighttarget - lightpos;
-	light.Direction = { lightdir.x, lightdir.y, lightdir.z, 0.0f };
-	light.Direction = VectorNormalize(light.Direction);
+	XMVECTOR dir = XMVector4Normalize(XMLoadFloat4(&light.Direction));
+	XMVECTOR tgt = XMLoadFloat3(&lighttarget);
+	XMVECTOR lightpos = tgt - dir * 250.0f;
 
-	XMMATRIX lightview = XMMatrixLookAtLH(XMLoadFloat3(&lightpos), XMLoadFloat3(&lighttarget), XMLoadFloat3(&lightup));
-	XMMATRIX lightprojection = XMMatrixOrthographicLH(100.0f, 100.0f, 1.0f, 300.0f);		//正射影
+	XMMATRIX lightview = XMMatrixLookAtLH(lightpos, XMLoadFloat3(&lighttarget), XMLoadFloat3(&lightup));
+	XMMATRIX lightprojection = XMMatrixOrthographicLH(250.0f, 250.0f, 1.0f, 500.0f);		//正射影
 
 	light.ViewMatrix = XMMatrixTranspose(lightview);
 	light.ProjectionMatrix = XMMatrixTranspose(lightprojection);
@@ -157,10 +157,10 @@ void Manager::Draw() {
 	Renderer::BeginLightDepth(lightview, lightprojection);
 	_scene->DrawAtLight();	//カメラ以外のオブジェクト描画
 
+
 	//オブジェクトの描画、深度マップの作成、速度マップの作成
 	Renderer::BeginPE();
-	_scene->Draw();
-	
+	_scene->Draw();	
 
 	//シーンにガウシアンブラーを掛ける
 	_gaussian->Draw();
