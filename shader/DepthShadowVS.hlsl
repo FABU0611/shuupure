@@ -14,8 +14,6 @@ void main(in VS_IN In, out PS_IN Out){
 	worldNormal = mul(normal, World);
 	worldNormal = normalize(worldNormal);
 	
-	float light = -dot(Light.Direction.xyz, worldNormal.xyz);
-	light = saturate(light);
 	Out.Diffuse = In.Diffuse * Material.Diffuse;
 	Out.Diffuse.a = In.Diffuse.a;
 	
