@@ -40,6 +40,8 @@ class Manager {
 	static CheckDoF* _checkdof;
 #endif
 
+	static bool _isdrawfromlight;
+
 public:
 	static void Init();
 	static void Uninit();
@@ -47,6 +49,8 @@ public:
 	static void Draw();
 
 	static void FadeUpdate();
+
+	static bool& GetisDrawFromLight() { return _isdrawfromlight; }
 
 	static Scene* GetScene() { return _scene; }
 	static TextManager* GetTextManager() { return _textmanager; }

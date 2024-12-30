@@ -28,6 +28,7 @@ Gaussian* Manager::_gaussian;
 MotionBlur* Manager::_motionblur;
 GUIManager* Manager::_guimanager;
 TextManager* Manager::_textmanager;
+bool Manager::_isdrawfromlight;
 
 #ifdef _DEBUG
 #include "CheckDoF.h"
@@ -155,7 +156,9 @@ void Manager::Draw() {
 
 	//ライトからの深度マップを作成
 	Renderer::BeginLightDepth(lightview, lightprojection);
-	_scene->DrawAtLight();	//カメラ以外のオブジェクト描画
+	_isdrawfromlight = true;
+	_scene->DrawFromLight();	//カメラ以外のオブジェクト描画
+	_isdrawfromlight = false;
 
 
 	//オブジェクトの描画、深度マップの作成、速度マップの作成

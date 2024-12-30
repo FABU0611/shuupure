@@ -127,7 +127,13 @@ void Player_Tutorial::Draw(){
 	rot = XMMatrixRotationQuaternion(XMLoadFloat4(&GetQuaternion()));
 	trans = XMMatrixTranslation(GetPosition().x, GetPosition().y, GetPosition().z);
 	world = scale * rot * trans;
-	Renderer::SetWorldMatrix(world, _prevworld);
+
+	if (Manager::GetisDrawFromLight()) {
+		Renderer::SetWorldMatrix(world);
+	}
+	else {
+		Renderer::SetWorldMatrix(world, _prevworld);
+	}
 
 	for (auto c : _components) {
 		c->Draw();
