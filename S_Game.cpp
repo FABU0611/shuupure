@@ -28,14 +28,14 @@ void Game::Init() {
 	_light->Position = XMFLOAT4(0.0f, 10.0f, 20.0f, 0.0f);
 	_light->PointLightParam = XMFLOAT4(5000.0f, 0.0f, 0.0f, 0.0f);
 
-	AddGameobject<Camera>(System);
+	AddGameobject<Camera>(Layer::System);
 
-	AddGameobject<Sky>(BackGround, 300.0f);
+	AddGameobject<Sky>(Layer::BackGround, 300.0f);
 
-	AddGameobject<Player>(Object, XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(1.0f, 1.0f, 1.0f));
-	AddGameobject<DivingBoard>(Object, XMFLOAT3(-30.0f, 0.0f, 0.0f));
-	AddGameobject<Pool>(Object, XMFLOAT3(0.0f, 0.0f, 0.0f));
-	AddGameobject<Water>(Effect, XMFLOAT3(40.0f, 20.0f, 0.0f));
+	AddGameobject<Player>(Layer::Object, XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(1.0f, 1.0f, 1.0f));
+	AddGameobject<DivingBoard>(Layer::Object, XMFLOAT3(-30.0f, 0.0f, 0.0f));
+	AddGameobject<Pool>(Layer::Object, XMFLOAT3(0.0f, 0.0f, 0.0f));
+	AddGameobject<Water>(Layer::Effect, XMFLOAT3(40.0f, 20.0f, 0.0f));
 }
 
 void Game::Uninit(){

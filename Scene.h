@@ -9,7 +9,7 @@
 #include "Camera.h"
 #include "C_Collision.h"
 
-enum Layer{
+enum class Layer{
 	System,
 	BackGround,
 	Object,
@@ -22,7 +22,7 @@ enum Layer{
 
 class Scene {
 protected:
-	std::list<GameObject*>	_gameobjects[MAX_LAYER];
+	std::list<GameObject*>	_gameobjects[static_cast<int>(Layer::MAX_LAYER)];
 
 public:
 	Scene() {}
@@ -30,7 +30,7 @@ public:
 
 	virtual void Init() {};
 	virtual void Uninit() {
-		for (int i = 0; i < MAX_LAYER; i++) {
+		for (int i = 0; i < static_cast<int>(Layer::MAX_LAYER); i++) {
 			for (auto o : _gameobjects[i]) {
 				o->Uninit();
 				delete o;
@@ -40,7 +40,7 @@ public:
 		}
 	};
 	virtual void Update() {
-		for (int i = 0; i < MAX_LAYER; i++) {
+		for (int i = 0; i < static_cast<int>(Layer::MAX_LAYER); i++) {
 			for (auto o : _gameobjects[i]) {
 				//オブジェクトの更新処理
 				o->Update();
@@ -57,19 +57,19 @@ public:
 	virtual void Draw() {
 		ZSort();
 
-		for (int i = 0; i < MAX_LAYER; i++) {
+		for (int i = 0; i < static_cast<int>(Layer::MAX_LAYER); i++) {
 			for (auto o : _gameobjects[i]) {
 				//描画処理
 				o->Draw();
 			}
 		}
 	};
-	virtual void DrawAtLight() {
+	virtual void DrawFromLight() {
 		ZSort();
 
-		for (int i = 0; i < MAX_LAYER; i++) {
+		for (int i = 0; i < static_cast<int>(Layer::MAX_LAYER); i++) {
 			for (auto o : _gameobjects[i]) {
-				if (i == System) {
+				if (i == static_cast<int>(Layer::System)) {
 					Camera* camera = dynamic_cast<Camera*>(o);
 					if (camera) {
 						continue;
@@ -82,9 +82,9 @@ public:
 	}
 
 	template <typename T, typename... Args>
-	T* AddGameobject(const int& layer, Args&& ...args) {
+	T* AddGameobject(const Layer& layer, Args&& ...args) {
 		T* gameobject = new T(std::forward<Args>(args)...);		//Memo:newはCPU負荷が高くなるので自作newする。plasement new。https://logicalbeat.jp/blog/5016/ https://github.com/microsoft/mimalloc
-		_gameobjects[layer].push_back(gameobject);
+		_gameobjects[static_cast<int>(layer)].push_back(gameobject);
 		gameobject->Init();
 
 		return gameobject;
@@ -93,7 +93,7 @@ public:
 	//オブジェクトを取得
 	template <typename T>
 	T* GetGameobject() {
-		for (int i = 0; i < MAX_LAYER; i++) {
+		for (int i = 0; i < static_cast<int>(Layer::MAX_LAYER); i++) {
 			for (auto o : _gameobjects[i]) {
 				T* ret = dynamic_cast<T*>(o);
 
@@ -109,7 +109,7 @@ public:
 	template <typename T>
 	std::vector<T*> GetGameobjects() {
 		std::vector<T*> objectlist;
-		for (int i = 0; i < MAX_LAYER; i++) {
+		for (int i = 0; i < static_cast<int>(Layer::MAX_LAYER); i++) {
 			for (auto o : _gameobjects[i]) {
 				T* ret = dynamic_cast<T*>(o);
 
@@ -123,7 +123,7 @@ public:
 
 	//当たり判定処理
 	void CheckHit(GameObject* obj) {
-		for (auto o : _gameobjects[Object]) {
+		for (auto o : _gameobjects[static_cast<int>(Layer::Object)]) {
 			//コリジョンを持っているものだけ処理
 			if (!obj->GetComponent<Collision>() ||
 				!o->GetComponent<Collision>()) {
@@ -158,14 +158,14 @@ public:
 		//正規化
 		XMVector3Normalize(camD);
 
-		for (auto& o : _gameobjects[Object]) {
+		for (auto& o : _gameobjects[static_cast<int>(Layer::Object)]) {
 			XMVECTOR pos = XMLoadFloat3(&o->GetPosition());
 			XMVECTOR dir = pos - camP;
 			o->SetCamDistance(XMVectorGetX(XMVector3Dot(dir, camD)));
 		}
 
 		//Zソート
-		_gameobjects[Object].sort([](GameObject* a, GameObject* b) {
+		_gameobjects[static_cast<int>(Layer::Object)].sort([](GameObject* a, GameObject* b) {
 			return (a->GetCamDistance() > b->GetCamDistance());
 			});
 		//射影、当たり判定でも使う

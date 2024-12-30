@@ -60,7 +60,7 @@ public:
 			Scene* scene;
 			scene = Manager::GetScene();
 
-			scene->AddGameobject<Fireworks>(Effect, GetPosition(), _size, XMFLOAT4(0.2f, 0.2f, 0.5f, 1.0f), _volume);
+			scene->AddGameobject<Fireworks>(Layer::Effect, GetPosition(), _size, XMFLOAT4(0.2f, 0.2f, 0.5f, 1.0f), _volume);
 			_isSpawn = true;
 		}
 

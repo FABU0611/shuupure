@@ -26,11 +26,11 @@ void Tutorial::Init() {
 	_light->Position = XMFLOAT4(0.0f, 10.0f, 20.0f, 0.0f);
 	_light->PointLightParam = XMFLOAT4(5000.0f, 0.0f, 0.0f, 0.0f);
 
-	AddGameobject<Camera>(System);
+	AddGameobject<Camera>(Layer::System);
 
-	AddGameobject<Skyobj>(BackGround, 300.0f);
+	AddGameobject<Skyobj>(Layer::BackGround, 300.0f);
 
-	AddGameobject<Player_Tutorial>(Object, XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(1.0f, 1.0f, 1.0f));
+	AddGameobject<Player_Tutorial>(Layer::Object, XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(1.0f, 1.0f, 1.0f));
 }
 
 void Tutorial::Uninit(){
