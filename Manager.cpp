@@ -135,28 +135,8 @@ void Manager::Update() {
 }
 
 void Manager::Draw() {
-	LIGHT light;
-	light.Enable = true;
-	light.Direction = { -1.0f, -1.0f, -0.5f, 0.0f };
-	light.Ambient = { 0.1f, 0.1f, 0.1f, 1.0f };
-	light.Diffuse = { 1.0f, 1.0f, 1.0f, 1.0f };
-
-	XMFLOAT3 lighttarget = { 0.0f, 0.0f, 0.0f };
-	XMFLOAT3 lightup = { 0.0f, 1.0f, 0.0f };
-
-	XMVECTOR dir = XMVector4Normalize(XMLoadFloat4(&light.Direction));
-	XMVECTOR tgt = XMLoadFloat3(&lighttarget);
-	XMVECTOR lightpos = tgt - dir * 250.0f;
-
-	XMMATRIX lightview = XMMatrixLookAtLH(lightpos, XMLoadFloat3(&lighttarget), XMLoadFloat3(&lightup));
-	XMMATRIX lightprojection = XMMatrixOrthographicLH(250.0f, 250.0f, 1.0f, 500.0f);		//正射影
-
-	light.ViewMatrix = XMMatrixTranspose(lightview);
-	light.ProjectionMatrix = XMMatrixTranspose(lightprojection);
-	Renderer::SetLight(light);
-
 	//ライトからの深度マップを作成
-	Renderer::BeginLightDepth(lightview, lightprojection);
+	Renderer::BeginLightDepth();
 	_isdrawfromlight = true;
 	_scene->DrawFromLight();	//カメラ以外のオブジェクト描画
 	_isdrawfromlight = false;

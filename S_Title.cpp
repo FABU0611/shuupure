@@ -10,6 +10,7 @@
 #include "S_Tutorial.h"
 
 #include "Camera.h"
+#include "LightCamera.h"
 #include "Wave.h"
 #include "Sky.h"
 #include "MeshField.h"
@@ -32,6 +33,7 @@ void Title::Init(){
 	_light->PointLightParam = XMFLOAT4(5000.0f, 0.0f, 0.0f, 0.0f);
 
 	AddGameobject<Camera>(Layer::System);
+	AddGameobject<LightCamera>(Layer::System);
 
 	//AddGameobject<MeshField>(Object);
 	AddGameobject<Player>(Layer::Object, XMFLOAT3(35.0f, 7.0f, 5.0f), XMFLOAT3(1.0f, 1.0f, 1.0f));

@@ -7,6 +7,7 @@
 #include <algorithm>
 
 #include "Camera.h"
+#include "LightCamera.h"
 #include "C_Collision.h"
 
 enum class Layer{
@@ -59,6 +60,12 @@ public:
 
 		for (int i = 0; i < static_cast<int>(Layer::MAX_LAYER); i++) {
 			for (auto o : _gameobjects[i]) {
+				if (i == static_cast<int>(Layer::System)) {
+					LightCamera* lightcamera = dynamic_cast<LightCamera*>(o);
+					if (lightcamera) {
+						continue;
+					}
+				}
 				//•`‰æˆ—
 				o->Draw();
 			}

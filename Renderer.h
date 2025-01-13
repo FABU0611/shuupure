@@ -149,5 +149,8 @@ public:
 	static void BeginBlurX();
 	static void BeginBlurY();
 	static void BeginMotionBlur();
-	static void BeginLightDepth(const XMMATRIX& ViewMatrix, const XMMATRIX& ProjectionMatrix);
+	/// <summary>
+	/// 使用前にライトのViewMatrixとProjectionMatrixをセットしてください
+	/// </summary>
+	static void BeginLightDepth();
 };

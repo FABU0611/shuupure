@@ -963,13 +963,10 @@ void Renderer::BeginMotionBlur() {
 	_devicecontext->ClearDepthStencilView(_depthstencilview, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
-void Renderer::BeginLightDepth(const XMMATRIX& ViewMatrix, const XMMATRIX& ProjectionMatrix) {
-	Renderer::SetViewMatrix(ViewMatrix);
-	Renderer::SetProjectionMatrix(ProjectionMatrix);
-
+void Renderer::BeginLightDepth() {
 	SetViewportSize({ 1024.0f, 1024.0f });
 
-	_devicecontext->OMSetRenderTargets(0, NULL,	_CameraDepthstencilview);
+	_devicecontext->OMSetRenderTargets(0, NULL, _CameraDepthstencilview);
 	_devicecontext->ClearDepthStencilView(_CameraDepthstencilview, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 

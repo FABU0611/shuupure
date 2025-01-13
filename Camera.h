@@ -3,20 +3,28 @@
 //24_05_08
 #pragma once
 #include "GameObject.h"
+#include <vector>
 
 class CameraState;
 
 class Camera : public GameObject{
+	static const int CASCADE_NUM = 3;
+	static const float NEAR_CLIP;
+	static const float FAR_CLIP;
+
 	XMFLOAT3		_target{};
 	XMFLOAT4X4		_viewmatrix{};
 	float			_length{};
 	float			_cameraspeed{};
 	float			_time{};
+	float			_cascade[CASCADE_NUM]{};
 
 	XMMATRIX		_prevview{};
 	XMMATRIX		_prevprojection{};
 
 	CameraState*	_state{};
+
+	void CalculationCascade();
 
 public:
 	Camera() {}
@@ -46,5 +54,8 @@ public:
 		return XMMatrixInverse(nullptr, view).r[2];
 	}
 	XMMATRIX GetViewMatrix() const{	return XMLoadFloat4x4(&_viewmatrix); }
+
+	std::vector<XMVECTOR> GetCornersWorldSpace(const float& nearZ, const float& farZ)const;
+	float* GetCascade() { return _cascade; }
 };
 
