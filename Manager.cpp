@@ -17,6 +17,7 @@
 #include "ShaderManager.h"
 #include "GUIManager.h"
 #include "TextManager.h"
+#include "TakePicture.h"
 
 Scene* Manager::_scene{};
 Scene* Manager::_nextscene{};
@@ -177,9 +178,7 @@ void Manager::Draw() {
 	Renderer::Begin();
 	_final->Draw();
 
-	if (Input::GetKeyTrigger('T')) {
-		Renderer::TakeingPic();
-	}
+	TakePicture::TakePic();
 
 	//GUI•`‰æ
 	_guimanager->Draw();

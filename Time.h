@@ -2,7 +2,8 @@
 //20106_田中　蓮
 //24_08_28
 #pragma once
-#include<Windows.h>
+#include <Windows.h>
+#include <string>
 
 class Time{
     static LARGE_INTEGER    _frequency;  //タイマーの周波数
@@ -14,8 +15,10 @@ public:
     static void Update();
 
     //フレーム間の経過時間を取得
-    static float GetDeltaTime();
+    static const float& GetDeltaTime();
 
     //現在のフレームレートを取得
-    static float GetFrameRate();
+    static const float& GetFrameRate();
+
+    static const std::wstring GetNowRealTime();
 };

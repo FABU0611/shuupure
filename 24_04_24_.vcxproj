@@ -201,6 +201,7 @@
     <ClCompile Include="Rendpoly.cpp" />
     <ClCompile Include="Score.cpp" />
     <ClCompile Include="ShaderManager.cpp" />
+    <ClCompile Include="TakePicture.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="TextManager.cpp" />
     <ClCompile Include="T_Score.cpp" />
@@ -270,6 +271,7 @@
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Score.h" />
     <ClInclude Include="ShaderManager.h" />
+    <ClInclude Include="TakePicture.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="TextManager.h" />
     <ClInclude Include="T_Score.h" />

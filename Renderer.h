@@ -1,6 +1,7 @@
+//Renderer.h
+//20106_ìcíÜÅ@ò@
+//24_04_24
 #pragma once
-
-
 
 
 struct VERTEX_3D {
@@ -45,8 +46,6 @@ struct LIGHT {
 
 
 class Renderer {
-private:
-
 	static D3D_FEATURE_LEVEL			_featurelevel;
 
 	static ID3D11Device* _device;
@@ -142,7 +141,6 @@ public:
 	static ID3D11ShaderResourceView* GetMBTexture() { return _MBshaderresourceview; }
 
 	static ID3D11Texture2D* GetRendertargetTEX() { return _RendertargetTEX; }
-	static void TakeingPic();
 
 	static void SetViewportSize(const XMFLOAT2& size);
 
