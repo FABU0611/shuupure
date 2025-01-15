@@ -27,6 +27,8 @@ void Camera::CalculationCascade() {
 		float unifromsplit = NEAR_CLIP + range * p;				//線形分割　均等に分割
 		_cascade[i] = std::lerp(logsplit, unifromsplit, 0.5f);	//ブレンドしていい感じに	遠くが広すぎると解像度が低くなる
 	}
+
+	Renderer::SetCascadeSplit(_cascade);
 }
 
 void Camera::Init() {
@@ -44,6 +46,9 @@ void Camera::Init() {
 	_length = sqrtf(vx * vx + vz * vz);
 
 	_cameraspeed = 0.07f;
+
+	_fov = 1.0f;
+	_aspect = (float)SCREEN_WIDTH / SCREEN_HEIGHT;
 
 	Scene* scene;
 	scene = Manager::GetScene();
@@ -102,7 +107,7 @@ void Camera::Draw() {
 
 	//プロジェクションマトリクス設定
 	XMMATRIX projectionMatrix;
-	projectionMatrix = XMMatrixPerspectiveFovLH(1.0f, (float)SCREEN_WIDTH / SCREEN_HEIGHT, NEAR_CLIP, FAR_CLIP);
+	projectionMatrix = XMMatrixPerspectiveFovLH(_fov, (float)SCREEN_WIDTH / SCREEN_HEIGHT, NEAR_CLIP, FAR_CLIP);
 
 	Renderer::SetProjectionMatrix(projectionMatrix, _prevprojection);
 
@@ -113,15 +118,12 @@ void Camera::Draw() {
 std::vector<XMVECTOR> Camera::GetCornersWorldSpace(const float& nearZ, const float& farZ) const {
 	std::vector<XMVECTOR> corners(8);
 
-	float fov = 1.0f;		//XMMatrixPerspectiveFovLHの第一引数
-	float aspect = (float)SCREEN_WIDTH / SCREEN_HEIGHT;
-
 	//近面の高さと幅の半分
-	float nearHeight = tanf(fov * 0.5f) * nearZ;
-	float nearWidth = nearHeight * aspect;
+	float nearHeight = tanf(_fov * 0.5f) * nearZ;
+	float nearWidth = nearHeight * _aspect;
 	//遠面の高さと幅の半分
-	float farHeight = tanf(fov * 0.5f) * farZ;
-	float farWidth = farHeight * aspect;
+	float farHeight = tanf(_fov * 0.5f) * farZ;
+	float farWidth = farHeight * _aspect;
 
 	//視錐台の四隅の座標を計算
 	corners[0] = XMVectorSet(-nearWidth,  nearHeight, nearZ, 1.0f);
@@ -129,10 +131,10 @@ std::vector<XMVECTOR> Camera::GetCornersWorldSpace(const float& nearZ, const flo
 	corners[2] = XMVectorSet( nearWidth, -nearHeight, nearZ, 1.0f);
 	corners[3] = XMVectorSet(-nearWidth, -nearHeight, nearZ, 1.0f);
 
-	corners[4] = XMVectorSet(-farWidth,  farHeight, nearZ, 1.0f);
-	corners[5] = XMVectorSet( farWidth,  farHeight, nearZ, 1.0f);
-	corners[6] = XMVectorSet( farWidth, -farHeight, nearZ, 1.0f);
-	corners[7] = XMVectorSet(-farWidth, -farHeight, nearZ, 1.0f);
+	corners[4] = XMVectorSet(-farWidth,  farHeight, farZ, 1.0f);
+	corners[5] = XMVectorSet( farWidth,  farHeight, farZ, 1.0f);
+	corners[6] = XMVectorSet( farWidth, -farHeight, farZ, 1.0f);
+	corners[7] = XMVectorSet(-farWidth, -farHeight, farZ, 1.0f);
 
 	//逆変換してワールド空間に直す
 	XMMATRIX invView = XMMatrixInverse(nullptr, XMLoadFloat4x4(&_viewmatrix));

@@ -18,6 +18,8 @@ class Camera : public GameObject{
 	float			_cameraspeed{};
 	float			_time{};
 	float			_cascade[CASCADE_NUM]{};
+	float			_fov{};
+	float			_aspect{};
 
 	XMMATRIX		_prevview{};
 	XMMATRIX		_prevprojection{};
