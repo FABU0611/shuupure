@@ -1,6 +1,7 @@
 #include "main.h"
 #include "renderer.h"
 #include "C_AnimationModel.h"
+#include "Manager.h"
 
 void AnimationModel::Draw() {
 	// プリミティブトポロジ設定
@@ -49,8 +50,14 @@ void AnimationModel::Draw() {
 		}
 		//上書きすれば他のモデルのテクスチャが貼られることはないっぽい
 
-		ID3D11ShaderResourceView* shadow = Renderer::GetCameraDepthTexture();
-		Renderer::GetDeviceContext()->PSSetShaderResources(2, 1, &shadow);
+		if (Manager::GetisDrawFromLight()) {
+			ID3D11ShaderResourceView* shadow0 = Renderer::GetCameraDepthTexture(0);
+			Renderer::GetDeviceContext()->PSSetShaderResources(2, 1, &shadow0);
+			ID3D11ShaderResourceView* shadow1 = Renderer::GetCameraDepthTexture(1);
+			Renderer::GetDeviceContext()->PSSetShaderResources(3, 1, &shadow1);
+			ID3D11ShaderResourceView* shadow2 = Renderer::GetCameraDepthTexture(2);
+			Renderer::GetDeviceContext()->PSSetShaderResources(4, 1, &shadow2);
+		}
 
 		//if (texture == aiString(""))
 		//{

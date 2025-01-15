@@ -54,7 +54,7 @@ struct LIGHT {
 	float4 PointParam;
 	float4 Angle;	
 	matrix ViewMatrix;
-	matrix ProjectionMatrix;
+	matrix ProjectionMatrix[3];
 };
 
 cbuffer LightBuffer : register(b4) {
@@ -81,6 +81,12 @@ cbuffer DoFBuffer : register(b8) {
 	float2 DoF;
 }
 
+//カスケードパラメータ受け取り用
+cbuffer SplitBuffer : register(b12) {
+	float Split[3];
+	float dummy;
+}
+
 struct VS_IN {
 	float4 Position			: POSITION0;	//ポジションゼロ
 	float4 Normal			: NORMAL0;		//ノーマルゼロ
@@ -100,7 +106,9 @@ struct PS_IN {
 	float4 Binormal			: BINORMAL0;	//バイノーマル
 	float4 CurPosition		: TEXCOORD1;	//今フレームピクセルの座標
 	float4 PrevPosition		: TEXCOORD2;	//前フレームピクセルの座標
-	float4 LightPosition	: POSITION1;	//ライト空間座標	
+	float4 LightPosition0	: POSITION1;	//ライト空間座標
+	float4 LightPosition1	: POSITION2;	//ライト空間座標
+	float4 LightPosition2	: POSITION3;	//ライト空間座標
 };
 struct PS_OUT {
 	float4 Out0				: SV_Target0;	//デフォルトのびょうが

@@ -8,6 +8,7 @@
 
 #include "Camera.h"
 #include "LightCamera.h"
+#include "Sky.h"
 #include "C_Collision.h"
 
 enum class Layer{
@@ -79,6 +80,12 @@ public:
 				if (i == static_cast<int>(Layer::System)) {
 					Camera* camera = dynamic_cast<Camera*>(o);
 					if (camera) {
+						continue;
+					}
+				}
+				else if (i == static_cast<int>(Layer::BackGround)) {
+					Sky* sky = dynamic_cast<Sky*>(o);
+					if (sky) {
 						continue;
 					}
 				}

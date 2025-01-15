@@ -95,7 +95,7 @@ void CheckDoF::Draw() {
 	Renderer::SetMaterial(material);
 
 	// テクスチャ設定
-	ID3D11ShaderResourceView* ppTexture = Renderer::GetCameraDepthTexture();
+	ID3D11ShaderResourceView* ppTexture = Renderer::GetCameraDepthTexture(1);
 	Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &ppTexture);
 
 	// プリミティブトポロジ設定

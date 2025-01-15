@@ -4,7 +4,7 @@
 #include "T_PushStart.h"
 #include "Manager.h"
 #include "Renderer.h"
-#include "S_Tutorial.h"
+#include "S_Game.h"
 #include "Input.h"
 #include "C_Audio.h"
 #include "EasingFunc.h"
@@ -37,6 +37,6 @@ void TitlePush::Update(){
 	//ƒV[ƒ“‘JˆÚ
 	if (button->OnClicked(VK_LBUTTON)) {
 		GetComponent<Audio>()->Play("asset\\audio\\push.wav", false);
-		Manager::SetSceneFade<Tutorial>(0.05f);
+		Manager::SetSceneFade<Game>(0.05f);
 	}
 }

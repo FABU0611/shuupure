@@ -9,6 +9,7 @@
 #include "S_Result.h"
 
 #include "Camera.h"
+#include "LightCamera.h"
 #include "Player.h"
 #include "Sky.h"
 #include "ParticleFireup.h"
@@ -29,13 +30,14 @@ void Game::Init() {
 	_light->PointLightParam = XMFLOAT4(5000.0f, 0.0f, 0.0f, 0.0f);
 
 	AddGameobject<Camera>(Layer::System);
+	AddGameobject<LightCamera>(Layer::System);
 
 	AddGameobject<Sky>(Layer::BackGround, 300.0f);
 
 	AddGameobject<Player>(Layer::Object, XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(1.0f, 1.0f, 1.0f));
-	AddGameobject<DivingBoard>(Layer::Object, XMFLOAT3(-30.0f, 0.0f, 0.0f));
 	AddGameobject<Pool>(Layer::Object, XMFLOAT3(0.0f, 0.0f, 0.0f));
-	AddGameobject<Water>(Layer::Effect, XMFLOAT3(40.0f, 20.0f, 0.0f));
+	AddGameobject<DivingBoard>(Layer::Object, XMFLOAT3(-30.0f, 0.0f, 0.0f));
+	//AddGameobject<Water>(Layer::Effect, XMFLOAT3(40.0f, 20.0f, 0.0f));
 }
 
 void Game::Uninit(){
