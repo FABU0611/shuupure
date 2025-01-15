@@ -41,11 +41,11 @@ void TakePicture::TakePic() {
 			return;
 		}
 
-		//DirectXTexを使用してJPEGに保存
+		//DirectXTexを使用してPNGに保存
 		Image image;
 		image.width = desc.Width;
 		image.height = desc.Height;
-		image.format = desc.Format;
+		image.format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 		image.rowPitch = mappedResource.RowPitch;
 		image.slicePitch = mappedResource.DepthPitch;
 		image.pixels = reinterpret_cast<uint8_t*>(mappedResource.pData);
@@ -53,12 +53,12 @@ void TakePicture::TakePic() {
 		std::wstringstream filename;
 		std::wstring time = Time::GetNowRealTime();
 
-		filename << L"photo\\" << time << L".jpg";
+		filename << L"photo\\" << time << L".png";
 
-		hr = SaveToWICFile(image, WIC_FLAGS_NONE, GetWICCodec(WIC_CODEC_JPEG), filename.str().c_str());
+		hr = SaveToWICFile(image, WIC_FLAGS_NONE, GetWICCodec(WIC_CODEC_PNG), filename.str().c_str());
 		if (hr == HRESULT_FROM_WIN32(ERROR_PATH_NOT_FOUND)) {
 			std::filesystem::create_directory("photo");
-			SaveToWICFile(image, WIC_FLAGS_NONE, GetWICCodec(WIC_CODEC_JPEG), filename.str().c_str());
+			SaveToWICFile(image, WIC_FLAGS_NONE, GetWICCodec(WIC_CODEC_PNG), filename.str().c_str());
 		}
 
 		devicecontext->Unmap(stagingTexture, 0);
