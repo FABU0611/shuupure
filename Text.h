@@ -16,7 +16,7 @@ protected:
 	float					_size = 30.0f;
 	D2D1::ColorF			_color = D2D1::ColorF::Black;
 
-	TextAnchor				_anchor;
+	TextAnchor				_anchor = TextAnchor::TopLeft;
 
 
 	void SetColor(const D2D1::ColorF& color) {
