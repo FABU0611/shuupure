@@ -42,6 +42,8 @@ class Manager {
 
 	static bool _isdrawfromlight;
 
+	static int	_cascadeidx;
+
 public:
 	static void Init();
 	static void Uninit();
@@ -55,6 +57,7 @@ public:
 	static Scene* GetScene() { return _scene; }
 	static TextManager* GetTextManager() { return _textmanager; }
 	static Gaussian* GetGaussian() { return _gaussian; }
+	static int& GetCascadeIndex() { return _cascadeidx; }
 
 	static void ChangeNextScene() {
 		_nextscene = _prvscene;

@@ -30,6 +30,7 @@ ID3D11Buffer* Renderer::_camerabuffer{};
 ID3D11Buffer* Renderer::_parameterbuffer{};
 ID3D11Buffer* Renderer::_weightsbuffer{};
 ID3D11Buffer* Renderer::_dofbuffer{};
+ID3D11Buffer* Renderer::_cascadesplitbuffer{};
 
 XMMATRIX Renderer::_prevworld;
 XMMATRIX Renderer::_prevview;
@@ -49,8 +50,8 @@ ID3D11ShaderResourceView* Renderer::_PEshaderresourceview = NULL;
 
 ID3D11DepthStencilView* Renderer::_Depthstencilview = NULL;
 ID3D11ShaderResourceView* Renderer::_Depthshaderresourceview = NULL;
-ID3D11DepthStencilView* Renderer::_CameraDepthstencilview = NULL;
-ID3D11ShaderResourceView* Renderer::_CameraDepthshaderresourceview = NULL;
+ID3D11DepthStencilView* Renderer::_CameraDepthstencilview[3] = { NULL, NULL, NULL };
+ID3D11ShaderResourceView* Renderer::_CameraDepthshaderresourceview[3] = { NULL, NULL, NULL };;
 ID3D11RenderTargetView* Renderer::_BXrenderertargetview = NULL;
 ID3D11ShaderResourceView* Renderer::_BXshaderresourceview = NULL;
 ID3D11RenderTargetView* Renderer::_BYrenderertargetview = NULL;
@@ -340,6 +341,12 @@ void Renderer::Init() {
 	_devicecontext->VSSetConstantBuffers(11, 1, &_prevprojectionbuffer);
 
 
+	bufferDesc.ByteWidth = sizeof(float) * 4;
+
+	hr = _device->CreateBuffer(&bufferDesc, NULL, &_cascadesplitbuffer);
+	_devicecontext->PSSetConstantBuffers(12, 1, &_cascadesplitbuffer);
+
+
 	// ライト初期化
 	LIGHT light{};
 	light.Enable = true;
@@ -528,43 +535,45 @@ void Renderer::Init() {
 		depthTexture->Release();
 	}
 	{
-		//ライトからの深度
-		ID3D11Texture2D* depthTexture = NULL;
-		D3D11_TEXTURE2D_DESC	dtd;			//テクスチャ作成用デスクリプタ構造体
-		ZeroMemory(&dtd, sizeof(dtd));
+		for (int i = 0; i < 3; i++) {
+			//ライトからの深度
+			ID3D11Texture2D* depthTexture = NULL;
+			D3D11_TEXTURE2D_DESC	dtd;			//テクスチャ作成用デスクリプタ構造体
+			ZeroMemory(&dtd, sizeof(dtd));
 
-		dtd.Width = 1024;
-		dtd.Height = 1024;
-		//作成するミップマップの数
-		dtd.MipLevels = 1;
-		dtd.ArraySize = 1;
-		dtd.Format = DXGI_FORMAT_R32_TYPELESS;		//ピクセルフォーマット
-		dtd.SampleDesc = swapChainDesc.SampleDesc;
-		dtd.Usage = D3D11_USAGE_DEFAULT;
-		//レンダリングターゲット用の設定
-		dtd.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
-		dtd.CPUAccessFlags = 0;
-		dtd.MiscFlags = 0;
+			dtd.Width = 1024;
+			dtd.Height = 1024;
+			//作成するミップマップの数
+			dtd.MipLevels = 1;
+			dtd.ArraySize = 1;
+			dtd.Format = DXGI_FORMAT_R32_TYPELESS;		//ピクセルフォーマット
+			dtd.SampleDesc = swapChainDesc.SampleDesc;
+			dtd.Usage = D3D11_USAGE_DEFAULT;
+			//レンダリングターゲット用の設定
+			dtd.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
+			dtd.CPUAccessFlags = 0;
+			dtd.MiscFlags = 0;
 
-		//テクスチャの作成
-		_device->CreateTexture2D(&dtd, NULL, &depthTexture);
-		//レンダーターゲットビュー
-		D3D11_DEPTH_STENCIL_VIEW_DESC dsvd;
-		ZeroMemory(&dsvd, sizeof(dsvd));
-		dsvd.Format = DXGI_FORMAT_D32_FLOAT;
-		dsvd.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-		_device->CreateDepthStencilView(depthTexture, &dsvd, &_CameraDepthstencilview);
+			//テクスチャの作成
+			_device->CreateTexture2D(&dtd, NULL, &depthTexture);
+			//レンダーターゲットビュー
+			D3D11_DEPTH_STENCIL_VIEW_DESC dsvd;
+			ZeroMemory(&dsvd, sizeof(dsvd));
+			dsvd.Format = DXGI_FORMAT_D32_FLOAT;
+			dsvd.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+			_device->CreateDepthStencilView(depthTexture, &dsvd, &_CameraDepthstencilview[i]);
 
-		//シェーダーリソースビューの作成
-		D3D11_SHADER_RESOURCE_VIEW_DESC srvd;
-		ZeroMemory(&srvd, sizeof(srvd));
-		srvd.Format = DXGI_FORMAT_R32_FLOAT;
-		srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-		srvd.Texture2D.MipLevels = 1;
-		srvd.Texture2D.MostDetailedMip = 0;
-		_device->CreateShaderResourceView(depthTexture, &srvd, &_CameraDepthshaderresourceview);
+			//シェーダーリソースビューの作成
+			D3D11_SHADER_RESOURCE_VIEW_DESC srvd;
+			ZeroMemory(&srvd, sizeof(srvd));
+			srvd.Format = DXGI_FORMAT_R32_FLOAT;
+			srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+			srvd.Texture2D.MipLevels = 1;
+			srvd.Texture2D.MostDetailedMip = 0;
+			_device->CreateShaderResourceView(depthTexture, &srvd, &_CameraDepthshaderresourceview[i]);
 
-		depthTexture->Release();
+			depthTexture->Release();
+		}
 	}
 	{
 		//速度マップ
@@ -664,13 +673,16 @@ void Renderer::Uninit() {
 	_parameterbuffer->Release();
 	_weightsbuffer->Release();
 	_dofbuffer->Release();
+	_cascadesplitbuffer->Release();
 
 	_Velshaderresourceview->Release();
 	_Velrenderertargetview->Release();
 	_MBshaderresourceview->Release();
 	_MBrenderertargetview->Release();
-	_CameraDepthshaderresourceview->Release();
-	_CameraDepthstencilview->Release();
+	for (int i = 0; i < 3; i++) {
+		_CameraDepthshaderresourceview[i]->Release();
+		_CameraDepthstencilview[i]->Release();
+	}
 	_Depthshaderresourceview->Release();
 	_Depthstencilview->Release();
 	_BXshaderresourceview->Release();
@@ -834,6 +846,10 @@ void Renderer::SetDoF(XMFLOAT2 dof) {
 	_devicecontext->UpdateSubresource(_dofbuffer, 0, NULL, &dof, 0, 0);
 }
 
+void Renderer::SetCascadeSplit(float* split) {
+	_devicecontext->UpdateSubresource(_cascadesplitbuffer, 0, NULL, &split, 0, 0);
+}
+
 
 
 
@@ -963,11 +979,11 @@ void Renderer::BeginMotionBlur() {
 	_devicecontext->ClearDepthStencilView(_depthstencilview, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
-void Renderer::BeginLightDepth() {
+void Renderer::BeginLightDepth(const int& idx) {
 	SetViewportSize({ 1024.0f, 1024.0f });
 
-	_devicecontext->OMSetRenderTargets(0, NULL, _CameraDepthstencilview);
-	_devicecontext->ClearDepthStencilView(_CameraDepthstencilview, D3D11_CLEAR_DEPTH, 1.0f, 0);
+	_devicecontext->OMSetRenderTargets(0, NULL, _CameraDepthstencilview[idx]);
+	_devicecontext->ClearDepthStencilView(_CameraDepthstencilview[idx], D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
 

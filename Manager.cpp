@@ -30,6 +30,7 @@ MotionBlur* Manager::_motionblur;
 GUIManager* Manager::_guimanager;
 TextManager* Manager::_textmanager;
 bool Manager::_isdrawfromlight;
+int Manager::_cascadeidx = 0;
 
 #ifdef _DEBUG
 #include "CheckDoF.h"
@@ -136,9 +137,12 @@ void Manager::Update() {
 
 void Manager::Draw() {
 	//ライトからの深度マップを作成
-	Renderer::BeginLightDepth();
 	_isdrawfromlight = true;
-	_scene->DrawFromLight();	//カメラ以外のオブジェクト描画
+	for (int i = 0; i < 3; i++) {
+		Renderer::BeginLightDepth(i);
+		_cascadeidx = i;
+		_scene->DrawFromLight();	//カメラ以外のオブジェクト描画
+	}
 	_isdrawfromlight = false;
 
 

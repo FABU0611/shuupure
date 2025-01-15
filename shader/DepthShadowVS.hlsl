@@ -24,7 +24,16 @@ void main(in VS_IN In, out PS_IN Out){
 	//ライトカメラで頂点変換して出力
 	matrix lightwvp;
 	lightwvp = mul(World, Light.ViewMatrix);
-	lightwvp = mul(lightwvp, Light.ProjectionMatrix);
-	Out.LightPosition = mul(In.Position, lightwvp);
-
+	for(int i = 0; i < 3; i++) {
+		lightwvp = mul(lightwvp, Light.ProjectionMatrix[i]);
+		if(i == 0) {
+			Out.LightPosition0 = mul(In.Position, lightwvp);
+		}
+		else if(i == 1) {
+			Out.LightPosition1 = mul(In.Position, lightwvp);
+		}
+		else if(i == 2) {
+			Out.LightPosition2 = mul(In.Position, lightwvp);
+		}
+	}
 }

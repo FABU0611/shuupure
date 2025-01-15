@@ -39,13 +39,22 @@ void LightCamera::Draw() {
 
 	XMVECTOR dir = XMVector4Normalize(XMLoadFloat4(&_light.Direction));
 	XMVECTOR tgt = XMLoadFloat3(&_target);
-	XMVECTOR lightpos = tgt - dir * 10.0f;
+	XMVECTOR lightpos = tgt - dir * 125.0f;
 
 	XMMATRIX lightview = XMMatrixLookAtLH(lightpos, tgt, XMLoadFloat3(&_up));
 
+	int index = Manager::GetCascadeIndex();
 
+	//カスケード分回す
 	float nearZ = 1.0f;
-	float farZ = camera->GetCascade()[0];
+	if (index == 0) {
+		nearZ = 1.0f;
+	}
+	else {
+		nearZ = camera->GetCascade()[index - 1];
+	}
+	float farZ = camera->GetCascade()[index];
+
 	std::vector<XMVECTOR> corners = camera->GetCornersWorldSpace(nearZ, farZ);
 
 	//最大と最小を初期化
@@ -65,7 +74,7 @@ void LightCamera::Draw() {
 								XMVectorGetZ(min), XMVectorGetZ(max));		//正射影
 
 	_light.ViewMatrix = XMMatrixTranspose(lightview);
-	_light.ProjectionMatrix = XMMatrixTranspose(lightprojection);
+	_light.ProjectionMatrix[index] = XMMatrixTranspose(lightprojection);
 	Renderer::SetLight(_light);
 
 	Renderer::SetViewMatrix(lightview);

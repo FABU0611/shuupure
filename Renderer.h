@@ -40,7 +40,7 @@ struct LIGHT {
 	XMFLOAT4	PointLightParam;	//光の範囲
 	XMFLOAT4	Angle;				//光の角度
 	XMMATRIX	ViewMatrix;
-	XMMATRIX	ProjectionMatrix;
+	XMMATRIX	ProjectionMatrix[3];	//配列にする
 };
 
 
@@ -67,6 +67,7 @@ class Renderer {
 	static ID3D11Buffer* _parameterbuffer;
 	static ID3D11Buffer* _weightsbuffer;
 	static ID3D11Buffer* _dofbuffer;
+	static ID3D11Buffer* _cascadesplitbuffer;
 
 	static XMMATRIX				_prevworld;
 	static XMMATRIX				_prevview;
@@ -85,8 +86,8 @@ class Renderer {
 
 	static ID3D11DepthStencilView* _Depthstencilview;
 	static ID3D11ShaderResourceView* _Depthshaderresourceview;
-	static ID3D11DepthStencilView* _CameraDepthstencilview;
-	static ID3D11ShaderResourceView* _CameraDepthshaderresourceview;
+	static ID3D11DepthStencilView* _CameraDepthstencilview[3];
+	static ID3D11ShaderResourceView* _CameraDepthshaderresourceview[3];
 	static ID3D11RenderTargetView* _BXrenderertargetview;
 	static ID3D11ShaderResourceView* _BXshaderresourceview;
 	static ID3D11RenderTargetView* _BYrenderertargetview;
@@ -122,6 +123,7 @@ public:
 	static void SetParameter(XMFLOAT4 Parameter);
 	static void SetWeights(float* weights);
 	static void SetDoF(XMFLOAT2 dof);
+	static void SetCascadeSplit(float* split);
 
 	static ID3D11Device* GetDevice(void) { return _device; }
 	static ID3D11DeviceContext* GetDeviceContext(void) { return _devicecontext; }
@@ -136,7 +138,8 @@ public:
 	static ID3D11ShaderResourceView* GetBXTexture() { return _BXshaderresourceview; }
 	static ID3D11ShaderResourceView* GetBYTexture() { return _BYshaderresourceview; }
 	static ID3D11ShaderResourceView* GetDepthTexture() { return _Depthshaderresourceview; }
-	static ID3D11ShaderResourceView* GetCameraDepthTexture() { return _CameraDepthshaderresourceview; }
+	static ID3D11ShaderResourceView* GetCameraDepthTexture(const int& idx) { return _CameraDepthshaderresourceview[idx]; }
+	static ID3D11ShaderResourceView** GetCameraDepthTexture() { return _CameraDepthshaderresourceview; }
 	static ID3D11ShaderResourceView* GetVelocityTexture() { return _Velshaderresourceview; }
 	static ID3D11ShaderResourceView* GetMBTexture() { return _MBshaderresourceview; }
 
@@ -152,5 +155,5 @@ public:
 	/// <summary>
 	/// 使用前にライトのViewMatrixとProjectionMatrixをセットしてください
 	/// </summary>
-	static void BeginLightDepth();
+	static void BeginLightDepth(const int& idx);
 };
