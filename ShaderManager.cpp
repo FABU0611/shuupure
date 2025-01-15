@@ -57,3 +57,14 @@ ShaderPack* Shader::GetShader(const ShaderName& name) {
         return _shaders.at(ShaderName::Unlit);
     }
 }
+
+void Shader::SetShader(const ShaderName& name) {
+    ShaderPack* shader = GetShader(name);
+
+    //入力レイアウト設定
+    Renderer::GetDeviceContext()->IASetInputLayout(shader->vertexLayout);
+
+    //シェーダ設定
+    Renderer::GetDeviceContext()->VSSetShader(shader->vertexShader, NULL, 0);
+    Renderer::GetDeviceContext()->PSSetShader(shader->pixelShader, NULL, 0);
+}
