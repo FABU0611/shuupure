@@ -21,10 +21,10 @@ void LightCamera::Init() {
 
 void LightCamera::Uninit() {}
 
-void LightCamera::Update() {
-}
+void LightCamera::Update() {}
 
 void LightCamera::Draw() {
+	//シーンのカメラを取得
 	Scene* scene = Manager::GetScene();
 	Camera* camera{};
 	if (scene) {
@@ -33,19 +33,9 @@ void LightCamera::Draw() {
 	if (!camera) {
 		return;
 	}
-	_light.Enable = true;
 
-	_target = camera->GetPosition();
-
-	XMVECTOR dir = XMVector4Normalize(XMLoadFloat4(&_light.Direction));
-	XMVECTOR tgt = XMLoadFloat3(&_target);
-	XMVECTOR lightpos = tgt - dir * 125.0f;
-
-	XMMATRIX lightview = XMMatrixLookAtLH(lightpos, tgt, XMLoadFloat3(&_up));
-
+	//カスケードの切れ目を取得
 	int index = Manager::GetCascadeIndex();
-
-	//カスケード分回す
 	float nearZ = 1.0f;
 	if (index == 0) {
 		nearZ = 1.0f;
@@ -55,9 +45,25 @@ void LightCamera::Draw() {
 	}
 	float farZ = camera->GetCascade()[index];
 
+
+	//カメラの方向からライトの位置と焦点を計算
+	XMFLOAT3 cameradirection = camera->GetTartgetPos() - camera->GetPosition();
+	cameradirection.y = 0.0f;
+	cameradirection = VectorNormalize(cameradirection);
+
+	float p = nearZ + ((farZ - nearZ) * 0.5f);
+	_target = camera->GetPosition() + (cameradirection * p);
+
+	XMVECTOR dir = XMVector4Normalize(XMLoadFloat4(&_light.Direction));
+	XMVECTOR tgt = XMLoadFloat3(&_target);
+	XMVECTOR lightpos = tgt - dir;
+
+	XMMATRIX lightview = XMMatrixLookAtLH(lightpos, tgt, XMVectorSet(0, 1, 0, 0));
+
+
+	//視錐台の8頂点の最大と最小を計算
 	std::vector<XMVECTOR> corners = camera->GetCornersWorldSpace(nearZ, farZ);
 
-	//最大と最小を初期化
 	XMVECTOR min = XMVectorSet(FLT_MAX, FLT_MAX, FLT_MAX, FLT_MAX);
 	XMVECTOR max = XMVectorSet(-FLT_MAX, -FLT_MAX, -FLT_MAX, -FLT_MAX);
 	for (const auto& corner : corners) {
@@ -73,7 +79,8 @@ void LightCamera::Draw() {
 								XMVectorGetY(min), XMVectorGetY(max),
 								XMVectorGetZ(min), XMVectorGetZ(max));		//正射影
 
-	_light.ViewMatrix = XMMatrixTranspose(lightview);
+	_light.Enable = true;
+	_light.ViewMatrix[index] = XMMatrixTranspose(lightview);
 	_light.ProjectionMatrix[index] = XMMatrixTranspose(lightprojection);
 	Renderer::SetLight(_light);
 

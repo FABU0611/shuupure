@@ -94,6 +94,8 @@ void Camera::Update() {
 	if (_target.y < 0.0f) {
 		_target.y = 0.0f;
 	}
+
+	GetComponent<Transform>()->Update();
 }
 
 void Camera::Draw() {
