@@ -39,7 +39,7 @@ struct LIGHT {
 	XMFLOAT4	Position;			//ŒõŒ¹‚ÌÀ•W
 	XMFLOAT4	PointLightParam;	//Œõ‚Ì”ÍˆÍ
 	XMFLOAT4	Angle;				//Œõ‚ÌŠp“x
-	XMMATRIX	ViewMatrix;
+	XMMATRIX	ViewMatrix[3];
 	XMMATRIX	ProjectionMatrix[3];	//”z—ñ‚É‚·‚é
 };
 
@@ -139,7 +139,7 @@ public:
 	static ID3D11ShaderResourceView* GetBYTexture() { return _BYshaderresourceview; }
 	static ID3D11ShaderResourceView* GetDepthTexture() { return _Depthshaderresourceview; }
 	static ID3D11ShaderResourceView* GetCameraDepthTexture(const int& idx) { return _CameraDepthshaderresourceview[idx]; }
-	static ID3D11ShaderResourceView** GetCameraDepthTexture() { return _CameraDepthshaderresourceview; }
+	static ID3D11ShaderResourceView* GetCameraDepthTexture() { return (*_CameraDepthshaderresourceview); }
 	static ID3D11ShaderResourceView* GetVelocityTexture() { return _Velshaderresourceview; }
 	static ID3D11ShaderResourceView* GetMBTexture() { return _MBshaderresourceview; }
 

@@ -53,7 +53,7 @@ struct LIGHT {
 	float4 Position;
 	float4 PointParam;
 	float4 Angle;	
-	matrix ViewMatrix;
+	matrix ViewMatrix[3];
 	matrix ProjectionMatrix[3];
 };
 
@@ -106,9 +106,9 @@ struct PS_IN {
 	float4 Binormal			: BINORMAL0;	//バイノーマル
 	float4 CurPosition		: TEXCOORD1;	//今フレームピクセルの座標
 	float4 PrevPosition		: TEXCOORD2;	//前フレームピクセルの座標
-	float4 LightPosition0	: POSITION1;	//ライト空間座標
-	float4 LightPosition1	: POSITION2;	//ライト空間座標
-	float4 LightPosition2	: POSITION3;	//ライト空間座標
+	float4 LightPosition[3]	: POSITION1;	//ライト空間座標
+	//float4 LightPosition1	: POSITION2;	//ライト空間座標
+	//float4 LightPosition2	: POSITION3;	//ライト空間座標
 };
 struct PS_OUT {
 	float4 Out0				: SV_Target0;	//デフォルトのびょうが

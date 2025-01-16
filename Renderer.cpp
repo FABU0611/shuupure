@@ -271,6 +271,16 @@ void Renderer::Init() {
 	_device->CreateSamplerState(&samplerDesc, &samplerState);
 	_devicecontext->PSSetSamplers(1, 1, &samplerState);
 
+	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_BORDER;	//範囲外は指定した色
+	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_BORDER;
+	samplerDesc.BorderColor[0] = 1.0f;
+	samplerDesc.BorderColor[1] = 0.0f;
+	samplerDesc.BorderColor[2] = 0.0f;
+	samplerDesc.BorderColor[3] = 1.0f;
+	samplerDesc.Filter = D3D11_FILTER_ANISOTROPIC;	//フィルターOFF
+	_device->CreateSamplerState(&samplerDesc, &samplerState);
+	_devicecontext->PSSetSamplers(2, 1, &samplerState);
+
 
 	// 定数バッファ生成
 	D3D11_BUFFER_DESC bufferDesc{};
