@@ -9,7 +9,7 @@ Texture2D g_VelTexture : register(t1);
 SamplerState g_SamplerState : register(s1);
 
 void main(in PS_IN In, out PS_OUT Out) {
-	float blurStrength = 0.1f; // ブラー強度
+	float blurStrength = 0.5f; // ブラー強度
 
     // 通常のシーンカラー取得
 	float4 sceneColor = g_SceneTexture.Sample(g_SamplerState, In.TexCoord);
@@ -18,6 +18,7 @@ void main(in PS_IN In, out PS_OUT Out) {
 	float2 velocity = g_VelTexture.Sample(g_SamplerState, In.TexCoord).xy;
     
 	velocity = velocity * 2.0f - 1.0f;
+	velocity *= -1;
     
     // サンプル累積
 	float4 blurredColor = sceneColor;

@@ -179,7 +179,7 @@ void CreateVelTex(in PS_IN In, out float2 vel) {
 	float2 velocity = (In.CurPosition.xy / In.CurPosition.w) - (In.PrevPosition.xy / In.PrevPosition.w);
 	velocity.y = -velocity.y;
 	float2 velocityNormalized = (velocity + 1.0f) * 0.5f;
-	velocityNormalized = clamp(velocityNormalized, 0.39f, 0.69f);
+	//velocityNormalized = clamp(velocityNormalized, 0.39f, 0.69f);
 	vel.rg = float2(velocityNormalized);
 }
 
