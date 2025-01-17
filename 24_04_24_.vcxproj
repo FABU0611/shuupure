@@ -203,6 +203,7 @@
     <ClCompile Include="Score.cpp" />
     <ClCompile Include="ShaderManager.cpp" />
     <ClCompile Include="TakePicture.cpp" />
+    <ClCompile Include="TestObject.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="TextManager.cpp" />
     <ClCompile Include="T_Score.cpp" />
@@ -274,6 +275,7 @@
     <ClInclude Include="Score.h" />
     <ClInclude Include="ShaderManager.h" />
     <ClInclude Include="TakePicture.h" />
+    <ClInclude Include="TestObject.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="TextManager.h" />
     <ClInclude Include="T_Score.h" />

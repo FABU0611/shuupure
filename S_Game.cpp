@@ -15,6 +15,7 @@
 #include "ParticleFireup.h"
 #include "DivingBoard.h"
 #include "Pool.h"
+#include "TestObject.h"
 #include "Water.h"
 #include "UIManager.h"
 
@@ -37,6 +38,7 @@ void Game::Init() {
 	AddGameobject<Player>(Layer::Object, XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(1.0f, 1.0f, 1.0f));
 	AddGameobject<Pool>(Layer::Object, XMFLOAT3(0.0f, 0.0f, 0.0f));
 	AddGameobject<DivingBoard>(Layer::Object, XMFLOAT3(-30.0f, 0.0f, 0.0f));
+	AddGameobject<TestObject>(Layer::Object, XMFLOAT3(-10.0f, 10.0f, -0.0f));
 	//AddGameobject<Water>(Layer::Effect, XMFLOAT3(40.0f, 20.0f, 0.0f));
 }
 
