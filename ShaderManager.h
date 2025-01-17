@@ -27,6 +27,7 @@ class Shader {
 
 	static void AddShader(const std::string& VSpath, const std::string& PSpath, const ShaderName& name);
 
+	static ShaderPack* GetShader(const ShaderName& name);
 public:
 	Shader() {}
 	~Shader() {}
@@ -34,5 +35,5 @@ public:
 	static void LoadShader();
 	static void UninitAll();
 
-	static ShaderPack* GetShader(const ShaderName& name);
+	static void SetShader(const ShaderName& name);
 };

@@ -70,7 +70,7 @@ void Player::Init(){
 
 	GetComponent<Transform>()->Update();
 
-	_smoke = Manager::GetScene()->AddGameobject<Smoke>(Effect, XMFLOAT3(0.0f, 0.0f, 0.0f), 0.5f, XMFLOAT4(0.1f, 0.1f, 0.1f, 1.0f));
+	_smoke = Manager::GetScene()->AddGameobject<Smoke>(Layer::Effect, XMFLOAT3(0.0f, 0.0f, 0.0f), 0.5f, XMFLOAT4(0.1f, 0.1f, 0.1f, 1.0f));
 
 	_smokepos = GetPosition() + (GetRight() * 1.4f) - (GetForward() * (0.75f)) + (GetUp() * 4.5f);
 
@@ -127,13 +127,7 @@ void Player::Update() {
 }
 
 void Player::Draw(){
-	_shader = Shader::GetShader(ShaderName::Normallit);
-	//入力レイアウト設定
-	Renderer::GetDeviceContext()->IASetInputLayout(_shader->vertexLayout);
-
-	//シェーダ設定
-	Renderer::GetDeviceContext()->VSSetShader(_shader->vertexShader, NULL, 0);
-	Renderer::GetDeviceContext()->PSSetShader(_shader->pixelShader, NULL, 0);
+	Shader::SetShader(ShaderName::Normallit);
 
 	//ワールドマトリクス設定
 	XMMATRIX world, scale, rot, trans;

@@ -6,13 +6,10 @@
 #include "GameObject.h"
 #include "Time.h"
 
-struct ShaderPack;
 class PlayerState;
 class Smoke;
 
 class Player : public GameObject {
-	ShaderPack*			_shader{};
-
 	PlayerState*		_state{};
 
 	XMFLOAT3			_velocity{};

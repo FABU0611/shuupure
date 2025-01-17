@@ -13,10 +13,6 @@ enum class FadeMode {
 };
 
 class Fade : public GameObject {
-	ID3D11VertexShader* _vertexshader{};
-	ID3D11PixelShader*	_pixelshader{};
-	ID3D11InputLayout*	_vertexlayout{};
-
 	XMFLOAT4			_fadecolor{};
 	float				_faderate{};
 

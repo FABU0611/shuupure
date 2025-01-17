@@ -68,13 +68,7 @@ void ParticleEmitter::Update() {}
 
 //描画処理
 void ParticleEmitter::Draw() {
-	_shader = Shader::GetShader(ShaderName::Particle);
-	//入力レイアウト設定
-	Renderer::GetDeviceContext()->IASetInputLayout(_shader->vertexLayout);
-
-	//シェーダ設定
-	Renderer::GetDeviceContext()->VSSetShader(_shader->vertexShader, NULL, 0);
-	Renderer::GetDeviceContext()->PSSetShader(_shader->pixelShader, NULL, 0);
+	Shader::SetShader(ShaderName::Particle);
 
 	//カメラのビューマトリクス取得
 	Scene* scene = Manager::GetScene();

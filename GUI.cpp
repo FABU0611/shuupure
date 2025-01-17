@@ -3,7 +3,7 @@
 //24_12_04
 #include "GUI.h"
 #include "Renderer.h"
-
+#include "ShaderManager.h"
 #include "C_Sprite2D.h"
 #include "Input.h"
 
@@ -19,31 +19,16 @@ void GUI::Init() {
 	sprite2d->LoadTexture(_texname);
 	sprite2d->SetDrawMode(DrawMode::Color);
 	sprite2d->SetSize(_size);
-
-	Renderer::CreateVertexShader(&_vertexshader, &_vertexlayout,
-		"shader\\UnlitTextureVS.cso");
-
-	Renderer::CreatePixelShader(&_pixelshader,
-		"shader\\ParticlePS.cso");
 }
 
 void GUI::Uninit() {
 	for (auto c : _components) {
 		c->Uninit();
 	}
-
-	_vertexshader->Release();
-	_pixelshader->Release();
-	_vertexlayout->Release();
 }
 
 void GUI::Draw() {
-	//入力レイアウト設定
-	Renderer::GetDeviceContext()->IASetInputLayout(_vertexlayout);
-
-	//シェーダ設定
-	Renderer::GetDeviceContext()->VSSetShader(_vertexshader, NULL, 0);
-	Renderer::GetDeviceContext()->PSSetShader(_pixelshader, NULL, 0);
+	Shader::SetShader(ShaderName::Particle);
 
 	GetComponent<Sprite2D>()->SetPos(GetPosition());
 	for (auto c : _components) {

@@ -7,10 +7,6 @@
 
 class GUI : public GameObject{
 protected:
-	ID3D11VertexShader*	_vertexshader{};
-	ID3D11PixelShader*	_pixelshader{};
-	ID3D11InputLayout*	_vertexlayout{};
-
 	XMFLOAT3			_size{};
 	const wchar_t*		_texname{};
 

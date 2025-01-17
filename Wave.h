@@ -6,8 +6,6 @@
 #include "GameObject.h"
 #include "Renderer.h"
 
-struct ShaderPack;
-
 class Wave : public GameObject {
 	static const int			VERTEX_NUM = 42;
 	static const float			WAVE_AMPLITUDE;					// ウェーブポイントの振幅
@@ -19,8 +17,6 @@ class Wave : public GameObject {
 	ID3D11ShaderResourceView*	_texture = NULL;
 	ID3D11ShaderResourceView*	_normaltexture = NULL;
 	ID3D11ShaderResourceView*	_envtexture = NULL;
-
-	ShaderPack*					_shader{};
 
 	VERTEX_3D					_vertex[VERTEX_NUM][VERTEX_NUM];
 

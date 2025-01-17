@@ -4,16 +4,10 @@
 #include "Fade.h"
 #include "Renderer.h"
 #include "Manager.h"
+#include "ShaderManager.h"
 
 void Fade::Init(){
 	LoadTexture();
-
-	//シェーダーセット
-	Renderer::CreateVertexShader(&_vertexshader, &_vertexlayout,
-		"shader\\UnlitTextureVS.cso");
-
-	Renderer::CreatePixelShader(&_pixelshader,
-		"shader\\UnlitTexturePS.cso");
 
 	_fadecolor = { 1.0f, 1.0f, 1.0f, 0.0f };
 }
@@ -22,9 +16,6 @@ void Fade::Uninit(){
 	for (auto c : _components) {
 		c->Uninit();
 	}
-	_vertexshader->Release();
-	_pixelshader->Release();
-	_vertexlayout->Release();
 }
 
 void Fade::Update(){
@@ -59,12 +50,7 @@ void Fade::Update(){
 }
 
 void Fade::Draw(){
-	//入力レイアウト設定
-	Renderer::GetDeviceContext()->IASetInputLayout(_vertexlayout);
-
-	//シェーダ設定
-	Renderer::GetDeviceContext()->VSSetShader(_vertexshader, NULL, 0);
-	Renderer::GetDeviceContext()->PSSetShader(_pixelshader, NULL, 0);
+	Shader::SetShader(ShaderName::Unlit);
 
 	GetComponent<Sprite2D>()->SetPos(GetPosition());
 

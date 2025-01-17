@@ -152,13 +152,7 @@ void MeshField::Uninit() {
 void MeshField::Update() {}
 
 void MeshField::Draw() {
-	_shader = Shader::GetShader(ShaderName::Dirlit);
-	//入力レイアウト設定
-	Renderer::GetDeviceContext()->IASetInputLayout(_shader->vertexLayout);
-
-	//シェーダ設定
-	Renderer::GetDeviceContext()->VSSetShader(_shader->vertexShader, NULL, 0);
-	Renderer::GetDeviceContext()->PSSetShader(_shader->pixelShader, NULL, 0);
+	Shader::SetShader(ShaderName::Dirlit);
 
 
 	//ワールドマトリクス設定

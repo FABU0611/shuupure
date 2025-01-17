@@ -6,16 +6,12 @@
 #include "GameObject.h"
 #include "Renderer.h"
 
-struct ShaderPack;
-
 class MeshField : public GameObject {
 	static const int			VERTEX_NUM = 42;
 
 	ID3D11Buffer*				_vertexbuffer = NULL;
 	ID3D11Buffer*				_indexbuffer = NULL;
 	ID3D11ShaderResourceView*	_texture = NULL;
-
-	ShaderPack*					_shader{};
 
 	VERTEX_3D					_vertex[VERTEX_NUM][VERTEX_NUM];
 

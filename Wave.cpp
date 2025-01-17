@@ -188,13 +188,7 @@ void Wave::Update() {
 }
 
 void Wave::Draw() {
-	_shader = Shader::GetShader(ShaderName::Water);
-	//入力レイアウト設定
-	Renderer::GetDeviceContext()->IASetInputLayout(_shader->vertexLayout);
-
-	//シェーダ設定
-	Renderer::GetDeviceContext()->VSSetShader(_shader->vertexShader, NULL, 0);
-	Renderer::GetDeviceContext()->PSSetShader(_shader->pixelShader, NULL, 0);
+	Shader::SetShader(ShaderName::Water);
 
 
 	//ワールドマトリクス設定

@@ -5,15 +5,11 @@
 
 #include "GameObject.h"
 
-struct ShaderPack;
-
 class ParticleEmitter : public GameObject {
 	ID3D11Buffer*				_vertexbuffer = NULL;
 	ID3D11ShaderResourceView*	_texture = NULL;
 
 	const wchar_t*		_texname{};		//画像ファイルのパス
-
-	ShaderPack*			_shader{};
 
 	//生成するパーティクル
 	struct PARTICLE{
