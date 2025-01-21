@@ -12,7 +12,7 @@ void LightCamera::Init() {
 	SetRotation({ 0.0f, 0.5f, 0.0f });
 	_target = { 0.0f, 0.5f, 0.0f };
 
-	_light.Direction = { -1.0f, -1.0f, -0.5f, 0.0f };
+	_light.Direction = { -0.5f, -1.0f, -0.5f, 0.0f };
 	_light.Direction = VectorNormalize(_light.Direction);
 	_light.Ambient = { 0.1f, 0.1f, 0.1f, 1.0f };
 	_light.Diffuse = { 1.0f, 1.0f, 1.0f, 1.0f };
@@ -46,21 +46,23 @@ void LightCamera::Draw() {
 
 
 	//カメラの方向からライトの位置と焦点を計算
-	XMFLOAT3 cameradirection = camera->GetTartgetPos() - camera->GetPosition();
-	cameradirection = VectorNormalize(cameradirection);
+	//XMFLOAT3 cameradirection = camera->GetTartgetPos() - camera->GetPosition();
+	//cameradirection.y = 0.0f;
+	//cameradirection = VectorNormalize(cameradirection);
 
-	float p = nearZ + ((farZ - nearZ) * 0.5f);
-	_target = camera->GetPosition() + (cameradirection * p);
+	//float p = nearZ + ((farZ - nearZ) * 0.5f);
+	//_target = camera->GetPosition() + (cameradirection * p);
+	_target = camera->GetTartgetPos();
 
 	XMVECTOR dir = XMVector4Normalize(XMLoadFloat4(&_light.Direction));
 	XMVECTOR tgt = XMLoadFloat3(&_target);
-	XMVECTOR lightpos = tgt - dir;
+	XMVECTOR lightpos = tgt - dir * farZ;
 
 	XMMATRIX lightview = XMMatrixLookAtLH(lightpos, tgt, XMVectorSet(0, 1, 0, 0));
 
 
 	//視錐台の8頂点の最大と最小を計算
-	std::vector<XMVECTOR> corners = camera->GetCornersWorldSpace(nearZ, farZ);
+	std::vector<XMVECTOR> corners = camera->GetCornersWorldSpace(1.0f, farZ);
 
 	XMVECTOR min = XMVectorSet(FLT_MAX, FLT_MAX, FLT_MAX, FLT_MAX);
 	XMVECTOR max = XMVectorSet(-FLT_MAX, -FLT_MAX, -FLT_MAX, -FLT_MAX);
