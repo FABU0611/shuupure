@@ -3,12 +3,12 @@
 //24_05_08
 #pragma once
 #include "GameObject.h"
+#include "Renderer.h"
 #include <vector>
 
 class CameraState;
 
 class Camera : public GameObject{
-	static const int CASCADE_NUM = 3;
 	static const float NEAR_CLIP;
 	static const float FAR_CLIP;
 
@@ -17,7 +17,7 @@ class Camera : public GameObject{
 	float			_length{};
 	float			_cameraspeed{};
 	float			_time{};
-	float			_cascade[CASCADE_NUM]{};
+	float			_cascade[Renderer::CASCADE_NUM]{};
 	float			_fov{};
 	float			_aspect{};
 

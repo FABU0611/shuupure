@@ -14,15 +14,17 @@
 #include "CameraState_Game1.h"
 
 const float Camera::NEAR_CLIP = 1.0f;
-const float Camera::FAR_CLIP = 250.0f;
+const float Camera::FAR_CLIP = 330.0f;
 
 //カメラ視錐台を分割
 void Camera::CalculationCascade() {
+	int cascadenum = Renderer::CASCADE_NUM;
+
 	float range = FAR_CLIP - NEAR_CLIP;
 	float ratio = FAR_CLIP / NEAR_CLIP;
 
-	for (int i = 0; i < CASCADE_NUM; i++) {
-		float p = (i + 1) / (float)CASCADE_NUM;					//i = 0 -> 1/3, i = 1 -> 2/3...
+	for (int i = 0; i < cascadenum; i++) {
+		float p = (i + 1) / (float)cascadenum;					//i = 0 -> 1/3, i = 1 -> 2/3...
 		float logsplit = NEAR_CLIP * powf(ratio, p);			//対数分割　近いほど小さく分割
 		float unifromsplit = NEAR_CLIP + range * p;				//線形分割　均等に分割
 		_cascade[i] = std::lerp(logsplit, unifromsplit, 0.5f);	//ブレンドしていい感じに	遠くが広すぎると解像度が低くなる
