@@ -10,58 +10,58 @@
 #define NVIDIAGPU (0x10DE)
 
 
-D3D_FEATURE_LEVEL       Renderer::_featurelevel = D3D_FEATURE_LEVEL_11_0;
+D3D_FEATURE_LEVEL			Renderer::_featurelevel = D3D_FEATURE_LEVEL_11_0;
 
-ID3D11Device* Renderer::_device{};
-ID3D11DeviceContext* Renderer::_devicecontext{};
-IDXGISwapChain* Renderer::_swapchain{};
-ID3D11RenderTargetView* Renderer::_rendertargetview{};
-ID3D11DepthStencilView* Renderer::_depthstencilview{};
+ID3D11Device*				Renderer::_device{};
+ID3D11DeviceContext*		Renderer::_devicecontext{};
+IDXGISwapChain*				Renderer::_swapchain{};
+ID3D11RenderTargetView*		Renderer::_rendertargetview{};
+ID3D11DepthStencilView*		Renderer::_depthstencilview{};
 
-ID3D11Buffer* Renderer::_worldbuffer{};
-ID3D11Buffer* Renderer::_viewbuffer{};
-ID3D11Buffer* Renderer::_projectionbuffer{};
-ID3D11Buffer* Renderer::_prevworldbuffer{};
-ID3D11Buffer* Renderer::_prevviewbuffer{};
-ID3D11Buffer* Renderer::_prevprojectionbuffer{};
-ID3D11Buffer* Renderer::_materialbuffer{};
-ID3D11Buffer* Renderer::_lightbuffer{};
-ID3D11Buffer* Renderer::_camerabuffer{};
-ID3D11Buffer* Renderer::_parameterbuffer{};
-ID3D11Buffer* Renderer::_weightsbuffer{};
-ID3D11Buffer* Renderer::_dofbuffer{};
-ID3D11Buffer* Renderer::_cascadesplitbuffer{};
+ID3D11Buffer*				Renderer::_worldbuffer{};
+ID3D11Buffer*				Renderer::_viewbuffer{};
+ID3D11Buffer*				Renderer::_projectionbuffer{};
+ID3D11Buffer*				Renderer::_prevworldbuffer{};
+ID3D11Buffer*				Renderer::_prevviewbuffer{};
+ID3D11Buffer*				Renderer::_prevprojectionbuffer{};
+ID3D11Buffer*				Renderer::_materialbuffer{};
+ID3D11Buffer*				Renderer::_lightbuffer{};
+ID3D11Buffer*				Renderer::_camerabuffer{};
+ID3D11Buffer*				Renderer::_parameterbuffer{};
+ID3D11Buffer*				Renderer::_weightsbuffer{};
+ID3D11Buffer*				Renderer::_dofbuffer{};
+ID3D11Buffer*				Renderer::_cascadesplitbuffer{};
 
-XMMATRIX Renderer::_prevworld;
-XMMATRIX Renderer::_prevview;
-XMMATRIX Renderer::_prevprojection;
+XMMATRIX					Renderer::_prevworld;
+XMMATRIX					Renderer::_prevview;
+XMMATRIX					Renderer::_prevprojection;
 
-ID3D11DepthStencilState* Renderer::_depthstateenable{};
-ID3D11DepthStencilState* Renderer::_depthstatedisable{};
-
-
-ID3D11BlendState* Renderer::_blendstate{};
-ID3D11BlendState* Renderer::_blendstateAdd{};
-ID3D11BlendState* Renderer::_blendstateATC{};
+ID3D11DepthStencilState*	Renderer::_depthstateenable{};
+ID3D11DepthStencilState*	Renderer::_depthstatedisable{};
 
 
-ID3D11RenderTargetView* Renderer::_PErenderertargetview = NULL;
-ID3D11ShaderResourceView* Renderer::_PEshaderresourceview = NULL;
+ID3D11BlendState*			Renderer::_blendstate{};
+ID3D11BlendState*			Renderer::_blendstateAdd{};
+ID3D11BlendState*			Renderer::_blendstateATC{};
 
-ID3D11DepthStencilView* Renderer::_Depthstencilview = NULL;
-ID3D11ShaderResourceView* Renderer::_Depthshaderresourceview = NULL;
-ID3D11DepthStencilView* Renderer::_CameraDepthstencilview[3] = { NULL, NULL, NULL };
-ID3D11ShaderResourceView* Renderer::_CameraDepthshaderresourceview[3] = { NULL, NULL, NULL };;
-ID3D11RenderTargetView* Renderer::_BXrenderertargetview = NULL;
-ID3D11ShaderResourceView* Renderer::_BXshaderresourceview = NULL;
-ID3D11RenderTargetView* Renderer::_BYrenderertargetview = NULL;
-ID3D11ShaderResourceView* Renderer::_BYshaderresourceview = NULL;
-ID3D11RenderTargetView* Renderer::_Velrenderertargetview = NULL;
-ID3D11ShaderResourceView* Renderer::_Velshaderresourceview = NULL;
-ID3D11RenderTargetView* Renderer::_MBrenderertargetview = NULL;
-ID3D11ShaderResourceView* Renderer::_MBshaderresourceview = NULL;
 
-ID3D11Texture2D* Renderer::_RendertargetTEX = NULL;
+ID3D11RenderTargetView*		Renderer::_sceneRTV = NULL;
+ID3D11ShaderResourceView*	Renderer::_sceneSRV = NULL;
+
+ID3D11DepthStencilView*		Renderer::_sceneDSV = NULL;
+ID3D11ShaderResourceView*	Renderer::_depthSRV = NULL;
+ID3D11DepthStencilView*		Renderer::_cameraDSV[Renderer::CASCADE_NUM] = { NULL, NULL, NULL };
+ID3D11ShaderResourceView*	Renderer::_cameradepthSRV[Renderer::CASCADE_NUM] = { NULL, NULL, NULL };;
+ID3D11RenderTargetView*		Renderer::_bxRTV = NULL;
+ID3D11ShaderResourceView*	Renderer::_bxSRV = NULL;
+ID3D11RenderTargetView*		Renderer::_byRTV = NULL;
+ID3D11ShaderResourceView*	Renderer::_bySRV = NULL;
+ID3D11RenderTargetView*		Renderer::_velRTV = NULL;
+ID3D11ShaderResourceView*	Renderer::_velSRV = NULL;
+ID3D11RenderTargetView*		Renderer::_mbRTV = NULL;
+ID3D11ShaderResourceView*	Renderer::_mbSRV = NULL;
+
+ID3D11Texture2D*			Renderer::_rendertargetTEX = NULL;
 
 
 void Renderer::Init() {
@@ -144,7 +144,7 @@ void Renderer::Init() {
 	_swapchain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&renderTarget);
 	_device->CreateRenderTargetView(renderTarget, NULL, &_rendertargetview);
 
-	_RendertargetTEX = renderTarget;
+	_rendertargetTEX = renderTarget;
 
 	renderTarget->Release();
 
@@ -218,7 +218,7 @@ void Renderer::Init() {
 	_device->CreateBlendState(&blendDesc, &_blendstate);
 
 
-	blendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_ONE;				//背景のαにかける式(* 1)
+	blendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_ONE;
 	_device->CreateBlendState(&blendDesc, &_blendstateAdd);
 
 
@@ -407,7 +407,7 @@ void Renderer::Init() {
 		ZeroMemory(&rtvd, sizeof(rtvd));
 		rtvd.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 		rtvd.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
-		_device->CreateRenderTargetView(bxTexture, &rtvd, &_BXrenderertargetview);
+		_device->CreateRenderTargetView(bxTexture, &rtvd, &_bxRTV);
 
 		//シェーダーリソースビューの作成
 		D3D11_SHADER_RESOURCE_VIEW_DESC srvd;
@@ -415,7 +415,7 @@ void Renderer::Init() {
 		srvd.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 		srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 		srvd.Texture2D.MipLevels = 1;
-		_device->CreateShaderResourceView(bxTexture, &srvd, &_BXshaderresourceview);
+		_device->CreateShaderResourceView(bxTexture, &srvd, &_bxSRV);
 
 		bxTexture->Release();
 	}
@@ -450,7 +450,7 @@ void Renderer::Init() {
 		ZeroMemory(&rtvd, sizeof(rtvd));
 		rtvd.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 		rtvd.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
-		_device->CreateRenderTargetView(byTexture, &rtvd, &_BYrenderertargetview);
+		_device->CreateRenderTargetView(byTexture, &rtvd, &_byRTV);
 
 		//シェーダーリソースビューの作成
 		D3D11_SHADER_RESOURCE_VIEW_DESC srvd;
@@ -458,7 +458,7 @@ void Renderer::Init() {
 		srvd.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 		srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 		srvd.Texture2D.MipLevels = 1;
-		_device->CreateShaderResourceView(byTexture, &srvd, &_BYshaderresourceview);
+		_device->CreateShaderResourceView(byTexture, &srvd, &_bySRV);
 
 		byTexture->Release();
 	}
@@ -493,7 +493,7 @@ void Renderer::Init() {
 		ZeroMemory(&rtvd, sizeof(rtvd));
 		rtvd.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 		rtvd.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
-		_device->CreateRenderTargetView(mbTexture, &rtvd, &_MBrenderertargetview);
+		_device->CreateRenderTargetView(mbTexture, &rtvd, &_mbRTV);
 
 		//シェーダーリソースビューの作成
 		D3D11_SHADER_RESOURCE_VIEW_DESC srvd;
@@ -501,7 +501,7 @@ void Renderer::Init() {
 		srvd.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 		srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 		srvd.Texture2D.MipLevels = 1;
-		_device->CreateShaderResourceView(mbTexture, &srvd, &_MBshaderresourceview);
+		_device->CreateShaderResourceView(mbTexture, &srvd, &_mbSRV);
 
 		mbTexture->Release();
 	}
@@ -531,7 +531,7 @@ void Renderer::Init() {
 		ZeroMemory(&dsvd, sizeof(dsvd));
 		dsvd.Format = DXGI_FORMAT_D32_FLOAT;
 		dsvd.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-		_device->CreateDepthStencilView(depthTexture, &dsvd, &_Depthstencilview);
+		_device->CreateDepthStencilView(depthTexture, &dsvd, &_sceneDSV);
 
 		//シェーダーリソースビューの作成
 		D3D11_SHADER_RESOURCE_VIEW_DESC srvd;
@@ -540,12 +540,12 @@ void Renderer::Init() {
 		srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 		srvd.Texture2D.MipLevels = 1;
 		srvd.Texture2D.MostDetailedMip = 0;
-		_device->CreateShaderResourceView(depthTexture, &srvd, &_Depthshaderresourceview);
+		_device->CreateShaderResourceView(depthTexture, &srvd, &_depthSRV);
 
 		depthTexture->Release();
 	}
 	{
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < Renderer::CASCADE_NUM; i++) {
 			//ライトからの深度
 			ID3D11Texture2D* depthTexture = NULL;
 			D3D11_TEXTURE2D_DESC	dtd;			//テクスチャ作成用デスクリプタ構造体
@@ -571,7 +571,7 @@ void Renderer::Init() {
 			ZeroMemory(&dsvd, sizeof(dsvd));
 			dsvd.Format = DXGI_FORMAT_D32_FLOAT;
 			dsvd.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-			_device->CreateDepthStencilView(depthTexture, &dsvd, &_CameraDepthstencilview[i]);
+			_device->CreateDepthStencilView(depthTexture, &dsvd, &_cameraDSV[i]);
 
 			//シェーダーリソースビューの作成
 			D3D11_SHADER_RESOURCE_VIEW_DESC srvd;
@@ -580,7 +580,7 @@ void Renderer::Init() {
 			srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 			srvd.Texture2D.MipLevels = 1;
 			srvd.Texture2D.MostDetailedMip = 0;
-			_device->CreateShaderResourceView(depthTexture, &srvd, &_CameraDepthshaderresourceview[i]);
+			_device->CreateShaderResourceView(depthTexture, &srvd, &_cameradepthSRV[i]);
 
 			depthTexture->Release();
 		}
@@ -611,7 +611,7 @@ void Renderer::Init() {
 		ZeroMemory(&rtvd, sizeof(rtvd));
 		rtvd.Format = DXGI_FORMAT_R8G8_UNORM;
 		rtvd.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
-		_device->CreateRenderTargetView(velocityTexture, &rtvd, &_Velrenderertargetview);
+		_device->CreateRenderTargetView(velocityTexture, &rtvd, &_velRTV);
 
 		//シェーダーリソースビューの作成
 		D3D11_SHADER_RESOURCE_VIEW_DESC srvd;
@@ -620,7 +620,7 @@ void Renderer::Init() {
 		srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 		srvd.Texture2D.MipLevels = 1;
 		srvd.Texture2D.MostDetailedMip = 0;
-		_device->CreateShaderResourceView(velocityTexture, &srvd, &_Velshaderresourceview);
+		_device->CreateShaderResourceView(velocityTexture, &srvd, &_velSRV);
 
 		velocityTexture->Release();
 	}
@@ -654,7 +654,7 @@ void Renderer::Init() {
 		ZeroMemory(&rtvd, sizeof(rtvd));
 		rtvd.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 		rtvd.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
-		_device->CreateRenderTargetView(ppTexture, &rtvd, &_PErenderertargetview);
+		_device->CreateRenderTargetView(ppTexture, &rtvd, &_sceneRTV);
 
 		//シェーダーリソースビューの作成
 		D3D11_SHADER_RESOURCE_VIEW_DESC srvd;
@@ -662,7 +662,7 @@ void Renderer::Init() {
 		srvd.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 		srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 		srvd.Texture2D.MipLevels = 1;
-		_device->CreateShaderResourceView(ppTexture, &srvd, &_PEshaderresourceview);
+		_device->CreateShaderResourceView(ppTexture, &srvd, &_sceneSRV);
 
 		ppTexture->Release();
 	}
@@ -685,24 +685,24 @@ void Renderer::Uninit() {
 	_dofbuffer->Release();
 	_cascadesplitbuffer->Release();
 
-	_Velshaderresourceview->Release();
-	_Velrenderertargetview->Release();
-	_MBshaderresourceview->Release();
-	_MBrenderertargetview->Release();
-	for (int i = 0; i < 3; i++) {
-		_CameraDepthshaderresourceview[i]->Release();
-		_CameraDepthstencilview[i]->Release();
+	_velSRV->Release();
+	_velRTV->Release();
+	_mbSRV->Release();
+	_mbRTV->Release();
+	for (int i = 0; i < Renderer::CASCADE_NUM; i++) {
+		_cameradepthSRV[i]->Release();
+		_cameraDSV[i]->Release();
 	}
-	_Depthshaderresourceview->Release();
-	_Depthstencilview->Release();
-	_BXshaderresourceview->Release();
-	_BXrenderertargetview->Release();
-	_BYshaderresourceview->Release();
-	_BYrenderertargetview->Release();
-	_PEshaderresourceview->Release();
-	_PErenderertargetview->Release();
+	_depthSRV->Release();
+	_sceneDSV->Release();
+	_bxSRV->Release();
+	_bxRTV->Release();
+	_bySRV->Release();
+	_byRTV->Release();
+	_sceneSRV->Release();
+	_sceneRTV->Release();
 
-	_RendertargetTEX->Release();
+	_rendertargetTEX->Release();
 
 	_devicecontext->ClearState();
 	_rendertargetview->Release();
@@ -935,29 +935,29 @@ void Renderer::BeginPE() {
 	SetViewportSize({ (FLOAT)SCREEN_WIDTH, (FLOAT)SCREEN_HEIGHT });
 
 	ID3D11RenderTargetView* mrt[2]{
-		_PErenderertargetview, _Velrenderertargetview
+		_sceneRTV, _velRTV
 	};
 	_devicecontext->OMSetRenderTargets(2,
 		mrt,	//レンダリングテクスチャ 
-		_Depthstencilview);		//Zバッファ
+		_sceneDSV);		//Zバッファ
 
 	//レンダリングテクスチャクリア
 	float ClearColor[4] = { 0.0f, 0.0f, 0.5f, 1.0f };
-	_devicecontext->ClearRenderTargetView(_PErenderertargetview, ClearColor);
-	_devicecontext->ClearRenderTargetView(_Velrenderertargetview, ClearColor);
+	_devicecontext->ClearRenderTargetView(_sceneRTV, ClearColor);
+	_devicecontext->ClearRenderTargetView(_velRTV, ClearColor);
 
 	//Zバッファクリア
-	_devicecontext->ClearDepthStencilView(_Depthstencilview, D3D11_CLEAR_DEPTH, 1.0f, 0);
+	_devicecontext->ClearDepthStencilView(_sceneDSV, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
 void Renderer::BeginBlurX() {
 	_devicecontext->OMSetRenderTargets(1,
-		&_BXrenderertargetview,	//レンダリングテクスチャ 
+		&_bxRTV,	//レンダリングテクスチャ 
 		_depthstencilview);		//Zバッファ
 
 	//レンダリングテクスチャクリア
 	float ClearColor[4] = { 0.0f, 0.5f, 0.0f, 1.0f };
-	_devicecontext->ClearRenderTargetView(_BXrenderertargetview, ClearColor);
+	_devicecontext->ClearRenderTargetView(_bxRTV, ClearColor);
 
 	//Zバッファクリア
 	_devicecontext->ClearDepthStencilView(_depthstencilview, D3D11_CLEAR_DEPTH, 1.0f, 0);
@@ -965,12 +965,12 @@ void Renderer::BeginBlurX() {
 
 void Renderer::BeginBlurY() {
 	_devicecontext->OMSetRenderTargets(1,
-		&_BYrenderertargetview,	//レンダリングテクスチャ 
+		&_byRTV,	//レンダリングテクスチャ 
 		_depthstencilview);		//Zバッファ
 
 	//レンダリングテクスチャクリア
 	float ClearColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-	_devicecontext->ClearRenderTargetView(_BYrenderertargetview, ClearColor);
+	_devicecontext->ClearRenderTargetView(_byRTV, ClearColor);
 
 	//Zバッファクリア
 	_devicecontext->ClearDepthStencilView(_depthstencilview, D3D11_CLEAR_DEPTH, 1.0f, 0);
@@ -978,12 +978,12 @@ void Renderer::BeginBlurY() {
 
 void Renderer::BeginMotionBlur() {
 	_devicecontext->OMSetRenderTargets(1,
-		&_MBrenderertargetview,	//レンダリングテクスチャ 
+		&_mbRTV,	//レンダリングテクスチャ 
 		_depthstencilview);		//Zバッファ
 
 	//レンダリングテクスチャクリア
 	float ClearColor[4] = { 0.5f, 0.0f, 0.0f, 1.0f };
-	_devicecontext->ClearRenderTargetView(_MBrenderertargetview, ClearColor);
+	_devicecontext->ClearRenderTargetView(_mbRTV, ClearColor);
 
 	//Zバッファクリア
 	_devicecontext->ClearDepthStencilView(_depthstencilview, D3D11_CLEAR_DEPTH, 1.0f, 0);
@@ -992,8 +992,8 @@ void Renderer::BeginMotionBlur() {
 void Renderer::BeginLightDepth(const int& idx) {
 	SetViewportSize({ 1024.0f, 1024.0f });
 
-	_devicecontext->OMSetRenderTargets(0, NULL, _CameraDepthstencilview[idx]);
-	_devicecontext->ClearDepthStencilView(_CameraDepthstencilview[idx], D3D11_CLEAR_DEPTH, 1.0f, 0);
+	_devicecontext->OMSetRenderTargets(0, NULL, _cameraDSV[idx]);
+	_devicecontext->ClearDepthStencilView(_cameraDSV[idx], D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
 

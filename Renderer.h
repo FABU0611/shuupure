@@ -3,18 +3,18 @@
 //24_04_24
 #pragma once
 
-
+//3D構造体
 struct VERTEX_3D {
-	XMFLOAT3 Position;
-	XMFLOAT3 Normal;
-	XMFLOAT4 Diffuse;
-	XMFLOAT2 TexCoord;
+	XMFLOAT3	Position;
+	XMFLOAT3	Normal;
+	XMFLOAT4	Diffuse;
+	XMFLOAT2	TexCoord;
 	XMFLOAT3	Tangent;
-	float dummy;
+	float		dummy;
 };
 
 
-
+//マテリアル構造体
 struct MATERIAL {
 	XMFLOAT4	Ambient;
 	XMFLOAT4	Diffuse;
@@ -26,7 +26,7 @@ struct MATERIAL {
 };
 
 
-
+//ライト構造体
 struct LIGHT {
 	BOOL		Enable;
 	BOOL		Dummy[3];//16byte境界用
@@ -40,64 +40,68 @@ struct LIGHT {
 	XMFLOAT4	PointLightParam;	//光の範囲
 	XMFLOAT4	Angle;				//光の角度
 	XMMATRIX	ViewMatrix[3];
-	XMMATRIX	ProjectionMatrix[3];	//配列にする
+	XMMATRIX	ProjectionMatrix[3];
 };
 
 
 
 class Renderer {
+public:
+	static const int					CASCADE_NUM = 3;
+
+private:
 	static D3D_FEATURE_LEVEL			_featurelevel;
 
-	static ID3D11Device* _device;
-	static ID3D11DeviceContext* _devicecontext;
-	static IDXGISwapChain* _swapchain;
-	static ID3D11RenderTargetView* _rendertargetview;
-	static ID3D11DepthStencilView* _depthstencilview;
+	static ID3D11Device*				_device;
+	static ID3D11DeviceContext*			_devicecontext;
+	static IDXGISwapChain*				_swapchain;
+	static ID3D11RenderTargetView*		_rendertargetview;
+	static ID3D11DepthStencilView*		_depthstencilview;
 
-	static ID3D11Buffer* _worldbuffer;
-	static ID3D11Buffer* _viewbuffer;
-	static ID3D11Buffer* _projectionbuffer;
-	static ID3D11Buffer* _prevworldbuffer;
-	static ID3D11Buffer* _prevviewbuffer;
-	static ID3D11Buffer* _prevprojectionbuffer;
+	static ID3D11Buffer*				_worldbuffer;
+	static ID3D11Buffer*				_viewbuffer;
+	static ID3D11Buffer*				_projectionbuffer;
+	static ID3D11Buffer*				_prevworldbuffer;
+	static ID3D11Buffer*				_prevviewbuffer;
+	static ID3D11Buffer*				_prevprojectionbuffer;
 
-	static ID3D11Buffer* _materialbuffer;
-	static ID3D11Buffer* _lightbuffer;
-	static ID3D11Buffer* _camerabuffer;
-	static ID3D11Buffer* _parameterbuffer;
-	static ID3D11Buffer* _weightsbuffer;
-	static ID3D11Buffer* _dofbuffer;
-	static ID3D11Buffer* _cascadesplitbuffer;
+	static ID3D11Buffer*				_materialbuffer;
+	static ID3D11Buffer*				_lightbuffer;
+	static ID3D11Buffer*				_camerabuffer;
+	static ID3D11Buffer*				_parameterbuffer;
+	static ID3D11Buffer*				_weightsbuffer;
+	static ID3D11Buffer*				_dofbuffer;
+	static ID3D11Buffer*				_cascadesplitbuffer;
 
-	static XMMATRIX				_prevworld;
-	static XMMATRIX				_prevview;
-	static XMMATRIX				_prevprojection;
+	static XMMATRIX						_prevworld;
+	static XMMATRIX						_prevview;
+	static XMMATRIX						_prevprojection;
 
-	static ID3D11DepthStencilState* _depthstateenable;
-	static ID3D11DepthStencilState* _depthstatedisable;
+	static ID3D11DepthStencilState*		_depthstateenable;
+	static ID3D11DepthStencilState*		_depthstatedisable;
 
-	static ID3D11BlendState* _blendstate;
-	static ID3D11BlendState* _blendstateAdd;
-	static ID3D11BlendState* _blendstateATC;
+	static ID3D11BlendState*			_blendstate;
+	static ID3D11BlendState*			_blendstateAdd;
+	static ID3D11BlendState*			_blendstateATC;
 
 
-	static ID3D11RenderTargetView* _PErenderertargetview;
-	static ID3D11ShaderResourceView* _PEshaderresourceview;
+	static ID3D11RenderTargetView*		_sceneRTV;
+	static ID3D11ShaderResourceView*	_sceneSRV;
 
-	static ID3D11DepthStencilView* _Depthstencilview;
-	static ID3D11ShaderResourceView* _Depthshaderresourceview;
-	static ID3D11DepthStencilView* _CameraDepthstencilview[3];
-	static ID3D11ShaderResourceView* _CameraDepthshaderresourceview[3];
-	static ID3D11RenderTargetView* _BXrenderertargetview;
-	static ID3D11ShaderResourceView* _BXshaderresourceview;
-	static ID3D11RenderTargetView* _BYrenderertargetview;
-	static ID3D11ShaderResourceView* _BYshaderresourceview;
-	static ID3D11RenderTargetView* _Velrenderertargetview;
-	static ID3D11ShaderResourceView* _Velshaderresourceview;
-	static ID3D11RenderTargetView* _MBrenderertargetview;
-	static ID3D11ShaderResourceView* _MBshaderresourceview;
+	static ID3D11DepthStencilView*		_sceneDSV;
+	static ID3D11ShaderResourceView*	_depthSRV;
+	static ID3D11DepthStencilView*		_cameraDSV[CASCADE_NUM];
+	static ID3D11ShaderResourceView*	_cameradepthSRV[CASCADE_NUM];
+	static ID3D11RenderTargetView*		_bxRTV;
+	static ID3D11ShaderResourceView*	_bxSRV;
+	static ID3D11RenderTargetView*		_byRTV;
+	static ID3D11ShaderResourceView*	_bySRV;
+	static ID3D11RenderTargetView*		_velRTV;
+	static ID3D11ShaderResourceView*	_velSRV;
+	static ID3D11RenderTargetView*		_mbRTV;
+	static ID3D11ShaderResourceView*	_mbSRV;
 
-	static ID3D11Texture2D* _RendertargetTEX;
+	static ID3D11Texture2D*				_rendertargetTEX;
 
 public:
 	static void Init();
@@ -134,16 +138,16 @@ public:
 	static void CreatePixelShader(ID3D11PixelShader** PixelShader, const char* FileName);
 
 
-	static ID3D11ShaderResourceView* GetPETexture() { return _PEshaderresourceview; }
-	static ID3D11ShaderResourceView* GetBXTexture() { return _BXshaderresourceview; }
-	static ID3D11ShaderResourceView* GetBYTexture() { return _BYshaderresourceview; }
-	static ID3D11ShaderResourceView* GetDepthTexture() { return _Depthshaderresourceview; }
-	static ID3D11ShaderResourceView* GetCameraDepthTexture(const int& idx) { return _CameraDepthshaderresourceview[idx]; }
-	static ID3D11ShaderResourceView* GetCameraDepthTexture() { return (*_CameraDepthshaderresourceview); }
-	static ID3D11ShaderResourceView* GetVelocityTexture() { return _Velshaderresourceview; }
-	static ID3D11ShaderResourceView* GetMBTexture() { return _MBshaderresourceview; }
+	static ID3D11ShaderResourceView* GetPETexture() { return _sceneSRV; }
+	static ID3D11ShaderResourceView* GetBXTexture() { return _bxSRV; }
+	static ID3D11ShaderResourceView* GetBYTexture() { return _bySRV; }
+	static ID3D11ShaderResourceView* GetDepthTexture() { return _depthSRV; }
+	static ID3D11ShaderResourceView* GetCameraDepthTexture(const int& idx) { return _cameradepthSRV[idx]; }
+	static ID3D11ShaderResourceView* GetCameraDepthTexture() { return (*_cameradepthSRV); }
+	static ID3D11ShaderResourceView* GetVelocityTexture() { return _velSRV; }
+	static ID3D11ShaderResourceView* GetMBTexture() { return _mbSRV; }
 
-	static ID3D11Texture2D* GetRendertargetTEX() { return _RendertargetTEX; }
+	static ID3D11Texture2D* GetRendertargetTEX() { return _rendertargetTEX; }
 
 	static void SetViewportSize(const XMFLOAT2& size);
 
