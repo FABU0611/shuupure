@@ -34,7 +34,9 @@ int Manager::_cascadeidx = 0;
 
 #ifdef _DEBUG
 #include "CheckDoF.h"
+#include "CheckCameraDepth.h"
 CheckDoF* Manager::_checkdof;
+CheckCameraDepth* Manager::_checkcamera;
 #endif
 
 
@@ -69,16 +71,20 @@ void Manager::Init() {
 	_motionblur->Init();
 
 #ifdef _DEBUG
-	_checkdof = new CheckDoF();
-	_checkdof->Init();
+	//_checkdof = new CheckDoF();
+	//_checkdof->Init();
+	_checkcamera = new CheckCameraDepth();
+	_checkcamera->Init();
 #endif
 }
 
 
 void Manager::Uninit() {
 #ifdef _DEBUG
-	_checkdof->Uninit();
-	delete _checkdof;
+	_checkcamera->Uninit();
+	delete _checkcamera;
+	//_checkdof->Uninit();
+	//delete _checkdof;
 #endif
 
 	_motionblur->Uninit();
@@ -128,7 +134,7 @@ void Manager::Update() {
 		_motionblur->Update();
 		_final->Update();
 #ifdef _DEBUG
-		_checkdof->Update();
+		//_checkdof->Update();
 #endif
 	}
 
@@ -138,7 +144,7 @@ void Manager::Update() {
 void Manager::Draw() {
 	//ライトからの深度マップを作成
 	_isdrawfromlight = true;
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < Renderer::CASCADE_NUM; i++) {
 		Renderer::BeginLightDepth(i);
 		_cascadeidx = i;
 		_scene->DrawFromLight();	//カメラ以外のオブジェクト描画
@@ -173,7 +179,8 @@ void Manager::Draw() {
 
 	//確認用
 #ifdef _DEBUG
-	_checkdof->Draw();
+	//_checkdof->Draw();
+	_checkcamera->Draw();
 #endif
 
 	//フェードの描画
@@ -192,7 +199,7 @@ void Manager::Draw() {
 	//次のシーンがセットされていたら
 	if (_scene) {
 #ifdef _DEBUG
-		_checkdof->Uninit();
+		//_checkdof->Uninit();
 #endif
 		_textmanager->Uninit();
 		_guimanager->Uninit();
@@ -214,7 +221,7 @@ void Manager::Draw() {
 	_scene->Init();
 
 #ifdef _DEBUG
-	_checkdof->Init();
+	//_checkdof->Init();
 #endif
 
 	_nextscene = nullptr;

@@ -169,6 +169,7 @@
     <ClCompile Include="CameraState_Game1.cpp" />
     <ClCompile Include="CameraState_Title1.cpp" />
     <ClCompile Include="CameraState_Title2.cpp" />
+    <ClCompile Include="CheckCameraDepth.cpp" />
     <ClCompile Include="CheckDoF.cpp" />
     <ClCompile Include="C_AnimationModel.cpp" />
     <ClCompile Include="C_Audio.cpp" />
@@ -227,6 +228,7 @@
     <ClInclude Include="CameraState_Game1.h" />
     <ClInclude Include="CameraState_Title1.h" />
     <ClInclude Include="CameraState_Title2.h" />
+    <ClInclude Include="CheckCameraDepth.h" />
     <ClInclude Include="CheckDoF.h" />
     <ClInclude Include="C_AnimationModel.h" />
     <ClInclude Include="C_Audio.h" />

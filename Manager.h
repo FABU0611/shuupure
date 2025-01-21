@@ -15,6 +15,7 @@ class GUIManager;
 class TextManager;
 #ifdef _DEBUG
 class CheckDoF;
+class CheckCameraDepth;
 #endif
 
 
@@ -38,6 +39,7 @@ class Manager {
 	static TextManager* _textmanager;
 #ifdef _DEBUG
 	static CheckDoF* _checkdof;
+	static CheckCameraDepth* _checkcamera;
 #endif
 
 	static bool _isdrawfromlight;
