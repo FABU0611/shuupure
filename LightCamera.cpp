@@ -11,7 +11,6 @@ void LightCamera::Init() {
 	SetPosition({ 0.0f, 1.5f, 3.0f });
 	SetRotation({ 0.0f, 0.5f, 0.0f });
 	_target = { 0.0f, 0.5f, 0.0f };
-	_up = { 0.0f, 1.0f, 0.0f };
 
 	_light.Direction = { -1.0f, -1.0f, -0.5f, 0.0f };
 	_light.Direction = VectorNormalize(_light.Direction);
@@ -48,7 +47,6 @@ void LightCamera::Draw() {
 
 	//カメラの方向からライトの位置と焦点を計算
 	XMFLOAT3 cameradirection = camera->GetTartgetPos() - camera->GetPosition();
-	cameradirection.y = 0.0f;
 	cameradirection = VectorNormalize(cameradirection);
 
 	float p = nearZ + ((farZ - nearZ) * 0.5f);
@@ -73,7 +71,6 @@ void LightCamera::Draw() {
 	}
 
 
-	//XMMATRIX lightprojection = XMMatrixOrthographicLH(250.0f, 250.0f, 1.0f, 500.0f);		//正射影
 	XMMATRIX lightprojection = XMMatrixOrthographicOffCenterLH(
 								XMVectorGetX(min), XMVectorGetX(max),
 								XMVectorGetY(min), XMVectorGetY(max),

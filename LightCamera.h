@@ -9,7 +9,6 @@
 class LightCamera : public GameObject {
 	LIGHT		_light{};
 	XMFLOAT3	_target{};
-	XMFLOAT3	_up{};
 
 public:
 	LightCamera() {}
