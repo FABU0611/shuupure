@@ -47,7 +47,7 @@ void CheckDoF::Init() {
 
 	//ここにシェーダーファイルのロードを追加
 	Renderer::CreateVertexShader(&_vertexshader, &_vertexlayout, "shader\\UnlitTextureVS.cso");
-	Renderer::CreatePixelShader(&_pixelshader, "shader\\UnlitTexturePS.cso");
+	Renderer::CreatePixelShader(&_pixelshader, "shader\\CheckDoFPS.cso");
 
 	_screen = Manager::GetGUIManager()->AddGUI<CheckBox>(XMFLOAT3(25.0f, 225.0f, 0.0f));
 }
@@ -95,7 +95,7 @@ void CheckDoF::Draw() {
 	Renderer::SetMaterial(material);
 
 	// テクスチャ設定
-	ID3D11ShaderResourceView* ppTexture = Renderer::GetCameraDepthTexture(1);
+	ID3D11ShaderResourceView* ppTexture = Renderer::GetDepthTexture();
 	Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &ppTexture);
 
 	// プリミティブトポロジ設定
