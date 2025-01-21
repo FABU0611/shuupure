@@ -5,6 +5,7 @@
 #include "Manager.h"
 #include "Renderer.h"
 #include "S_Game.h"
+#include "S_Tutorial.h"
 #include "Input.h"
 #include "C_Audio.h"
 #include "EasingFunc.h"
