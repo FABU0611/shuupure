@@ -14,6 +14,7 @@ enum class ShaderName : short {
 	Tangentlit,
 	Dirlit,
 	Particle,
+	Instance,
 };
 
 struct ShaderPack {

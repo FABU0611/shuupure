@@ -28,6 +28,7 @@ void Shader::LoadShader() {
 	AddShader("shader\\TangentNormalLightingVS.cso", "shader\\TangentNormalLightingPS.cso", ShaderName::Tangentlit);
 	AddShader("shader\\VertexLightingVS.cso", "shader\\VertexLightingPS.cso", ShaderName::Dirlit);
     AddShader("shader\\UnlitTextureVS.cso", "shader\\ParticlePS.cso", ShaderName::Particle);
+    AddShader("shader\\NormalLightingInstanceVS.cso", "shader\\NormalLightingPS.cso", ShaderName::Instance);
 }
 
 void Shader::UninitAll() {
