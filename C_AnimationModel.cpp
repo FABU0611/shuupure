@@ -51,12 +51,10 @@ void AnimationModel::Draw() {
 		//上書きすれば他のモデルのテクスチャが貼られることはないっぽい
 
 		if (Manager::GetisDrawFromLight()) {
-			ID3D11ShaderResourceView* shadow0 = Renderer::GetCameraDepthTexture(0);
-			Renderer::GetDeviceContext()->PSSetShaderResources(2, 1, &shadow0);
-			ID3D11ShaderResourceView* shadow1 = Renderer::GetCameraDepthTexture(1);
-			Renderer::GetDeviceContext()->PSSetShaderResources(3, 1, &shadow1);
-			ID3D11ShaderResourceView* shadow2 = Renderer::GetCameraDepthTexture(2);
-			Renderer::GetDeviceContext()->PSSetShaderResources(4, 1, &shadow2);
+			for (int i = 0; i < Renderer::CASCADE_NUM; i++) {
+				ID3D11ShaderResourceView* shadow = Renderer::GetCameraDepthTexture(i);
+				Renderer::GetDeviceContext()->PSSetShaderResources(2 + i, 1, &shadow);
+			}
 		}
 
 		//if (texture == aiString(""))
