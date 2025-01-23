@@ -1,6 +1,8 @@
 
 
 static float PI = 3.14159265359f;
+static float SCREEN_WIDTH = 1280.0f;
+static float SCREEN_HEIGHT = 920.0f;
 
 cbuffer WorldBuffer : register(b0) {
 	matrix World;
@@ -53,8 +55,8 @@ struct LIGHT {
 	float4 Position;
 	float4 PointParam;
 	float4 Angle;	
-	matrix ViewMatrix[3];
-	matrix ProjectionMatrix[3];
+	matrix ViewMatrix[4];
+	matrix ProjectionMatrix[4];
 };
 
 cbuffer LightBuffer : register(b4) {
@@ -83,16 +85,17 @@ cbuffer DoFBuffer : register(b8) {
 
 //カスケードパラメータ受け取り用
 cbuffer SplitBuffer : register(b12) {
-	float Split[3];
-	float dummy;
+	float Split[4];
+	//float dummy;
 }
 
 struct VS_IN {
-	float4 Position			: POSITION0;	//ポジションゼロ
-	float4 Normal			: NORMAL0;		//ノーマルゼロ
-	float4 Diffuse			: COLOR0;		//カラーゼロ
-	float2 TexCoord			: TEXCOORD0;	//テクスコードゼロ
-	float4 Tangent			: TANGENT0;		//タンジェントゼロ
+	float4	Position		: POSITION0;	//ポジションゼロ
+	float4	Normal			: NORMAL0;		//ノーマルゼロ
+	float4	Diffuse			: COLOR0;		//カラーゼロ
+	float2	TexCoord		: TEXCOORD0;	//テクスコードゼロ
+	float4	Tangent			: TANGENT0;		//タンジェントゼロ
+	uint InstanceID			: SV_InstanceID;
 };
 
 
@@ -106,9 +109,7 @@ struct PS_IN {
 	float4 Binormal			: BINORMAL0;	//バイノーマル
 	float4 CurPosition		: TEXCOORD1;	//今フレームピクセルの座標
 	float4 PrevPosition		: TEXCOORD2;	//前フレームピクセルの座標
-	float4 LightPosition[3]	: POSITION1;	//ライト空間座標
-	//float4 LightPosition1	: POSITION2;	//ライト空間座標
-	//float4 LightPosition2	: POSITION3;	//ライト空間座標
+	float4 LightPosition[4]	: POSITION1;	//ライト空間座標
 };
 struct PS_OUT {
 	float4 Out0				: SV_Target0;	//デフォルトのびょうが
@@ -179,7 +180,7 @@ void CreateVelTex(in PS_IN In, out float2 vel) {
 	float2 velocity = (In.CurPosition.xy / In.CurPosition.w) - (In.PrevPosition.xy / In.PrevPosition.w);
 	velocity.y = -velocity.y;
 	float2 velocityNormalized = (velocity + 1.0f) * 0.5f;
-	//velocityNormalized = clamp(velocityNormalized, 0.39f, 0.69f);
+	velocityNormalized = clamp(velocityNormalized, 0.39f, 0.69f);
 	vel.rg = float2(velocityNormalized);
 }
 

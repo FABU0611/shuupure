@@ -19,10 +19,17 @@ void main(in PS_IN In, out PS_OUT Out) {
 	float light = 0.5f - 0.5f * dot(lv.xyz, normal.xyz);
 	
 	//テクスチャのピクセルの処理
-	Out.Out0 = g_Texture.Sample(g_SamplerState, In.TexCoord);
-	//色に明るさを乗算	
-	Out.Out0.rgb *= In.Diffuse.rgb * light;
-	Out.Out0.a *= In.Diffuse.a;
+	if(Material.TextureEnable) {
+		Out.Out0 = g_Texture.Sample(g_SamplerState, In.TexCoord);
+		//色に明るさを乗算
+		Out.Out0.rgb *= In.Diffuse.rgb * light;
+		Out.Out0.a *= In.Diffuse.a;
+	}
+	else {
+		//色に明るさを乗算
+		Out.Out0.rgb = In.Diffuse.rgb * light;
+		Out.Out0.a = In.Diffuse.a;
+	}
 	//環境光
 	Out.Out0.rgb += Light.Ambient.rgb;
 	
