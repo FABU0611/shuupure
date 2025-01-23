@@ -3,16 +3,12 @@
 //24_05_08
 #include "Main.h"
 #include "Renderer.h"
+#include "ShaderManager.h"
+#include "Time.h"
 #include "Water.h"
 
 //初期化処理
 void Water::Init(){
-	Renderer::CreateVertexShader(&_vertexshader, &_vertexlayout,
-		"shader\\WaterSurfaceVS.cso");
-
-	Renderer::CreatePixelShader(&_pixelshader,
-		"shader\\WaterSurfacePS.cso");
-
 	//テクスチャ読み込み
 	TexMetadata metadata;
 	ScratchImage image;
@@ -24,6 +20,8 @@ void Water::Init(){
 	SetPosition({ 15.0f, -0.05f, 0.0 });
 
 	GetComponent<Sprite3D>()->SetUVend({25.0f, 25.0f});
+
+	_param = { 0.0f, 0.0f, 0.0f, 0.0f };
 }
 
 //終了処理
@@ -31,24 +29,25 @@ void Water::Uninit(){
 	for (auto c : _components) {
 		c->Uninit();
 	}
-
-	_vertexshader->Release();
-	_pixelshader->Release();
-	_vertexlayout->Release();
 }
 
 //更新処理
 void Water::Update() {
+	_param.x += 0.5f * Time::GetDeltaTime();
+	_param.y += 0.5f * Time::GetDeltaTime();
+	if (_param.x >= 1.0f) {
+		_param.x = 0.0f;
+	}
+	if (_param.y >= 1.0f) {
+		_param.y = 0.0f;
+	}
 }
 
 //描画処理
 void Water::Draw(){
-	//入力レイアウト設定
-	Renderer::GetDeviceContext()->IASetInputLayout(_vertexlayout);
+	Shader::SetShader(ShaderName::Water);
 
-	//シェーダ設定
-	Renderer::GetDeviceContext()->VSSetShader(_vertexshader, NULL, 0);
-	Renderer::GetDeviceContext()->PSSetShader(_pixelshader, NULL, 0);
+	Renderer::SetParameter(_param);
 
 	Renderer::GetDeviceContext()->PSSetShaderResources(2, 1, &_envtexture);
 

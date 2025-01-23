@@ -20,6 +20,7 @@ class Wave : public GameObject {
 
 	VERTEX_3D					_vertex[VERTEX_NUM][VERTEX_NUM];
 
+	XMFLOAT4					_param{};
 	float						_size{};
 	const wchar_t*				_texname{};		//画像ファイルのパス
 

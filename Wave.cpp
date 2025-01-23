@@ -109,6 +109,9 @@ void Wave::Init() {
 	LoadFromWICFile(L"asset\\model\\sky02.jpg", WIC_FLAGS_NONE, &metadata, image);
 	CreateShaderResourceView(Renderer::GetDevice(), image.GetImages(), image.GetImageCount(), metadata, &_envtexture);
 	assert(_envtexture);
+
+
+	_param = { 0.0f, 0.0f, 0.0f, 0.0f };
 }
 
 void Wave::Uninit() {
@@ -185,11 +188,21 @@ void Wave::Update() {
 	Renderer::GetDeviceContext()->Unmap(_vertexbuffer, 0);
 
 	_time += dt;
+
+	_param.x += 0.5f * dt;
+	_param.y += 0.5f * dt;
+	if (_param.x >= 1.0f) {
+		_param.x = 0.0f;
+	}
+	if (_param.y >= 1.0f) {
+		_param.y = 0.0f;
+	}
 }
 
 void Wave::Draw() {
 	Shader::SetShader(ShaderName::Water);
 
+	Renderer::SetParameter(_param);
 
 	//ワールドマトリクス設定
 	XMMATRIX world, scale, trans, rot;

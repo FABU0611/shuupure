@@ -9,10 +9,7 @@
 class Water : public GameObject{
 	ID3D11ShaderResourceView*	_envtexture = NULL;
 
-	ID3D11VertexShader*			_vertexshader{};
-	ID3D11PixelShader*			_pixelshader{};
-	ID3D11InputLayout*			_vertexlayout{};
-
+	XMFLOAT4					_param{};
 	XMFLOAT3					_size{};
 	const wchar_t*				_texname{};		//画像ファイルのパス
 
