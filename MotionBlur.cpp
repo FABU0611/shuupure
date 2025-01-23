@@ -85,7 +85,7 @@ void MotionBlur::Draw() {
 	Renderer::SetMaterial(material);
 
 	// テクスチャ設定
-	ID3D11ShaderResourceView* ppTexture = Renderer::GetBYTexture();
+	ID3D11ShaderResourceView* ppTexture = Renderer::GetPETexture();
 	Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &ppTexture);
 	ID3D11ShaderResourceView* velTexture = Renderer::GetVelocityTexture();
 	Renderer::GetDeviceContext()->PSSetShaderResources(1, 1, &velTexture);

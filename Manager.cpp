@@ -71,8 +71,8 @@ void Manager::Init() {
 	_motionblur->Init();
 
 #ifdef _DEBUG
-	//_checkdof = new CheckDoF();
-	//_checkdof->Init();
+	_checkdof = new CheckDoF();
+	_checkdof->Init();
 	_checkcamera = new CheckCameraDepth();
 	_checkcamera->Init();
 #endif
@@ -83,8 +83,8 @@ void Manager::Uninit() {
 #ifdef _DEBUG
 	_checkcamera->Uninit();
 	delete _checkcamera;
-	//_checkdof->Uninit();
-	//delete _checkdof;
+	_checkdof->Uninit();
+	delete _checkdof;
 #endif
 
 	_motionblur->Uninit();
@@ -134,7 +134,7 @@ void Manager::Update() {
 		_motionblur->Update();
 		_final->Update();
 #ifdef _DEBUG
-		//_checkdof->Update();
+		_checkdof->Update();
 #endif
 	}
 
@@ -149,19 +149,19 @@ void Manager::Draw() {
 		_cascadeidx = i;
 		_scene->DrawFromLight();	//カメラ以外のオブジェクト描画
 	}
-	_isdrawfromlight = false;
 
 
 	//オブジェクトの描画、深度マップの作成、速度マップの作成
 	Renderer::BeginPE();
+	_isdrawfromlight = false;
 	_scene->Draw();	
-
-	//シーンにガウシアンブラーを掛ける
-	_gaussian->Draw();
 
 	//モーションブラーを掛ける
 	Renderer::BeginMotionBlur();
 	_motionblur->Draw();
+
+	//シーンにガウシアンブラーを掛ける
+	_gaussian->Draw();
 
 
 	//最終的な描画
@@ -179,8 +179,8 @@ void Manager::Draw() {
 
 	//確認用
 #ifdef _DEBUG
-	//_checkdof->Draw();
 	_checkcamera->Draw();
+	_checkdof->Draw();
 #endif
 
 	//フェードの描画
@@ -199,7 +199,7 @@ void Manager::Draw() {
 	//次のシーンがセットされていたら
 	if (_scene) {
 #ifdef _DEBUG
-		//_checkdof->Uninit();
+		_checkdof->Uninit();
 #endif
 		_textmanager->Uninit();
 		_guimanager->Uninit();
@@ -221,7 +221,7 @@ void Manager::Draw() {
 	_scene->Init();
 
 #ifdef _DEBUG
-	//_checkdof->Init();
+	_checkdof->Init();
 #endif
 
 	_nextscene = nullptr;

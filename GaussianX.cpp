@@ -85,7 +85,7 @@ void GaussianX::Draw() {
 	Renderer::SetMaterial(material);
 
 	// テクスチャ設定
-	ID3D11ShaderResourceView* ppTexture = Renderer::GetPETexture();
+	ID3D11ShaderResourceView* ppTexture = Renderer::GetMBTexture();
 	Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &ppTexture);
 
 	// プリミティブトポロジ設定
