@@ -203,6 +203,7 @@
     <ClCompile Include="Rendpoly.cpp" />
     <ClCompile Include="Score.cpp" />
     <ClCompile Include="ShaderManager.cpp" />
+    <ClCompile Include="SphereInstence.cpp" />
     <ClCompile Include="TakePicture.cpp" />
     <ClCompile Include="TestObject.cpp" />
     <ClCompile Include="Text.cpp" />
@@ -276,6 +277,7 @@
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Score.h" />
     <ClInclude Include="ShaderManager.h" />
+    <ClInclude Include="SphereInstence.h" />
     <ClInclude Include="TakePicture.h" />
     <ClInclude Include="TestObject.h" />
     <ClInclude Include="Text.h" />
@@ -349,6 +351,12 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="shader\NormalLightingInstanceVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
     <FxCompile Include="shader\NormalLightingPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>

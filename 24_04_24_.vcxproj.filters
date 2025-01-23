@@ -192,6 +192,9 @@
     <ClCompile Include="CheckCameraDepth.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="SphereInstence.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Main.h">
@@ -410,6 +413,9 @@
     <ClInclude Include="CheckCameraDepth.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="SphereInstence.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shader\common.hlsl">
@@ -467,6 +473,9 @@
       <Filter>シェーダー\PS</Filter>
     </FxCompile>
     <FxCompile Include="shader\DepthShadowVS.hlsl">
+      <Filter>シェーダー\VS</Filter>
+    </FxCompile>
+    <FxCompile Include="shader\NormalLightingInstanceVS.hlsl">
       <Filter>シェーダー\VS</Filter>
     </FxCompile>
   </ItemGroup>
