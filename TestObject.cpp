@@ -10,7 +10,7 @@
 
 TestObject::TestObject(const XMFLOAT3& pos) {
 	SetPosition(pos);
-	SetScale({ 1.0f, 1.0f, 10.0f });
+	SetScale({ 1.0f, 10.0f, 1.0f });
 }
 
 void TestObject::Init() {
@@ -35,7 +35,7 @@ void TestObject::Update() {
 		_time = 0.0f;
 	}
 
-	GetPosition().y = 3 * sin(_time * 5) + _defpos.y;
+	GetPosition().z = 10 * sin(_time * 5) + _defpos.y;
 	//GetRotation().x += 0.1f;
 
 	for (auto c : _components) {
@@ -44,6 +44,19 @@ void TestObject::Update() {
 }
 
 void TestObject::Draw() {
+	Scene* scene = Manager::GetScene();
+	if (!scene) {
+		return;
+	}
+	Camera* camera = scene->GetGameobject<Camera>();
+	if (!camera) {
+		return;
+	}
+	const float& rad = GetComponent<ModelRenderer>()->GetRadius();
+	if (!camera->ChackView(GetPosition(), rad * GetScale().x)) {
+		return;
+	}
+
 	Shader::SetShader(ShaderName::Unlit);
 
 	//ワールドマトリクス設定
