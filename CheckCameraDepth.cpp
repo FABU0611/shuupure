@@ -6,7 +6,7 @@
 #include "ShaderManager.h"
 
 void CheckCameraDepth::Init() {
-	VERTEX_3D vertex[4 * 3];
+	VERTEX_3D vertex[4 * Renderer::CASCADE_NUM];
 
 	vertex[0].Position = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	vertex[0].Normal = XMFLOAT3(0.0f, 0.0f, 0.0f);
@@ -69,13 +69,34 @@ void CheckCameraDepth::Init() {
 	vertex[11].Normal = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	vertex[11].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertex[11].TexCoord = XMFLOAT2(1.0f, 1.0f);
+	
+
+	vertex[12].Position = XMFLOAT3(SCREEN_HEIGHT * 0.75f + 30.0f, 0.0f, 0.0f);
+	vertex[12].Normal = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	vertex[12].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	vertex[12].TexCoord = XMFLOAT2(0.0f, 0.0f);
+
+	vertex[13].Position = XMFLOAT3(SCREEN_HEIGHT + 30.0f, 0.0f, 0.0f);
+	vertex[13].Normal = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	vertex[13].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	vertex[13].TexCoord = XMFLOAT2(1.0f, 0.0f);
+
+	vertex[14].Position = XMFLOAT3(SCREEN_HEIGHT * 0.75f + 30.0f, SCREEN_HEIGHT * 0.25f, 0.0f);
+	vertex[14].Normal = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	vertex[14].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	vertex[14].TexCoord = XMFLOAT2(0.0f, 1.0f);
+
+	vertex[15].Position = XMFLOAT3(SCREEN_HEIGHT + 30.0f, SCREEN_HEIGHT * 0.25f, 0.0f);
+	vertex[15].Normal = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	vertex[15].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	vertex[15].TexCoord = XMFLOAT2(1.0f, 1.0f);
 
 
 	// 頂点バッファ生成
 	D3D11_BUFFER_DESC bd;
 	ZeroMemory(&bd, sizeof(bd));
 	bd.Usage = D3D11_USAGE_DEFAULT;
-	bd.ByteWidth = sizeof(VERTEX_3D) * (4 * 3);
+	bd.ByteWidth = sizeof(VERTEX_3D) * (4 * Renderer::CASCADE_NUM);
 	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	bd.CPUAccessFlags = 0;
 
@@ -114,7 +135,7 @@ void CheckCameraDepth::Draw() {
 	// プリミティブトポロジ設定
 	Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < Renderer::CASCADE_NUM; i++) {
 		// テクスチャ設定
 		ID3D11ShaderResourceView* ppTexture = Renderer::GetCameraDepthTexture(i);
 		Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &ppTexture);
