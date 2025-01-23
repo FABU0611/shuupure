@@ -39,15 +39,15 @@ struct LIGHT {
 	XMFLOAT4	Position;			//ŒõŒ¹‚ÌÀ•W
 	XMFLOAT4	PointLightParam;	//Œõ‚Ì”ÍˆÍ
 	XMFLOAT4	Angle;				//Œõ‚ÌŠp“x
-	XMMATRIX	ViewMatrix[3];
-	XMMATRIX	ProjectionMatrix[3];
+	XMMATRIX	ViewMatrix[4];
+	XMMATRIX	ProjectionMatrix[4];
 };
 
 
 
 class Renderer {
 public:
-	static const int					CASCADE_NUM = 3;
+	static const int					CASCADE_NUM = 4;
 
 private:
 	static D3D_FEATURE_LEVEL			_featurelevel;
