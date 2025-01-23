@@ -19,9 +19,9 @@ void main(in PS_IN In, out PS_OUT Out) {
 	float2 uv2 = In.TexCoord;
 	float2 uv3 = In.TexCoord;
 	
-	uv1 = uv1 * 1.5f - float2(Light.PointParam.y, Light.PointParam.z);
-	uv2 = uv2 * 1.0f - float2(Light.PointParam.y, -Light.PointParam.z);
-	uv3 = uv3 * 0.5f - float2(Light.PointParam.y, 0.0f);
+	uv1 = uv1 * 1.5f - float2(Parameter.y, Parameter.z);
+	uv2 = uv2 * 1.0f - float2(Parameter.y, -Parameter.z);
+	uv3 = uv3 * 0.5f - float2(Parameter.y, 0.0f);
 	
 	float2 localnormal1 = g_Normal.Sample(g_SamplerState, uv1).rg;
 	float2 localnormal2 = g_Normal.Sample(g_SamplerState, uv2).rg;
