@@ -11,10 +11,10 @@
 
 
 std::unordered_map<std::string, MODEL*> ModelRenderer::_modelpool;
+float ModelRenderer::_radius;
 
 
-void ModelRenderer::Draw()
-{
+void ModelRenderer::Draw() {
 
 	// 頂点バッファ設定
 	UINT stride = sizeof(VERTEX_3D);
@@ -28,25 +28,27 @@ void ModelRenderer::Draw()
 	Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 
-	for( unsigned int i = 0; i < _model->SubsetNum; i++ )
-	{
+	for (unsigned int i = 0; i < _model->SubsetNum; i++) {
 		// マテリアル設定
-		Renderer::SetMaterial(_model->SubsetArray[i].Material.Material );
+		Renderer::SetMaterial(_model->SubsetArray[i].Material.Material);
 
 		// テクスチャ設定
-		if(_model->SubsetArray[i].Material.Texture)
-			Renderer::GetDeviceContext()->PSSetShaderResources( 0, 1, &_model->SubsetArray[i].Material.Texture );
+		if (_model->SubsetArray[i].Material.Texture)
+			Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &_model->SubsetArray[i].Material.Texture);
 
 		// ポリゴン描画
-		Renderer::GetDeviceContext()->DrawIndexed(_model->SubsetArray[i].IndexNum, _model->SubsetArray[i].StartIndex, 0 );
+		if (!_isinstance) {
+			Renderer::GetDeviceContext()->DrawIndexed(_model->SubsetArray[i].IndexNum, _model->SubsetArray[i].StartIndex, 0);
+		}
+		else {
+			Renderer::GetDeviceContext()->DrawIndexedInstanced(_model->SubsetArray[i].IndexNum, _instancenum, _model->SubsetArray[i].StartIndex, 0, 0);
+		}
 	}
 
 }
 
-void ModelRenderer::Preload(const char *FileName)
-{
-	if (_modelpool.count(FileName) > 0)
-	{
+void ModelRenderer::Preload(const char* FileName) {
+	if (_modelpool.count(FileName) > 0) {
 		return;
 	}
 
@@ -58,15 +60,12 @@ void ModelRenderer::Preload(const char *FileName)
 }
 
 
-void ModelRenderer::UnloadAll()
-{
-	for (std::pair<const std::string, MODEL*> pair : _modelpool)
-	{
+void ModelRenderer::UnloadAll() {
+	for (std::pair<const std::string, MODEL*> pair : _modelpool) {
 		pair.second->VertexBuffer->Release();
 		pair.second->IndexBuffer->Release();
 
-		for (unsigned int i = 0; i < pair.second->SubsetNum; i++)
-		{
+		for (unsigned int i = 0; i < pair.second->SubsetNum; i++) {
 			if (pair.second->SubsetArray[i].Material.Texture)
 				pair.second->SubsetArray[i].Material.Texture->Release();
 		}
@@ -80,10 +79,8 @@ void ModelRenderer::UnloadAll()
 }
 
 
-void ModelRenderer::Load(const char *FileName)
-{
-	if (_modelpool.count(FileName) > 0)
-	{
+void ModelRenderer::Load(const char* FileName) {
+	if (_modelpool.count(FileName) > 0) {
 		_model = _modelpool[FileName];
 		return;
 	}
@@ -95,54 +92,52 @@ void ModelRenderer::Load(const char *FileName)
 
 }
 
-void ModelRenderer::LoadModel( const char *FileName, MODEL *Model)
-{
+void ModelRenderer::LoadModel(const char* FileName, MODEL* Model) {
 
 	MODEL_OBJ modelObj;
-	LoadObj( FileName, &modelObj );
+	LoadObj(FileName, &modelObj);
 
 
 
 	// 頂点バッファ生成
 	{
 		D3D11_BUFFER_DESC bd;
-		ZeroMemory( &bd, sizeof(bd) );
+		ZeroMemory(&bd, sizeof(bd));
 		bd.Usage = D3D11_USAGE_DEFAULT;
-		bd.ByteWidth = sizeof( VERTEX_3D ) * modelObj.VertexNum;
+		bd.ByteWidth = sizeof(VERTEX_3D) * modelObj.VertexNum;
 		bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 		bd.CPUAccessFlags = 0;
 
 		D3D11_SUBRESOURCE_DATA sd;
-		ZeroMemory( &sd, sizeof(sd) );
+		ZeroMemory(&sd, sizeof(sd));
 		sd.pSysMem = modelObj.VertexArray;
 
-		Renderer::GetDevice()->CreateBuffer( &bd, &sd, &Model->VertexBuffer );
+		Renderer::GetDevice()->CreateBuffer(&bd, &sd, &Model->VertexBuffer);
 	}
 
 
 	// インデックスバッファ生成
 	{
 		D3D11_BUFFER_DESC bd;
-		ZeroMemory( &bd, sizeof(bd) );
+		ZeroMemory(&bd, sizeof(bd));
 		bd.Usage = D3D11_USAGE_DEFAULT;
-		bd.ByteWidth = sizeof( unsigned int ) * modelObj.IndexNum;
+		bd.ByteWidth = sizeof(unsigned int) * modelObj.IndexNum;
 		bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
 		bd.CPUAccessFlags = 0;
 
 		D3D11_SUBRESOURCE_DATA sd;
-		ZeroMemory( &sd, sizeof(sd) );
+		ZeroMemory(&sd, sizeof(sd));
 		sd.pSysMem = modelObj.IndexArray;
 
-		Renderer::GetDevice()->CreateBuffer( &bd, &sd, &Model->IndexBuffer );
+		Renderer::GetDevice()->CreateBuffer(&bd, &sd, &Model->IndexBuffer);
 	}
 
 	// サブセット設定
 	{
-		Model->SubsetArray = new SUBSET[ modelObj.SubsetNum ];
+		Model->SubsetArray = new SUBSET[modelObj.SubsetNum];
 		Model->SubsetNum = modelObj.SubsetNum;
 
-		for( unsigned int i = 0; i < modelObj.SubsetNum; i++ )
-		{
+		for (unsigned int i = 0; i < modelObj.SubsetNum; i++) {
 			Model->SubsetArray[i].StartIndex = modelObj.SubsetArray[i].StartIndex;
 			Model->SubsetArray[i].IndexNum = modelObj.SubsetArray[i].IndexNum;
 
@@ -166,10 +161,11 @@ void ModelRenderer::LoadModel( const char *FileName, MODEL *Model)
 		}
 	}
 
+	_radius = CalculateRadius(modelObj.VertexArray, modelObj.VertexNum);
+
 	delete[] modelObj.VertexArray;
 	delete[] modelObj.IndexArray;
 	delete[] modelObj.SubsetArray;
-
 }
 
 
@@ -178,11 +174,10 @@ void ModelRenderer::LoadModel( const char *FileName, MODEL *Model)
 
 
 //モデル読込////////////////////////////////////////////
-void ModelRenderer::LoadObj( const char *FileName, MODEL_OBJ *ModelObj )
-{
+void ModelRenderer::LoadObj(const char* FileName, MODEL_OBJ* ModelObj) {
 
 	char dir[MAX_PATH];
-	strcpy (dir, FileName );
+	strcpy(dir, FileName);
 	PathRemoveFileSpec(dir);
 
 
@@ -201,59 +196,51 @@ void ModelRenderer::LoadObj( const char *FileName, MODEL_OBJ *ModelObj )
 	unsigned int	in = 0;
 	unsigned int	subsetNum = 0;
 
-	MODEL_MATERIAL	*materialArray = nullptr;
+	MODEL_MATERIAL* materialArray = nullptr;
 	unsigned int	materialNum = 0;
 
 	char str[256];
-	char *s;
+	char* s;
 	char c;
 
 
-	FILE *file;
-	file = fopen( FileName, "rt" );
+	FILE* file;
+	file = fopen(FileName, "rt");
 	assert(file);
 
 
 
 	//要素数カウント
-	while( true )
-	{
-		fscanf( file, "%s", str );
+	while (true) {
+		fscanf(file, "%s", str);
 
-		if( feof( file ) != 0 )
+		if (feof(file) != 0)
 			break;
 
-		if( strcmp( str, "v" ) == 0 )
-		{
+		if (strcmp(str, "v") == 0) {
 			positionNum++;
 		}
-		else if( strcmp( str, "vn" ) == 0 )
-		{
+		else if (strcmp(str, "vn") == 0) {
 			normalNum++;
 		}
-		else if( strcmp( str, "vt" ) == 0 )
-		{
+		else if (strcmp(str, "vt") == 0) {
 			texcoordNum++;
 		}
-		else if( strcmp( str, "usemtl" ) == 0 )
-		{
+		else if (strcmp(str, "usemtl") == 0) {
 			subsetNum++;
 		}
-		else if( strcmp( str, "f" ) == 0 )
-		{
+		else if (strcmp(str, "f") == 0) {
 			in = 0;
 
-			do
-			{
-				fscanf( file, "%s", str );
+			do {
+				fscanf(file, "%s", str);
 				vertexNum++;
 				in++;
-				c = fgetc( file );
-			}
-			while( c != '\n' && c!= '\r' );
+				c = fgetc(file);
+			} while (c != '\n' && c != '\r');
 
 			//四角は三角に分割
-			if( in == 4 )
+			if (in == 4)
 				in = 6;
 
 			indexNum += in;
@@ -267,13 +254,13 @@ void ModelRenderer::LoadObj( const char *FileName, MODEL_OBJ *ModelObj )
 	texcoordArray = new XMFLOAT2[texcoordNum];
 
 
-	ModelObj->VertexArray = new VERTEX_3D[ vertexNum ];
+	ModelObj->VertexArray = new VERTEX_3D[vertexNum];
 	ModelObj->VertexNum = vertexNum;
 
-	ModelObj->IndexArray = new unsigned int[ indexNum ];
+	ModelObj->IndexArray = new unsigned int[indexNum];
 	ModelObj->IndexNum = indexNum;
 
-	ModelObj->SubsetArray = new SUBSET[ subsetNum ];
+	ModelObj->SubsetArray = new SUBSET[subsetNum];
 	ModelObj->SubsetNum = subsetNum;
 
 
@@ -289,102 +276,90 @@ void ModelRenderer::LoadObj( const char *FileName, MODEL_OBJ *ModelObj )
 	unsigned int sc = 0;
 
 
-	fseek( file, 0, SEEK_SET );
+	fseek(file, 0, SEEK_SET);
 
-	while( true )
-	{
-		fscanf( file, "%s", str );
+	while (true) {
+		fscanf(file, "%s", str);
 
-		if( feof( file ) != 0 )
+		if (feof(file) != 0)
 			break;
 
-		if( strcmp( str, "mtllib" ) == 0 )
-		{
+		if (strcmp(str, "mtllib") == 0) {
 			//マテリアルファイル
-			fscanf( file, "%s", str );
+			fscanf(file, "%s", str);
 
 			char path[256];
-			strcpy( path, dir );
-			strcat( path, "\\" );
-			strcat( path, str );
+			strcpy(path, dir);
+			strcat(path, "\\");
+			strcat(path, str);
 
-			LoadMaterial( path, &materialArray, &materialNum );
+			LoadMaterial(path, &materialArray, &materialNum);
 		}
-		else if( strcmp( str, "o" ) == 0 )
-		{
+		else if (strcmp(str, "o") == 0) {
 			//オブジェクト名
-			fscanf( file, "%s", str );
+			fscanf(file, "%s", str);
 		}
-		else if( strcmp( str, "v" ) == 0 )
-		{
+		else if (strcmp(str, "v") == 0) {
 			//頂点座標
-			fscanf( file, "%f", &position->x );
-			fscanf( file, "%f", &position->y );
-			fscanf( file, "%f", &position->z );
+			fscanf(file, "%f", &position->x);
+			fscanf(file, "%f", &position->y);
+			fscanf(file, "%f", &position->z);
 			position++;
 		}
-		else if( strcmp( str, "vn" ) == 0 )
-		{
+		else if (strcmp(str, "vn") == 0) {
 			//法線
-			fscanf( file, "%f", &normal->x );
-			fscanf( file, "%f", &normal->y );
-			fscanf( file, "%f", &normal->z );
+			fscanf(file, "%f", &normal->x);
+			fscanf(file, "%f", &normal->y);
+			fscanf(file, "%f", &normal->z);
 			normal++;
 		}
-		else if( strcmp( str, "vt" ) == 0 )
-		{
+		else if (strcmp(str, "vt") == 0) {
 			//テクスチャ座標
-			fscanf( file, "%f", &texcoord->x );
-			fscanf( file, "%f", &texcoord->y );
+			fscanf(file, "%f", &texcoord->x);
+			fscanf(file, "%f", &texcoord->y);
 			texcoord->x = 1.0f - texcoord->x;
 			texcoord->y = 1.0f - texcoord->y;
 			texcoord++;
 		}
-		else if( strcmp( str, "usemtl" ) == 0 )
-		{
+		else if (strcmp(str, "usemtl") == 0) {
 			//マテリアル
-			fscanf( file, "%s", str );
+			fscanf(file, "%s", str);
 
-			if( sc != 0 )
-				ModelObj->SubsetArray[ sc - 1 ].IndexNum = ic - ModelObj->SubsetArray[ sc - 1 ].StartIndex;
+			if (sc != 0)
+				ModelObj->SubsetArray[sc - 1].IndexNum = ic - ModelObj->SubsetArray[sc - 1].StartIndex;
 
-			ModelObj->SubsetArray[ sc ].StartIndex = ic;
+			ModelObj->SubsetArray[sc].StartIndex = ic;
 
 
-			for( unsigned int i = 0; i < materialNum; i++ )
-			{
-				if( strcmp( str, materialArray[i].Name ) == 0 )
-				{
-					ModelObj->SubsetArray[ sc ].Material.Material = materialArray[i].Material;
-					strcpy( ModelObj->SubsetArray[ sc ].Material.TextureName, materialArray[i].TextureName );
-					strcpy( ModelObj->SubsetArray[ sc ].Material.Name, materialArray[i].Name );
+			for (unsigned int i = 0; i < materialNum; i++) {
+				if (strcmp(str, materialArray[i].Name) == 0) {
+					ModelObj->SubsetArray[sc].Material.Material = materialArray[i].Material;
+					strcpy(ModelObj->SubsetArray[sc].Material.TextureName, materialArray[i].TextureName);
+					strcpy(ModelObj->SubsetArray[sc].Material.Name, materialArray[i].Name);
 
 					break;
 				}
 			}
 
 			sc++;
-			
+
 		}
-		else if( strcmp( str, "f" ) == 0 )
-		{
+		else if (strcmp(str, "f") == 0) {
 			//面
 			in = 0;
 
-			do
-			{
-				fscanf( file, "%s", str );
+			do {
+				fscanf(file, "%s", str);
 
-				s = strtok( str, "/" );	
-				ModelObj->VertexArray[vc].Position = positionArray[ atoi( s ) - 1 ];
-				if( s[ strlen( s ) + 1 ] != '/' )
-				{
+				s = strtok(str, "/");
+				ModelObj->VertexArray[vc].Position = positionArray[atoi(s) - 1];
+				if (s[strlen(s) + 1] != '/') {
 					//テクスチャ座標が存在しない場合もある
-					s = strtok( nullptr, "/" );
-					ModelObj->VertexArray[vc].TexCoord = texcoordArray[ atoi( s ) - 1 ];
+					s = strtok(nullptr, "/");
+					ModelObj->VertexArray[vc].TexCoord = texcoordArray[atoi(s) - 1];
 				}
-				s = strtok( nullptr, "/" );	
-				ModelObj->VertexArray[vc].Normal = normalArray[ atoi( s ) - 1 ];
+				s = strtok(nullptr, "/");
+				ModelObj->VertexArray[vc].Normal = normalArray[atoi(s) - 1];
 
 				ModelObj->VertexArray[vc].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 
@@ -393,13 +368,11 @@ void ModelRenderer::LoadObj( const char *FileName, MODEL_OBJ *ModelObj )
 				vc++;
 
 				in++;
-				c = fgetc( file );
-			}
-			while( c != '\n' && c != '\r' );
+				c = fgetc(file);
+			} while (c != '\n' && c != '\r');
 
 			//四角は三角に分割
-			if( in == 4 )
-			{
+			if (in == 4) {
 				ModelObj->IndexArray[ic] = vc - 4;
 				ic++;
 				ModelObj->IndexArray[ic] = vc - 2;
@@ -409,11 +382,11 @@ void ModelRenderer::LoadObj( const char *FileName, MODEL_OBJ *ModelObj )
 	}
 
 
-	if( sc != 0 )
-		ModelObj->SubsetArray[ sc - 1 ].IndexNum = ic - ModelObj->SubsetArray[ sc - 1 ].StartIndex;
+	if (sc != 0)
+		ModelObj->SubsetArray[sc - 1].IndexNum = ic - ModelObj->SubsetArray[sc - 1].StartIndex;
 
 
-	fclose( file );
+	fclose(file);
 
 
 	delete[] positionArray;
@@ -426,8 +399,7 @@ void ModelRenderer::LoadObj( const char *FileName, MODEL_OBJ *ModelObj )
 
 
 //マテリアル読み込み///////////////////////////////////////////////////////////////////
-void ModelRenderer::LoadMaterial( const char *FileName, MODEL_MATERIAL **MaterialArray, unsigned int *MaterialNum )
-{
+void ModelRenderer::LoadMaterial(const char* FileName, MODEL_MATERIAL** MaterialArray, unsigned int* MaterialNum) {
 
 	char dir[MAX_PATH];
 	strcpy(dir, FileName);
@@ -437,48 +409,44 @@ void ModelRenderer::LoadMaterial( const char *FileName, MODEL_MATERIAL **Materia
 
 	char str[256];
 
-	FILE *file;
-	file = fopen( FileName, "rt" );
+	FILE* file;
+	file = fopen(FileName, "rt");
 	assert(file);
 
-	MODEL_MATERIAL *materialArray;
+	MODEL_MATERIAL* materialArray;
 	unsigned int materialNum = 0;
 
 	//要素数カウント
-	while( true )
-	{
-		fscanf( file, "%s", str );
+	while (true) {
+		fscanf(file, "%s", str);
 
-		if( feof( file ) != 0 )
+		if (feof(file) != 0)
 			break;
 
 
-		if( strcmp( str, "newmtl" ) == 0 )
-		{
+		if (strcmp(str, "newmtl") == 0) {
 			materialNum++;
 		}
 	}
 
 
 	//メモリ確保
-	materialArray = new MODEL_MATERIAL[ materialNum ];
+	materialArray = new MODEL_MATERIAL[materialNum];
 
 
 	//要素読込
 	int mc = -1;
 
-	fseek( file, 0, SEEK_SET );
+	fseek(file, 0, SEEK_SET);
 
-	while( true )
-	{
-		fscanf( file, "%s", str );
+	while (true) {
+		fscanf(file, "%s", str);
 
-		if( feof( file ) != 0 )
+		if (feof(file) != 0)
 			break;
 
 
-		if (strcmp(str, "newmtl") == 0)
-		{
+		if (strcmp(str, "newmtl") == 0) {
 			//マテリアル名
 			mc++;
 			fscanf(file, "%s", materialArray[mc].Name);
@@ -489,51 +457,45 @@ void ModelRenderer::LoadMaterial( const char *FileName, MODEL_MATERIAL **Materia
 			materialArray[mc].Material.Emission.z = 0.0f;
 			materialArray[mc].Material.Emission.w = 0.0f;
 		}
-		else if (strcmp(str, "Ka") == 0)
-		{
+		else if (strcmp(str, "Ka") == 0) {
 			//アンビエント
 			fscanf(file, "%f", &materialArray[mc].Material.Ambient.x);
 			fscanf(file, "%f", &materialArray[mc].Material.Ambient.y);
 			fscanf(file, "%f", &materialArray[mc].Material.Ambient.z);
 			materialArray[mc].Material.Ambient.w = 1.0f;
 		}
-		else if (strcmp(str, "Kd") == 0)
-		{
+		else if (strcmp(str, "Kd") == 0) {
 			//ディフューズ
 			fscanf(file, "%f", &materialArray[mc].Material.Diffuse.x);
 			fscanf(file, "%f", &materialArray[mc].Material.Diffuse.y);
 			fscanf(file, "%f", &materialArray[mc].Material.Diffuse.z);
 			materialArray[mc].Material.Diffuse.w = 1.0f;
 		}
-		else if (strcmp(str, "Ks") == 0)
-		{
+		else if (strcmp(str, "Ks") == 0) {
 			//スペキュラ
 			fscanf(file, "%f", &materialArray[mc].Material.Specular.x);
 			fscanf(file, "%f", &materialArray[mc].Material.Specular.y);
 			fscanf(file, "%f", &materialArray[mc].Material.Specular.z);
 			materialArray[mc].Material.Specular.w = 1.0f;
 		}
-		else if( strcmp( str, "Ns" ) == 0 )
-		{
+		else if (strcmp(str, "Ns") == 0) {
 			//スペキュラ強度
-			fscanf( file, "%f", &materialArray[ mc ].Material.Shininess );
+			fscanf(file, "%f", &materialArray[mc].Material.Shininess);
 		}
-		else if( strcmp( str, "d" ) == 0 )
-		{
+		else if (strcmp(str, "d") == 0) {
 			//アルファ
-			fscanf( file, "%f", &materialArray[ mc ].Material.Diffuse.w );
+			fscanf(file, "%f", &materialArray[mc].Material.Diffuse.w);
 		}
-		else if( strcmp( str, "map_Kd" ) == 0 )
-		{
+		else if (strcmp(str, "map_Kd") == 0) {
 			//テクスチャ
-			fscanf( file, "%s", str );
+			fscanf(file, "%s", str);
 
 			char path[256];
-			strcpy( path, dir );
-			strcat( path, "\\" );
-			strcat( path, str );
+			strcpy(path, dir);
+			strcat(path, "\\");
+			strcat(path, str);
 
-			strcat( materialArray[ mc ].TextureName, path );
+			strcat(materialArray[mc].TextureName, path);
 		}
 	}
 
@@ -541,5 +503,26 @@ void ModelRenderer::LoadMaterial( const char *FileName, MODEL_MATERIAL **Materia
 
 	*MaterialArray = materialArray;
 	*MaterialNum = materialNum;
+}
+
+float ModelRenderer::CalculateRadius(const VERTEX_3D* vertices, const int vertexnum) {
+	//中心位置を計算
+	XMFLOAT3 center = { 0.0f, 0.0f, 0.0f };
+	for (int i = 0; i < vertexnum; i++) {
+		center += vertices[i].Position;
+	}
+	center /= vertexnum;
+
+	//中心からの最大距離を計算
+	float maxDistanceSquared = 0.0f;
+
+	for (int i = 0; i < vertexnum; i++) {
+		const XMFLOAT3& pos = vertices[i].Position;
+		XMFLOAT3 d = pos - center;
+		float distanceSquared = d.x * d.x + d.y * d.y + d.z * d.z;
+
+		maxDistanceSquared = (std::max)(maxDistanceSquared, distanceSquared);
+	}
+	return sqrtf(maxDistanceSquared);
 }
 
