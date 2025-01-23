@@ -89,13 +89,13 @@ void Camera::Update() {
 	//計算結果を _transform.position に設定
 	XMStoreFloat3(&GetPosition(), rotatedPosition);
 
-	//水面より下に行かないように
-	if (GetPosition().y < 10.0f) {
-		GetPosition().y = 10.0f;
-	}
-	if (_target.y < 0.0f) {
-		_target.y = 0.0f;
-	}
+	////水面より下に行かないように
+	//if (GetPosition().y < 10.0f) {
+	//	GetPosition().y = 10.0f;
+	//}
+	//if (_target.y < 0.0f) {
+	//	_target.y = 0.0f;
+	//}
 
 	GetComponent<Transform>()->Update();
 }
@@ -103,17 +103,14 @@ void Camera::Update() {
 void Camera::Draw() {
 	//ビューマトリクス設定
 	XMFLOAT3 up{ 0.0f, 1.0f, 0.0f };
-	XMMATRIX viewmatrix = XMMatrixLookAtLH(XMLoadFloat3(&GetPosition()), XMLoadFloat3(&_target), XMLoadFloat3(&up));
+	_viewmatrix = XMMatrixLookAtLH(XMLoadFloat3(&GetPosition()), XMLoadFloat3(&_target), XMLoadFloat3(&up));
 
-	Renderer::SetViewMatrix(viewmatrix, _prevview);
-
-	XMStoreFloat4x4(&_viewmatrix, viewmatrix);
+	Renderer::SetViewMatrix(_viewmatrix, _prevview);
 
 	//プロジェクションマトリクス設定
-	XMMATRIX projectionMatrix;
-	projectionMatrix = XMMatrixPerspectiveFovLH(_fov, (float)SCREEN_WIDTH / SCREEN_HEIGHT, NEAR_CLIP, FAR_CLIP);
+	_projectionMatrix = XMMatrixPerspectiveFovLH(_fov, (float)SCREEN_WIDTH / SCREEN_HEIGHT, NEAR_CLIP, FAR_CLIP);
 
-	Renderer::SetProjectionMatrix(projectionMatrix, _prevprojection);
+	Renderer::SetProjectionMatrix(_projectionMatrix, _prevprojection);
 
 	Renderer::SetCameraPosition(GetPosition());
 }
@@ -141,10 +138,137 @@ std::vector<XMVECTOR> Camera::GetCornersWorldSpace(const float& nearZ, const flo
 	corners[7] = XMVectorSet(-farWidth, -farHeight, farZ, 1.0f);
 
 	//逆変換してワールド空間に直す
-	XMMATRIX invView = XMMatrixInverse(nullptr, XMLoadFloat4x4(&_viewmatrix));
+	XMMATRIX invView = XMMatrixInverse(nullptr, _viewmatrix);
 	for (int i = 0; i < 8; i++) {
 		corners[i] = XMVector3TransformCoord(corners[i], invView);
 	}
 
 	return corners;
+}
+
+bool Camera::ChackView(const XMFLOAT3& pos, const float& rad) {
+	XMMATRIX vp, invvp;
+	XMVECTOR det;
+
+	vp = _viewmatrix * _projectionMatrix;
+	invvp = XMMatrixInverse(&det, vp);
+
+
+	XMFLOAT3 vpos[4];
+	XMFLOAT3 wpos[4];
+
+	vpos[0] = { -1.0f, 1.0f, 1.0f };
+	vpos[1] = { 1.0f, 1.0f, 1.0f };
+	vpos[2] = { -1.0f, -1.0f, 1.0f };
+	vpos[3] = { 1.0f, -1.0f, 1.0f };
+
+	XMVECTOR vposv[4];
+	XMVECTOR wposv[4];
+
+	for (int i = 0; i < 4; i++) {
+		vposv[i] = XMLoadFloat3(&vpos[i]);
+
+		wposv[i] = XMVector3TransformCoord(vposv[i], invvp);
+
+		XMStoreFloat3(&wpos[i], wposv[i]);
+	}
+
+	XMFLOAT3 v, v1, v2, n;
+	v = pos - GetPosition();
+
+	//奥面判定
+	{
+		XMFLOAT3 forward;
+		XMStoreFloat3(&forward, GetZDirection());
+		forward = VectorNormalize(forward);
+
+		//内積で側面からの距離
+		float dotF = forward.x * v.x + forward.y * v.y + forward.z * v.z;
+
+		if (dotF > FAR_CLIP) {
+			return false;
+		}
+	}
+	//左面判定
+	{
+		v1 = wpos[0] - GetPosition();
+		v2 = wpos[2] - GetPosition();
+
+		//外積で法線を求める
+		n.x = v1.y * v2.z - v1.z * v2.y;
+		n.y = v1.z * v2.x - v1.x * v2.z;
+		n.z = v1.x * v2.y - v1.y * v2.x;
+
+		//正規化
+		n = VectorNormalize(n);
+
+		//内積で側面からの距離
+		float dotL = n.x * v.x + n.y * v.y + n.z * v.z;
+
+		if (dotL < -rad) {	//0.0fを-半径に
+			return false;
+		}
+	}
+	//右面判定
+	{
+		v1 = wpos[3] - GetPosition();
+		v2 = wpos[1] - GetPosition();
+
+		//外積で法線を求める
+		n.x = v1.y * v2.z - v1.z * v2.y;
+		n.y = v1.z * v2.x - v1.x * v2.z;
+		n.z = v1.x * v2.y - v1.y * v2.x;
+
+		//正規化
+		n = VectorNormalize(n);
+
+		//内積で側面からの距離
+		float dotR = n.x * v.x + n.y * v.y + n.z * v.z;
+
+		if (dotR < -rad) {
+			return false;
+		}
+	}
+	//上面判定
+	{
+		v1 = wpos[1] - GetPosition();
+		v2 = wpos[0] - GetPosition();
+
+		//外積で法線を求める
+		n.x = v1.y * v2.z - v1.z * v2.y;
+		n.y = v1.z * v2.x - v1.x * v2.z;
+		n.z = v1.x * v2.y - v1.y * v2.x;
+
+		//正規化
+		n = VectorNormalize(n);
+
+		//内積で側面からの距離
+		float dotT = n.x * v.x + n.y * v.y + n.z * v.z;
+
+		if (dotT < -rad) {
+			return false;
+		}
+	}
+	//下面判定
+	{
+		v1 = wpos[2] - GetPosition();
+		v2 = wpos[3] - GetPosition();
+
+		//外積で法線を求める
+		n.x = v1.y * v2.z - v1.z * v2.y;
+		n.y = v1.z * v2.x - v1.x * v2.z;
+		n.z = v1.x * v2.y - v1.y * v2.x;
+
+		//正規化
+		n = VectorNormalize(n);
+
+		//内積で側面からの距離
+		float dotB = n.x * v.x + n.y * v.y + n.z * v.z;
+
+		if (dotB < -rad) {
+			return false;
+		}
+	}
+
+	return true;
 }

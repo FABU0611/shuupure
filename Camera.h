@@ -8,12 +8,13 @@
 
 class CameraState;
 
-class Camera : public GameObject{
+class Camera : public GameObject {
 	static const float NEAR_CLIP;
 	static const float FAR_CLIP;
 
 	XMFLOAT3		_target{};
-	XMFLOAT4X4		_viewmatrix{};
+	XMMATRIX		_viewmatrix{};
+	XMMATRIX		_projectionMatrix{};
 	float			_length{};
 	float			_cameraspeed{};
 	float			_time{};
@@ -52,12 +53,13 @@ public:
 
 	XMVECTOR GetZDirection() const{ 
 		//ãtçsóÒ
-		XMMATRIX view =  XMLoadFloat4x4(&_viewmatrix); 
+		XMMATRIX view =  _viewmatrix; 
 		return XMMatrixInverse(nullptr, view).r[2];
 	}
-	XMMATRIX GetViewMatrix() const{	return XMLoadFloat4x4(&_viewmatrix); }
+	XMMATRIX GetViewMatrix() const{	return _viewmatrix; }
 
 	std::vector<XMVECTOR> GetCornersWorldSpace(const float& nearZ, const float& farZ)const;
 	float* GetCascade() { return _cascade; }
+	bool ChackView(const XMFLOAT3& pos, const float& rad);
 };
 
