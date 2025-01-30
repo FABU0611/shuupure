@@ -13,6 +13,8 @@ class SphereInstance : public GameObject {
 	ID3D11Buffer* _posbuffer{};
 	ID3D11ShaderResourceView* _posSRV{};
 
+	XMFLOAT3*			_instancepos{};	
+
 	XMMATRIX			_prevworld{};
 
 public:
