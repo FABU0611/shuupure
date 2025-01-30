@@ -25,12 +25,12 @@ void Title::Init(){
 	AddGameobject<Camera>(Layer::System);
 	AddGameobject<LightCamera>(Layer::System);
 
-	//AddGameobject<MeshField>(Layer::Object);
+	AddGameobject<MeshField>(Layer::Object);
 	AddGameobject<Player>(Layer::Object, XMFLOAT3(35.0f, 7.0f, 5.0f), XMFLOAT3(1.0f, 1.0f, 1.0f));
-	AddGameobject<Pool>(Layer::Object, XMFLOAT3(0.0f, 0.0f, 0.0f));
-	AddGameobject<DivingBoard>(Layer::Object, XMFLOAT3(-30.0f, 0.0f, 0.0f));
+	//AddGameobject<Pool>(Layer::Object, XMFLOAT3(0.0f, 0.0f, 0.0f));
+	//AddGameobject<DivingBoard>(Layer::Object, XMFLOAT3(-30.0f, 0.0f, 0.0f));
 
-	//AddGameobject<Wave>(Layer::Transparency);
+	AddGameobject<Wave>(Layer::Transparency);
 
 	AddGameobject<Sky>(Layer::BackGround, 250.0f);
 

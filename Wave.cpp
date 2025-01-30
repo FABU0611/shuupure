@@ -4,6 +4,7 @@
 #include "Wave.h"
 #include "Time.h"
 #include "ShaderManager.h"
+#include "Input.h"
 
 const float Wave::WAVE_AMPLITUDE = 100.0f;
 const float Wave::WAVE_LENGTH = 70.0f;
@@ -111,7 +112,7 @@ void Wave::Init() {
 	assert(_envtexture);
 
 
-	_param = { 0.0f, 0.0f, 0.0f, 0.0f };
+	_param = { 0.0f, 0.0f, 1.0f, 0.0f };
 }
 
 void Wave::Uninit() {
@@ -196,6 +197,10 @@ void Wave::Update() {
 	}
 	if (_param.y >= 1.0f) {
 		_param.y = 0.0f;
+	}
+
+	if (Input::GetKeyTrigger(VK_SPACE)) {
+		_param.z *= -1;
 	}
 }
 

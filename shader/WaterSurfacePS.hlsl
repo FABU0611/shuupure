@@ -55,7 +55,9 @@ void main(in PS_IN In, out PS_OUT Out) {
 						float4(0.0f, 0.0f, 0.0f, 0.0f));
 	
 	//法線マップ内の法線を接空間へ変換する
-	normal = mul(normal2, mat);
+	if(Parameter.z == 1.0f) {
+		normal = mul(normal2, mat);
+	}
 	normal = normalize(normal);
 	
 	//光源計算
@@ -102,5 +104,5 @@ void main(in PS_IN In, out PS_OUT Out) {
 	Out.Out0.rgb = lerp(Out.Out0.rgb, reflect.rgb, fresnel);
 	Out.Out0.a *= fresnel * 1.0f;
 		
-	CreateVelTex(In, Out.Out1);
+	//CreateVelTex(In, Out.Out1);
 }
