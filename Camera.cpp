@@ -89,13 +89,13 @@ void Camera::Update() {
 	//ŒvZŒ‹‰Ê‚ğ _transform.position ‚Éİ’è
 	XMStoreFloat3(&GetPosition(), rotatedPosition);
 
-	////…–Ê‚æ‚è‰º‚És‚©‚È‚¢‚æ‚¤‚É
-	//if (GetPosition().y < 10.0f) {
-	//	GetPosition().y = 10.0f;
-	//}
-	//if (_target.y < 0.0f) {
-	//	_target.y = 0.0f;
-	//}
+	//…–Ê‚æ‚è‰º‚És‚©‚È‚¢‚æ‚¤‚É
+	if (GetPosition().y < 10.0f) {
+		GetPosition().y = 10.0f;
+	}
+	if (_target.y < 0.0f) {
+		_target.y = 0.0f;
+	}
 
 	GetComponent<Transform>()->Update();
 }
