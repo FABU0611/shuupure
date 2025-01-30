@@ -9,7 +9,7 @@ StructuredBuffer<float3> g_position : register(t2);
 void main(in VS_IN In, out PS_IN Out) {
 	//今フレームのインスタンスごとの頂点座標を計算
 	Out.CurPosition = mul(In.Position, World);
-	Out.CurPosition.xyz += g_position[In.InstanceID].xyz;	
+	Out.CurPosition.xyz += g_position[In.InstanceID].xyz;
 	Out.CurPosition = mul(Out.CurPosition, View);
 	Out.CurPosition = mul(Out.CurPosition, Projection);
 	
