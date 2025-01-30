@@ -53,7 +53,7 @@ void TestObject::Draw() {
 		return;
 	}
 	const float& rad = GetComponent<ModelRenderer>()->GetRadius();
-	if (!camera->ChackView(GetPosition(), rad * GetScale().x)) {
+	if (!camera->ChackView(GetPosition(), GetScale() * rad)) {
 		return;
 	}
 
