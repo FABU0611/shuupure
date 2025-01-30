@@ -108,7 +108,7 @@ void Camera::Draw() {
 	Renderer::SetViewMatrix(_viewmatrix, _prevview);
 
 	//プロジェクションマトリクス設定
-	_projectionMatrix = XMMatrixPerspectiveFovLH(_fov, (float)SCREEN_WIDTH / SCREEN_HEIGHT, NEAR_CLIP, FAR_CLIP);
+	_projectionMatrix = XMMatrixPerspectiveFovLH(_fov, _aspect, NEAR_CLIP, FAR_CLIP);
 
 	Renderer::SetProjectionMatrix(_projectionMatrix, _prevprojection);
 
@@ -146,7 +146,9 @@ std::vector<XMVECTOR> Camera::GetCornersWorldSpace(const float& nearZ, const flo
 	return corners;
 }
 
-bool Camera::ChackView(const XMFLOAT3& pos, const float& rad) {
+bool Camera::ChackView(const XMFLOAT3& pos, const XMFLOAT3& scl) {
+	const float& rad = std::max(std::max(scl.x, scl.y), scl.z);
+
 	XMMATRIX vp, invvp;
 	XMVECTOR det;
 
@@ -271,4 +273,16 @@ bool Camera::ChackView(const XMFLOAT3& pos, const float& rad) {
 	}
 
 	return true;
+}
+
+std::vector<int> Camera::CheckViewInstance(const XMFLOAT3* pos, const XMFLOAT3 basepos, const int& instancenum, const XMFLOAT3& scl) {
+	std::vector<int> result;
+
+	for (int i = 0; i < instancenum; i++) {
+		if (ChackView(pos[i] + basepos, scl)) {
+			result.push_back(i);
+		}
+	}
+	
+	return result;
 }

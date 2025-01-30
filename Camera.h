@@ -60,6 +60,7 @@ public:
 
 	std::vector<XMVECTOR> GetCornersWorldSpace(const float& nearZ, const float& farZ)const;
 	float* GetCascade() { return _cascade; }
-	bool ChackView(const XMFLOAT3& pos, const float& rad);
+	bool ChackView(const XMFLOAT3& pos, const XMFLOAT3& scl);
+	std::vector<int> CheckViewInstance(const XMFLOAT3* instancepos, const XMFLOAT3 basepos, const int& instancenum, const XMFLOAT3& scl);
 };
 
