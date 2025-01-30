@@ -199,6 +199,7 @@ void Manager::Draw() {
 	//次のシーンがセットされていたら
 	if (_scene) {
 #ifdef _DEBUG
+		_checkcamera->Uninit();
 		_checkdof->Uninit();
 #endif
 		_textmanager->Uninit();
@@ -222,6 +223,7 @@ void Manager::Draw() {
 
 #ifdef _DEBUG
 	_checkdof->Init();
+	_checkcamera->Init();
 #endif
 
 	_nextscene = nullptr;
