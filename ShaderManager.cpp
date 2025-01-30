@@ -7,21 +7,21 @@
 
 std::unordered_map<ShaderName, ShaderPack*>Shader::_shaders;
 
-void Shader::AddShader(const std::string& VSpath, const std::string& PSpath, const ShaderName& name) {
-	ID3D11PixelShader* pixelsharder{};
-	ID3D11VertexShader* vertexsharder{};
-	ID3D11InputLayout* vertexlayout{};
-
-	Renderer::CreateVertexShader(&vertexsharder, &vertexlayout,
-		VSpath.c_str());
-
-	Renderer::CreatePixelShader(&pixelsharder,
-		PSpath.c_str());
-
-	_shaders.emplace(name, new ShaderPack{ pixelsharder, vertexsharder, vertexlayout });
-}
-
 void Shader::LoadShader() {
+    auto AddShader = [](const std::string& VSpath, const std::string& PSpath, const ShaderName& name){
+        ID3D11PixelShader* pixelsharder{};
+        ID3D11VertexShader* vertexsharder{};
+        ID3D11InputLayout* vertexlayout{};
+
+        Renderer::CreateVertexShader(&vertexsharder, &vertexlayout,
+            VSpath.c_str());
+
+        Renderer::CreatePixelShader(&pixelsharder,
+            PSpath.c_str());
+
+        _shaders.emplace(name, new ShaderPack{ pixelsharder, vertexsharder, vertexlayout });
+	};
+
 	AddShader("shader\\UnlitTextureVS.cso", "shader\\UnlitTexturePS.cso", ShaderName::Unlit);
 	AddShader("shader\\TangentNormalLightingVS.cso", "shader\\WaterSurfacePS.cso", ShaderName::Water);
 	AddShader("shader\\NormalLightingVS.cso", "shader\\NormalLightingPS.cso", ShaderName::Normallit);
@@ -50,16 +50,16 @@ void Shader::UninitAll() {
     _shaders.clear(); //マップをクリア
 }
 
-ShaderPack* Shader::GetShader(const ShaderName& name) {
-    if (_shaders.contains(name)) {
-        return _shaders.at(name);
-    }
-    else {
-        return _shaders.at(ShaderName::Unlit);
-    }
-}
-
 void Shader::SetShader(const ShaderName& name) {
+	auto GetShader = [](const ShaderName& name) {
+		if (_shaders.contains(name)) {
+			return _shaders.at(name);
+		}
+		else {
+			return _shaders.at(ShaderName::Unlit);
+		}
+	};
+
     ShaderPack* shader = GetShader(name);
 
     //入力レイアウト設定

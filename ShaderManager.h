@@ -26,9 +26,6 @@ struct ShaderPack {
 class Shader {
 	static std::unordered_map<ShaderName, ShaderPack*>	_shaders;
 
-	static void AddShader(const std::string& VSpath, const std::string& PSpath, const ShaderName& name);
-
-	static ShaderPack* GetShader(const ShaderName& name);
 public:
 	Shader() {}
 	~Shader() {}
