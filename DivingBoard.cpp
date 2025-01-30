@@ -18,6 +18,8 @@ void DivingBoard::Init(){
 
 	Renderer::CreatePixelShader(&_pixelshader,
 		"shader\\DepthShadowPS.cso");
+
+	GetScale().y *= 0.5f;
 }
 
 void DivingBoard::Uninit(){
