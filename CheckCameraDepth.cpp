@@ -3,7 +3,10 @@
 //25_01_17
 #include "CheckCameraDepth.h"
 #include "Renderer.h"
+#include "Manager.h"
 #include "ShaderManager.h"
+#include "GUIManager.h"
+#include "G_CheckBox.h"
 
 void CheckCameraDepth::Init() {
 	VERTEX_3D vertex[4 * Renderer::CASCADE_NUM];
@@ -105,6 +108,8 @@ void CheckCameraDepth::Init() {
 	sd.pSysMem = vertex;
 
 	Renderer::GetDevice()->CreateBuffer(&bd, &sd, &_vertexbuffer);
+
+	_screen = Manager::GetGUIManager()->AddGUI<CheckBox>(XMFLOAT3(100.0f, 225.0f, 0.0f));
 }
 
 void CheckCameraDepth::Uninit() {
@@ -114,6 +119,14 @@ void CheckCameraDepth::Uninit() {
 void CheckCameraDepth::Update() {}
 
 void CheckCameraDepth::Draw() {
+	CheckBox* checkbox = dynamic_cast<CheckBox*>(Manager::GetGUIManager()->GetGUI(_screen));
+	if (!checkbox) {
+		return;
+	}
+	if (!checkbox->OnClicked(VK_LBUTTON)) {
+		return;
+	}
+
 	Shader::SetShader(ShaderName::Unlit);
 
 
