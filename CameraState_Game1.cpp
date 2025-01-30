@@ -43,7 +43,7 @@ void GameState1::Update() {
 			camera->GetRotation().x -= (XM_PIDIV4 * 0.05f);
 		}
 		//‰º
-		else if (Input::GetKeyPress('M')) {
+		else if (Input::GetKeyPress('K')) {
 			camera->GetRotation().x += (XM_PIDIV4 * 0.05f);
 		}
 		if (Input::GetRightStickX(0) < -STICK_DEADZONE ||
