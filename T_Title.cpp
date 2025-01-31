@@ -12,7 +12,7 @@ void TitleText::Init(){
 	_spos.y = 100.0f;
 	_epos.y = 100.0f;
 
-	_str = "Spin Dive";
+	_str = "シェーダー山盛りフォトモード";
 }
 
 void TitleText::Update(){
