@@ -36,5 +36,5 @@ void Title::Init(){
 
 	TextManager* tm = Manager::GetTextManager();
 	tm->AddText<TitlePush>(60.0f, D2D1::ColorF::Yellow, TextAnchor::Center);
-	tm->AddText<TitleText>(120.0f, D2D1::ColorF::GreenYellow, TextAnchor::Center);
+	tm->AddText<TitleText>(80.0f, D2D1::ColorF::GreenYellow, TextAnchor::Center);
 }
