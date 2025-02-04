@@ -5,8 +5,8 @@
 #include "GameObject.h"
 
 class SphereInstance : public GameObject {
-	static const int	INSTANCE_X_NUM = 10;
-	static const int	INSTANCE_Z_NUM = 10;
+	static const int	INSTANCE_X_NUM = 20;
+	static const int	INSTANCE_Z_NUM = 20;
 	static const int	INSTANCE_NUM = INSTANCE_X_NUM * INSTANCE_Z_NUM;
 	static const float	INSTANCE_DISTANCE;
 
