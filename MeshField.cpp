@@ -59,7 +59,7 @@ void MeshField::Init() {
 			for (int z = 0; z < VERTEX_NUM; z++) {
 				_vertex[x][z].Position = XMFLOAT3((x - (VERTEX_NUM * 0.5f)) * 5.0f, g_FieldHeight[x][z], (z - (VERTEX_NUM * 0.5f)) * -5.0f);
 				_vertex[x][z].Normal = XMFLOAT3(0.0f, 1.0f, 0.0f);
-				_vertex[x][z].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+				_vertex[x][z].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f) * (_vertex[x][z].Position.y / 6.0f) + 0.5f;
 				_vertex[x][z].TexCoord = XMFLOAT2((float)x, (float)z);
 				_vertex[x][z].Tangent = XMFLOAT3(1.0f, 0.0f, 0.0f);
 			}
@@ -152,7 +152,7 @@ void MeshField::Uninit() {
 void MeshField::Update() {}
 
 void MeshField::Draw() {
-	Shader::SetShader(ShaderName::Dirlit);
+	Shader::SetShader(ShaderName::DepthShadow);
 
 
 	//ワールドマトリクス設定
