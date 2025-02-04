@@ -14,12 +14,26 @@ void main(in VS_IN In, out PS_IN Out){
 	worldNormal = mul(normal, World);
 	worldNormal = normalize(worldNormal);
 	
+	float4 worldTangent, tangent;
+	tangent = float4(In.Tangent.xyz, 0.0f);
+	worldTangent = mul(tangent, World);
+	worldTangent = normalize(worldTangent);
+	Out.Tangent = worldTangent;
+
+	//バイノーマル
+	float4 worldBinormal;
+	worldBinormal.w = 0.0f;
+	worldBinormal.xyz = cross(worldTangent.xyz, worldNormal.xyz);
+	worldBinormal = normalize(worldBinormal);
+	Out.Binormal = worldBinormal;
+	
 	Out.Diffuse = In.Diffuse * Material.Diffuse;
 	Out.Diffuse.a = In.Diffuse.a;
 	
 	Out.Position = mul(In.Position, wvp);
 	Out.Normal = worldNormal;
 	Out.TexCoord = In.TexCoord;
+	Out.WorldPosition = mul(In.Position, World);
 	
 	//ライトカメラで頂点変換して出力
 	matrix lightwvp;
