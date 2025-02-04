@@ -89,6 +89,9 @@ public:
 						continue;
 					}
 				}
+				else if (i == static_cast<int>(Layer::Transparency)) {
+					continue;
+				}
 				//•`‰æˆ—
 				o->Draw();
 			}
