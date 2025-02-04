@@ -15,6 +15,7 @@ enum class ShaderName : short {
 	Dirlit,
 	Particle,
 	Instance,
+	DepthShadow,
 };
 
 struct ShaderPack {
