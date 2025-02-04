@@ -19,7 +19,7 @@ void main(in PS_IN In, out PS_OUT Out) {
 	
 	DepthofField(depthValue, blurFactor);
 
-	//深度に基づいたグレースケールの出力
+	//線形補完でぼかしを計算
 	Out.Out0 = lerp(scene, blur, blurFactor);
 	Out.Out0 *= In.Diffuse;
 	Out.Out0.a = 1.0f;
