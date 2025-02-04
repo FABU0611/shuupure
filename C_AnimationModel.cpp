@@ -14,6 +14,7 @@ void AnimationModel::Draw() {
 	material.Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	material.Ambient = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	material.TextureEnable = true;
+	material.NormalTextureEnable = true;
 	Renderer::SetMaterial(material);
 
 	for (unsigned int m = 0; m < _aiscene->mNumMeshes; m++) {
@@ -26,10 +27,17 @@ void AnimationModel::Draw() {
 		//aiString texture;
 		aiColor3D diffuse;
 		float opacity;
+		float shininess = 0.0f;
 
 		aiMaterial* aimaterial = _aiscene->mMaterials[mesh->mMaterialIndex];
 		aimaterial->Get(AI_MATKEY_COLOR_DIFFUSE, diffuse);
 		aimaterial->Get(AI_MATKEY_OPACITY, opacity);
+		if (AI_SUCCESS == aimaterial->Get(AI_MATKEY_SHININESS, shininess)) {
+			material.Shininess = shininess;
+		}
+		else{
+			material.Shininess = 0.0f;
+		}
 
 		//Diffuse (アルベド) テクスチャを取得
 		if (AI_SUCCESS == aimaterial->GetTexture(aiTextureType_DIFFUSE, 0, &diffuseTexture)) {
@@ -46,7 +54,7 @@ void AnimationModel::Draw() {
 		}
 		else {
 			Renderer::GetDeviceContext()->PSSetShaderResources(1, 1, &_dummyntex);
-			//nullptrとかNULLだとアクセス違反が起きるので上書き
+			material.NormalTextureEnable = false; // ディフューズテクスチャがない場合の処理
 		}
 		//上書きすれば他のモデルのテクスチャが貼られることはないっぽい
 

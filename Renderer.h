@@ -22,7 +22,8 @@ struct MATERIAL {
 	XMFLOAT4	Emission;
 	float		Shininess;
 	BOOL		TextureEnable;
-	float		Dummy[2];
+	BOOL		NormalTextureEnable;
+	float		Dummy[1];
 };
 
 
@@ -80,6 +81,9 @@ private:
 	static ID3D11DepthStencilState*		_depthstateenable;
 	static ID3D11DepthStencilState*		_depthstatedisable;
 
+	static ID3D11RasterizerState*		_rasterizerstateback;
+	static ID3D11RasterizerState*		_rasterizerstatefront;
+
 	static ID3D11BlendState*			_blendstate;
 	static ID3D11BlendState*			_blendstateAdd;
 	static ID3D11BlendState*			_blendstateATC;
@@ -114,6 +118,7 @@ public:
 	static void SetDepthEnable(bool Enable);
 	static void SetATCEnable(bool Enable);
 	static void SetBlendAddEnable(bool Enable);
+	static void SetRasterizerState(bool FrontEnable);
 	static void SetWorldViewProjection2D();
 	static void SetWorldMatrix(XMMATRIX WorldMatrix);
 	static void SetWorldMatrix(XMMATRIX WorldMatrix, XMMATRIX& PrevWorld);

@@ -89,7 +89,6 @@ void ModelRenderer::Load(const char* FileName) {
 	LoadModel(FileName, _model);
 
 	_modelpool[FileName] = _model;
-
 }
 
 void ModelRenderer::LoadModel(const char* FileName, MODEL* Model) {
@@ -157,6 +156,8 @@ void ModelRenderer::LoadModel(const char* FileName, MODEL* Model) {
 				Model->SubsetArray[i].Material.Material.TextureEnable = true;
 			else
 				Model->SubsetArray[i].Material.Material.TextureEnable = false;
+
+			Model->SubsetArray[i].Material.Material.NormalTextureEnable = false;
 
 		}
 	}

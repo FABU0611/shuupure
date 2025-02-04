@@ -3,6 +3,8 @@
 static float PI = 3.14159265359f;
 static float SCREEN_WIDTH = 1280.0f;
 static float SCREEN_HEIGHT = 920.0f;
+static float NEAR_CLIP = 1.0f;
+static float FAR_CLIP = 330.0f;
 
 cbuffer WorldBuffer : register(b0) {
 	matrix World;
@@ -33,7 +35,8 @@ struct MATERIAL {
 	float4 Emission;
 	float Shininess;
 	bool TextureEnable;
-	float2 Dummy;
+	bool NormalTextureEnable;
+	float Dummy;
 };
 
 cbuffer MaterialBuffer : register(b3) {
@@ -158,7 +161,7 @@ void LimLight(in PS_IN In, in float4 normal, inout float4 outDiffuse) {
 
 void DepthofField(in float depth, out float value) {
     //深度の線形化
-	float linearDepth = (2.0f * 1.0f) / (1000.0f + 1.0f - depth * (1000.0f - 1.0f));
+	float linearDepth = (2.0f * NEAR_CLIP) / (FAR_CLIP + NEAR_CLIP - depth * (FAR_CLIP - NEAR_CLIP));
 
     //0～1の範囲にクランプ
 	linearDepth = clamp(linearDepth, 0.0f, 1.0f);

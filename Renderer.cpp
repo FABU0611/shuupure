@@ -39,6 +39,8 @@ XMMATRIX					Renderer::_prevprojection;
 ID3D11DepthStencilState*	Renderer::_depthstateenable{};
 ID3D11DepthStencilState*	Renderer::_depthstatedisable{};
 
+ID3D11RasterizerState*		Renderer::_rasterizerstateback{};
+ID3D11RasterizerState*		Renderer::_rasterizerstatefront{};
 
 ID3D11BlendState*			Renderer::_blendstate{};
 ID3D11BlendState*			Renderer::_blendstateAdd{};
@@ -190,10 +192,12 @@ void Renderer::Init() {
 	rasterizerDesc.DepthClipEnable = TRUE;
 	rasterizerDesc.MultisampleEnable = FALSE;
 
-	ID3D11RasterizerState* rs;
-	_device->CreateRasterizerState(&rasterizerDesc, &rs);
+	_device->CreateRasterizerState(&rasterizerDesc, &_rasterizerstateback);
 
-	_devicecontext->RSSetState(rs);
+	rasterizerDesc.CullMode = D3D11_CULL_FRONT;
+	_device->CreateRasterizerState(&rasterizerDesc, &_rasterizerstatefront);
+
+	_devicecontext->RSSetState(_rasterizerstateback);
 
 
 
@@ -545,14 +549,15 @@ void Renderer::Init() {
 		depthTexture->Release();
 	}
 	{
+		int size[CASCADE_NUM] = { 2048, 1024, 512, 256 };
 		for (int i = 0; i < Renderer::CASCADE_NUM; i++) {
 			//ライトからの深度
 			ID3D11Texture2D* depthTexture = NULL;
 			D3D11_TEXTURE2D_DESC	dtd;			//テクスチャ作成用デスクリプタ構造体
 			ZeroMemory(&dtd, sizeof(dtd));
 
-			dtd.Width = 1024;
-			dtd.Height = 1024;
+			dtd.Width = size[i];
+			dtd.Height = size[i];
 			//作成するミップマップの数
 			dtd.MipLevels = 1;
 			dtd.ArraySize = 1;
@@ -759,6 +764,15 @@ void Renderer::SetBlendAddEnable(bool Enable) {
 		_devicecontext->OMSetBlendState(_blendstateAdd, blendFactor, 0xffffffff);
 	else
 		_devicecontext->OMSetBlendState(_blendstate, blendFactor, 0xffffffff);
+}
+
+void Renderer::SetRasterizerState(bool FrontEnable) {
+	if (FrontEnable) {
+		_devicecontext->RSSetState(_rasterizerstatefront);
+	}
+	else {
+		_devicecontext->RSSetState(_rasterizerstateback);
+	}
 }
 
 void Renderer::SetWorldViewProjection2D() {
@@ -990,7 +1004,8 @@ void Renderer::BeginMotionBlur() {
 }
 
 void Renderer::BeginLightDepth(const int& idx) {
-	SetViewportSize({ 1024.0f, 1024.0f });
+	int size[CASCADE_NUM] = { 2048, 1024, 512, 256 };
+	SetViewportSize({ (float)size[idx], (float)size[idx] });
 
 	_devicecontext->OMSetRenderTargets(0, NULL, _cameraDSV[idx]);
 	_devicecontext->ClearDepthStencilView(_cameraDSV[idx], D3D11_CLEAR_DEPTH, 1.0f, 0);
