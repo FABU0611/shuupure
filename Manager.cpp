@@ -32,12 +32,12 @@ TextManager* Manager::_textmanager;
 bool Manager::_isdrawfromlight;
 int Manager::_cascadeidx = 0;
 
-#ifdef _DEBUG
+//#ifdef _DEBUG
 #include "CheckDoF.h"
 #include "CheckCameraDepth.h"
 CheckDoF* Manager::_checkdof;
 CheckCameraDepth* Manager::_checkcamera;
-#endif
+//#endif
 
 
 
@@ -70,22 +70,22 @@ void Manager::Init() {
 	_motionblur = new MotionBlur();
 	_motionblur->Init();
 
-#ifdef _DEBUG
+//#ifdef _DEBUG
 	_checkdof = new CheckDoF();
 	_checkdof->Init();
 	_checkcamera = new CheckCameraDepth();
 	_checkcamera->Init();
-#endif
+//#endif
 }
 
 
 void Manager::Uninit() {
-#ifdef _DEBUG
+//#ifdef _DEBUG
 	_checkcamera->Uninit();
 	delete _checkcamera;
 	_checkdof->Uninit();
 	delete _checkdof;
-#endif
+//#endif
 
 	_motionblur->Uninit();
 	delete _motionblur;
@@ -133,9 +133,9 @@ void Manager::Update() {
 		_gaussian->Update();
 		_motionblur->Update();
 		_final->Update();
-#ifdef _DEBUG
+//#ifdef _DEBUG
 		_checkdof->Update();
-#endif
+//#endif
 	}
 
 	FadeUpdate();
@@ -178,10 +178,10 @@ void Manager::Draw() {
 	
 
 	//確認用
-#ifdef _DEBUG
+//#ifdef _DEBUG
 	_checkcamera->Draw();
 	_checkdof->Draw();
-#endif
+//#endif
 
 	//フェードの描画
 	if (_fade->GetFadeMode() != FadeMode::None) {
@@ -198,10 +198,10 @@ void Manager::Draw() {
 	}
 	//次のシーンがセットされていたら
 	if (_scene) {
-#ifdef _DEBUG
+//#ifdef _DEBUG
 		_checkcamera->Uninit();
 		_checkdof->Uninit();
-#endif
+//#endif
 		_textmanager->Uninit();
 		_guimanager->Uninit();
 		_scene->Uninit();
@@ -221,10 +221,10 @@ void Manager::Draw() {
 	_scene = _nextscene;
 	_scene->Init();
 
-#ifdef _DEBUG
+//#ifdef _DEBUG
 	_checkdof->Init();
 	_checkcamera->Init();
-#endif
+//#endif
 
 	_nextscene = nullptr;
 }

@@ -13,10 +13,10 @@ class MotionBlur;
 class LoadingText;
 class GUIManager;
 class TextManager;
-#ifdef _DEBUG
+//#ifdef _DEBUG
 class CheckDoF;
 class CheckCameraDepth;
-#endif
+//#endif
 
 
 class Manager {
@@ -37,10 +37,10 @@ class Manager {
 	static GUIManager* _guimanager;
 
 	static TextManager* _textmanager;
-#ifdef _DEBUG
+//#ifdef _DEBUG
 	static CheckDoF* _checkdof;
 	static CheckCameraDepth* _checkcamera;
-#endif
+//#endif
 
 	static bool _isdrawfromlight;
 
