@@ -19,7 +19,7 @@ void Sprite::CheckFileextension(const wchar_t*& filename, ID3D11ShaderResourceVi
 	std::wstring extension = file.substr(pos);
 
 	//拡張子を調べてテクスチャ読み込み
-	if (extension == L".png") {
+	if (extension == L".png" || extension == L".jpg") {
 		TexMetadata metadata;
 		ScratchImage image;
 		LoadFromWICFile(filename, WIC_FLAGS_NONE, &metadata, image);

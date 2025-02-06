@@ -11,7 +11,7 @@ enum class DrawMode {
 	LeftTopColor,	//左上色変更可能
 	Color,			//色変更可能
 	Rotate,			//回転
-	RotateColor,	//回転色変更可能	
+	RotateColor,	//回転色変更可能
 
 	ModeNum,
 };
