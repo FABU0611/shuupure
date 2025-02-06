@@ -29,8 +29,6 @@ void Camera::CalculationCascade() {
 		float unifromsplit = NEAR_CLIP + range * p;				//線形分割　均等に分割
 		_cascade[i] = std::lerp(logsplit, unifromsplit, 0.5f);	//ブレンドしていい感じに	遠くが広すぎると解像度が低くなる
 	}
-
-	Renderer::SetCascadeSplit(_cascade);
 }
 
 void Camera::Init() {
@@ -51,6 +49,10 @@ void Camera::Init() {
 
 	_fov = 1.0f;
 	_aspect = (float)SCREEN_WIDTH / SCREEN_HEIGHT;
+
+
+	Renderer::SetScreenParam({ (float)SCREEN_WIDTH, (float)SCREEN_HEIGHT, NEAR_CLIP, FAR_CLIP});
+
 
 	Scene* scene;
 	scene = Manager::GetScene();
