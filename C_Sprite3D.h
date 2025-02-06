@@ -8,6 +8,7 @@ enum class DrawMode3D {
 	Color,
 	Billboard,
 	BillboardColor,
+	Particle,
 
 	ModeNum,
 };
