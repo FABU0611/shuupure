@@ -478,6 +478,9 @@
     <FxCompile Include="shader\NormalLightingInstanceVS.hlsl">
       <Filter>シェーダー\VS</Filter>
     </FxCompile>
+    <FxCompile Include="shader\ParticleInstanceVS.hlsl">
+      <Filter>シェーダー\VS</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="24_04_24_.rc">
