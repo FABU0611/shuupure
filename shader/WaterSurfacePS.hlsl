@@ -64,7 +64,7 @@ void main(in PS_IN In, out PS_OUT Out) {
 	float light = 0.5f - 0.5f * dot(lv.xyz, normal.xyz);
 	
 	//テクスチャのピクセルの処理
-	Out.Out0 = float4(0.2f, 0.2f, 0.5f, 1.0f);
+	Out.Out0 = float4(1.0f, 1.0f, 1.0f, 1.0f); 
 	//色に明るさを乗算	
 	Out.Out0.rgb *= In.Diffuse.rgb * light;
 	Out.Out0.a *= In.Diffuse.a;
@@ -103,6 +103,4 @@ void main(in PS_IN In, out PS_OUT Out) {
 	fresnel = min(fresnel, 1) * 1.0f;
 	Out.Out0.rgb = lerp(Out.Out0.rgb, reflect.rgb, fresnel);
 	Out.Out0.a *= fresnel * 1.0f;
-		
-	//CreateVelTex(In, Out.Out1);
 }

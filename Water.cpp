@@ -19,9 +19,11 @@ void Water::Init(){
 	SetRotation({ 90.0f, 0.0f, 0.0f });
 	SetPosition({ 15.0f, -0.05f, 0.0 });
 
-	GetComponent<Sprite3D>()->SetUVend({25.0f, 25.0f});
+	Sprite3D* sprite = GetComponent<Sprite3D>();
+	sprite->SetUVend({ 25.0f, 25.0f });
+	sprite->SetColor({ 0.2f, 0.2f, 1.0f, 1.0f });
 
-	_param = { 0.0f, 0.0f, 0.0f, 0.0f };
+	_param = { 0.0f, 0.0f, 1.0f, 0.0f };
 }
 
 //終了処理
@@ -51,11 +53,7 @@ void Water::Draw(){
 
 	Renderer::GetDeviceContext()->PSSetShaderResources(2, 1, &_envtexture);
 
-	//Zバッファ無効
-	Renderer::SetDepthEnable(false);	//パーティクルをZソートするのは負荷が高い
 	for (auto c : _components) {
 		c->Draw();
 	}
-	//Zバッファ無効
-	Renderer::SetDepthEnable(true);	//パーティクルをZソートするのは負荷が高い
 }
