@@ -5,9 +5,10 @@
 #include "Renderer.h"
 #include "Scene.h"
 #include "Manager.h"
+#include "ParticleEmitter.h"
 #include "C_Sprite3D.h"
 
-void Sprite3D::Draw(){
+void Sprite3D::Draw() {
 	_scl = _gameobject->GetScale();
 	_pos = _gameobject->GetPosition();
 
@@ -20,15 +21,15 @@ void Sprite3D::Draw(){
 
 	//頂点設定---------------------------------------------------------------------------
 	vertex[0].Position = { -_scl.x,  _scl.y, 0.0f };
-	vertex[1].Position = {  _scl.x,  _scl.y, 0.0f };
+	vertex[1].Position = { _scl.x,  _scl.y, 0.0f };
 	vertex[2].Position = { -_scl.x, -_scl.y, 0.0f };
-	vertex[3].Position = {  _scl.x, -_scl.y, 0.0f };
+	vertex[3].Position = { _scl.x, -_scl.y, 0.0f };
 
 	for (int i = 0; i < 4; i++) {
 		vertex[i].Tangent = _tangent;
 	}
 
-	if (_mode == DrawMode3D::Normal){
+	if (_mode == DrawMode3D::Normal) {
 		_rot = _gameobject->GetRotation();
 
 		// 総合的な回転行列を計算
@@ -113,13 +114,6 @@ void Sprite3D::Draw(){
 	UINT offset = 0;
 	Renderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &_vertexbuffer, &stride, &offset);
 
-	//マテリアル設定
-	MATERIAL material;
-	ZeroMemory(&material, sizeof(material));
-	material.Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	material.TextureEnable = true;
-	Renderer::SetMaterial(material);
-
 	//テクスチャ設定
 	Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &_texture);
 	if (_normaltexture != NULL) {
@@ -129,6 +123,52 @@ void Sprite3D::Draw(){
 	//プリミティブトポロジ設定
 	Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
+	if (_mode == DrawMode3D::Particle) {
+		//カメラのビューマトリクス取得
+		Scene* scene = Manager::GetScene();
+		Camera* camera = scene->GetGameobject<Camera>();
+		XMMATRIX view = camera->GetViewMatrix();
+
+		//ビューの逆行列
+		XMMATRIX invView = XMMatrixInverse(nullptr, view);
+		invView.r[3].m128_f32[0] = 0.0f;
+		invView.r[3].m128_f32[1] = 0.0f;
+		invView.r[3].m128_f32[2] = 0.0f;
+
+		//ワールドマトリクス設定
+		XMMATRIX world, scale, trans;
+		scale = XMMatrixScaling(1.0f, 1.0f, 1.0f);
+		trans = XMMatrixTranslation(_pos.x, _pos.y, _pos.z);
+		world = scale * invView * trans;
+		Renderer::SetWorldMatrix(world, _prevworld);
+
+		//Zバッファ無効
+		Renderer::SetDepthEnable(false);	//パーティクルをZソートするのは負荷が高い
+		//加算合成に変更
+		Renderer::SetBlendAddEnable(true);
+
+		//パーティクル表示
+		ParticleEmitter* emitter = dynamic_cast<ParticleEmitter*>(_gameobject);
+		if (!emitter) {
+			_mode = DrawMode3D::Normal;
+			return;
+		}
+		Renderer::GetDeviceContext()->DrawInstanced(4, emitter->_instancecount, 0, 0);
+		
+		//加算合成を無効
+		Renderer::SetBlendAddEnable(false);
+		//Zバッファ有効
+		Renderer::SetDepthEnable(true);
+		return;
+	}
+	else {
+		//マテリアル設定
+		MATERIAL material;
+		ZeroMemory(&material, sizeof(material));
+		material.Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+		material.TextureEnable = true;
+		Renderer::SetMaterial(material);
+	}
 	//ポリゴン描画
 	Renderer::GetDeviceContext()->Draw(4, 0);
 }
