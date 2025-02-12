@@ -21,8 +21,6 @@ public:
 	ParticleEmitter(pos, size, color, L"asset\\texture\\particle.png"), _size(size), _stoptime(stoptime), _volume(volume){}
 	~Fireup() {}
 
-	void Init()override { ParticleEmitter::Init(); }
-	void Uninit()override { ParticleEmitter::Uninit(); }
 	void Update()override {
 		//óêêîê∂ê¨
 		std::random_device rd;
@@ -52,7 +50,7 @@ public:
 				_particle[i].Axel.x = 0.0f;
 				_particle[i].Axel.y = -98.0f;
 				_particle[i].Axel.z = 0.0f;
-				_particle[i].Size = _particle[i].Defsize;
+				_particle[i].Size = { _defsize,_defsize,_defsize };
 				break;
 			}
 		}
@@ -90,5 +88,4 @@ public:
 			}
 		}
 	}
-	void Draw()override { ParticleEmitter::Draw(); }
 };

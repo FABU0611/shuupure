@@ -60,12 +60,12 @@ public:
 				_particle[i + j].Axel.x = 0.0f;
 				_particle[i + j].Axel.y = -98.0f;
 				_particle[i + j].Axel.z = 0.0f;
-				_particle[i + j].Size = _particle[i + j].Defsize * _spraysize;
+				_particle[i + j].Size = { _defsize, _defsize, _defsize };
+				_particle[i + j].Size *= _spraysize;
 			}
 			break;
 		}
 	}
-	void Uninit()override { ParticleEmitter::Uninit(); }
 	void Update()override {
 		float dt = Time::GetDeltaTime();
 
@@ -94,5 +94,4 @@ public:
 			}
 		}
 	}
-	void Draw()override { ParticleEmitter::Draw(); }
 };

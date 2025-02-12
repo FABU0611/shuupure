@@ -45,12 +45,11 @@ public:
 				_particle[i + j].Axel.y = -98.0f;
 				_particle[i + j].Axel.z = 0.0f;
 
-				_particle[i + j].Size = _particle[i + j].Defsize;
+				_particle[i + j].Size = { _defsize, _defsize, _defsize };
 			}
 			break;
 		}
 	}
-	void Uninit()override { ParticleEmitter::Uninit(); }
 	void Update()override {
 		float dt = 1.0f / 60.0f;
 
@@ -86,5 +85,4 @@ public:
 			}
 		}
 	}
-	void Draw()override { ParticleEmitter::Draw(); }
 };

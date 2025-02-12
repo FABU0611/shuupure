@@ -14,9 +14,7 @@ class Smoke : public ParticleEmitter {
 	float _time{};
 public:
 	Smoke(const XMFLOAT3& pos, const float& size, const XMFLOAT4& color):
-	ParticleEmitter(pos, size, color, L"asset\\texture\\particle.png"){
-		_size = size;
-	}
+	ParticleEmitter(pos, size, color, L"asset\\texture\\particle.png"){}
 	~Smoke() {}
 
 	void Update()override {
@@ -48,8 +46,8 @@ public:
 				_particle[i].Pos = GetPosition();
 				_particle[i].Vel = { dist(rd), dist(rd) + 1.0f, dist(rd) };
 				_particle[i].Axel = { 0.0f, 5.0f, 0.0f };
-				_particle[i].Size = _particle[i].Defsize;
-				_particle[i].Color = _color;
+				_particle[i].Size = { _defsize, _defsize, _defsize };
+				_particle[i].Color = _defcolor;
 				_time = 0.0f;
 				break;
 			}
