@@ -31,5 +31,5 @@ void Game::Init() {
 	AddGameobject<DivingBoard>(Layer::Object, XMFLOAT3(-30.0f, 0.0f, 0.0f));
 	AddGameobject<TestObject>(Layer::Object, XMFLOAT3(-10.0f, 10.0f, 30.0f));
 	AddGameobject<SphereInstance>(Layer::Object);
-	//AddGameobject<Water>(Layer::Effect, XMFLOAT3(40.0f, 20.0f, 0.0f));
+	AddGameobject<Water>(Layer::Transparency, XMFLOAT3(40.0f, 20.0f, 0.0f));
 }
