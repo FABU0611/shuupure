@@ -15,6 +15,4 @@ void main(in PS_IN In, out PS_OUT Out) {
 	else {
 		Out.Out0 = In.Diffuse;
 	}
-	
-	CreateVelTex(In, Out.Out1);
 }
