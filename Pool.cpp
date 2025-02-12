@@ -5,29 +5,19 @@
 #include "Pool.h"
 #include "Renderer.h"
 #include "C_AnimationModel.h"
+#include "ShaderManager.h"
 
 void Pool::Init(){
 	AddComponent<AnimationModel>(this);
 
 	//モデル読み込み
 	GetComponent<AnimationModel>()->Load("asset\\model\\pool.fbx");
-
-	//シェーダーセット
-	Renderer::CreateVertexShader(&_vertexshader, &_vertexlayout,
-		"shader\\DepthShadowVS.cso");
-
-	Renderer::CreatePixelShader(&_pixelshader,
-		"shader\\DepthShadowPS.cso");
 }
 
 void Pool::Uninit(){
 	for (auto c : _components) {
 		c->Uninit();
 	}
-
-	_vertexshader->Release();
-	_pixelshader->Release();
-	_vertexlayout->Release();
 }
 
 void Pool::Update(){
@@ -37,12 +27,7 @@ void Pool::Update(){
 }
 
 void Pool::Draw(){
-	//入力レイアウト設定
-	Renderer::GetDeviceContext()->IASetInputLayout(_vertexlayout);
-
-	//シェーダ設定
-	Renderer::GetDeviceContext()->VSSetShader(_vertexshader, NULL, 0);
-	Renderer::GetDeviceContext()->PSSetShader(_pixelshader, NULL, 0);
+	Shader::SetShader(ShaderName::DepthShadow);
 
 	//ワールドマトリクス設定
 	XMMATRIX world, scale, rot, trans;

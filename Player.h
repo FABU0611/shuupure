@@ -16,8 +16,6 @@ class Player : public GameObject {
 	XMFLOAT3			_accel{};
 	XMFLOAT3			_move{};
 
-	XMMATRIX			_prevworld{};
-
 	XMFLOAT3			_smokepos{};
 	Smoke*				_smoke{};
 

@@ -104,13 +104,8 @@ void SphereInstance::Draw() {
 	trans = XMMatrixTranslation(GetPosition().x, GetPosition().y, GetPosition().z);
 	world = scale * rot * trans;
 
-	if (Manager::GetisDrawFromLight()) {
-		Renderer::SetWorldMatrix(world);
-	}
-	else {
-		Renderer::SetWorldMatrix(world, _prevworld);
-	}
-
+	Renderer::SetWorldMatrix(world, _prevworld);
+	
 	for (auto c : _components) {
 		c->Draw();
 	}

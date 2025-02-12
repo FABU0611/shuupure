@@ -10,8 +10,6 @@ class DivingBoard : public GameObject {
 	ID3D11PixelShader*	_pixelshader{};
 	ID3D11InputLayout*	_vertexlayout{};
 
-	XMMATRIX			_prevworld{};
-
 public:
 	DivingBoard(const XMFLOAT3& pos) {
 		SetPosition(pos);

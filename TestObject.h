@@ -8,8 +8,6 @@ class TestObject : public GameObject {
 	XMFLOAT3	_defpos{};
 	float		_time{};
 
-	XMMATRIX			_prevworld{};
-
 public:
 	TestObject() {}
 	TestObject(const XMFLOAT3& pos);
