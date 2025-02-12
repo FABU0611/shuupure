@@ -3,6 +3,7 @@
 //24_04_24
 #include "Main.h"
 #include "Renderer.h"
+#include "Manager.h"
 #include <io.h>
 #include <vector>
 
@@ -30,7 +31,7 @@ ID3D11Buffer*				Renderer::_camerabuffer{};
 ID3D11Buffer*				Renderer::_parameterbuffer{};
 ID3D11Buffer*				Renderer::_weightsbuffer{};
 ID3D11Buffer*				Renderer::_dofbuffer{};
-ID3D11Buffer*				Renderer::_cascadesplitbuffer{};
+ID3D11Buffer*				Renderer::_screenbuffer{};
 
 XMMATRIX					Renderer::_prevworld;
 XMMATRIX					Renderer::_prevview;
@@ -355,10 +356,10 @@ void Renderer::Init() {
 	_devicecontext->VSSetConstantBuffers(11, 1, &_prevprojectionbuffer);
 
 
-	bufferDesc.ByteWidth = sizeof(float) * 4;
+	bufferDesc.ByteWidth = sizeof(XMFLOAT4);
 
-	hr = _device->CreateBuffer(&bufferDesc, NULL, &_cascadesplitbuffer);
-	_devicecontext->PSSetConstantBuffers(12, 1, &_cascadesplitbuffer);
+	hr = _device->CreateBuffer(&bufferDesc, NULL, &_screenbuffer);
+	_devicecontext->PSSetConstantBuffers(12, 1, &_screenbuffer);
 
 
 	// ƒ‰ƒCƒg‰Šú‰»
@@ -688,7 +689,7 @@ void Renderer::Uninit() {
 	_parameterbuffer->Release();
 	_weightsbuffer->Release();
 	_dofbuffer->Release();
-	_cascadesplitbuffer->Release();
+	_screenbuffer->Release();
 
 	_velSRV->Release();
 	_velRTV->Release();
@@ -793,6 +794,10 @@ void Renderer::SetWorldMatrix(XMMATRIX WorldMatrix) {
 }
 
 void Renderer::SetWorldMatrix(XMMATRIX WorldMatrix, XMMATRIX& PrevWorld) {
+	if (Manager::GetisDrawFromLight()) {
+		SetWorldMatrix(WorldMatrix);
+		return;
+	}
 	XMFLOAT4X4 worldf;
 
 	XMStoreFloat4x4(&worldf, XMMatrixTranspose(PrevWorld));
@@ -870,8 +875,8 @@ void Renderer::SetDoF(XMFLOAT2 dof) {
 	_devicecontext->UpdateSubresource(_dofbuffer, 0, NULL, &dof, 0, 0);
 }
 
-void Renderer::SetCascadeSplit(float* split) {
-	_devicecontext->UpdateSubresource(_cascadesplitbuffer, 0, NULL, &split, 0, 0);
+void Renderer::SetScreenParam(XMFLOAT4 screen) {
+	_devicecontext->UpdateSubresource(_screenbuffer, 0, NULL, &screen, 0, 0);
 }
 
 

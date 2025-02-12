@@ -72,7 +72,7 @@ private:
 	static ID3D11Buffer*				_parameterbuffer;
 	static ID3D11Buffer*				_weightsbuffer;
 	static ID3D11Buffer*				_dofbuffer;
-	static ID3D11Buffer*				_cascadesplitbuffer;
+	static ID3D11Buffer*				_screenbuffer;
 
 	static XMMATRIX						_prevworld;
 	static XMMATRIX						_prevview;
@@ -132,7 +132,7 @@ public:
 	static void SetParameter(XMFLOAT4 Parameter);
 	static void SetWeights(float* weights);
 	static void SetDoF(XMFLOAT2 dof);
-	static void SetCascadeSplit(float* split);
+	static void SetScreenParam(XMFLOAT4 screen);
 
 	static ID3D11Device* GetDevice(void) { return _device; }
 	static ID3D11DeviceContext* GetDeviceContext(void) { return _devicecontext; }
