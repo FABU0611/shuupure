@@ -13,7 +13,9 @@ class Component;
 class GameObject {
 protected:
 	std::list<Component*>	_components{};
-	bool					_destroy = false;
+	XMMATRIX				_prevworld{};
+	bool					_ismotionblur = true;	
+	bool					_isdestroy = false;
 	float					_cameralength{};
 
 public:
@@ -51,13 +53,13 @@ public:
 		GetComponent<Transform>()->_quaternion = quaternion;
 		GetComponent<Transform>()->UseQuaternion();
 	}
-	void SetDestroy() { _destroy = true; }
+	void SetDestroy() { _isdestroy = true; }
 	void SetCamDistance(const float& camdis) { _cameralength = camdis; }
 
 	virtual void Hit(GameObject* obj){}
 
 	bool Destroy() {
-		if (_destroy) {
+		if (_isdestroy) {
 			Uninit();
 			delete this;
 			return true;

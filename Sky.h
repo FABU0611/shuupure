@@ -6,8 +6,6 @@
 #include "GameObject.h"
 
 class Sky : public GameObject {
-	XMMATRIX			_prevworld{};
-
 public:
 	Sky(const float& scl){
 		SetScale({ scl, scl,scl });

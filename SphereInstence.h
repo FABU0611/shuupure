@@ -10,12 +10,10 @@ class SphereInstance : public GameObject {
 	static const int	INSTANCE_NUM = INSTANCE_X_NUM * INSTANCE_Z_NUM;
 	static const float	INSTANCE_DISTANCE;
 
-	ID3D11Buffer* _posbuffer{};
+	ID3D11Buffer*		_posbuffer{};
 	ID3D11ShaderResourceView* _posSRV{};
 
-	XMFLOAT3*			_instancepos{};	
-
-	XMMATRIX			_prevworld{};
+	XMFLOAT3*			_instancepos{};	//インスタンスの位置
 
 public:
 	SphereInstance() {}
