@@ -43,16 +43,6 @@ void ExitApplication() {
 	}
 }
 
-void DispErrorMessageBox(const short& num) {
-	// エラーメッセージをフォーマット
-	char errorMessage[256];
-	snprintf(errorMessage, sizeof(errorMessage), "Error Code: %03d\nThe application is closed.", num);
-
-	if (MessageBoxA(g_Window, errorMessage, "Error", MB_OK | MB_ICONERROR) == IDOK) {
-		ExitApplication();
-	}
-}
-
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
 
