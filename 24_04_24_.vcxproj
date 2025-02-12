@@ -179,6 +179,7 @@
     <ClCompile Include="C_Sprite3D.cpp" />
     <ClCompile Include="DirectWriteCustomFont.cpp" />
     <ClCompile Include="DivingBoard.cpp" />
+    <ClCompile Include="ErrorHandler.cpp" />
     <ClCompile Include="Fade.cpp" />
     <ClCompile Include="Gaussian.cpp" />
     <ClCompile Include="GaussianX.cpp" />
@@ -243,6 +244,7 @@
     <ClInclude Include="DirectWriteCustomFont.h" />
     <ClInclude Include="DivingBoard.h" />
     <ClInclude Include="EasingFunc.h" />
+    <ClInclude Include="ErrorHandler.h" />
     <ClInclude Include="Fade.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Gaussian.h" />
