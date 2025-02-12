@@ -8,10 +8,12 @@
 LARGE_INTEGER Time::_frequency;
 LARGE_INTEGER Time::_lastTime;
 float Time::_deltatime;
+float Time::_gamespeed;
 
 void Time::Init() {
     QueryPerformanceFrequency(&_frequency); //タイマーの周波数を取得
     QueryPerformanceCounter(&_lastTime);    //最初のタイムスタンプを取得
+	_gamespeed = 1.0f;
 }
 
 void Time::Update(){
@@ -22,7 +24,7 @@ void Time::Update(){
 }
 
 const float& Time::GetDeltaTime() {
-    return _deltatime;
+    return _deltatime * _gamespeed;
 }
 
 const float& Time::GetFrameRate() {
@@ -48,4 +50,12 @@ const std::wstring Time::GetNowRealTime() {
         << std::setw(2) << std::setfill(L'0') << localTime.tm_sec;
 
     return ss.str();
+}
+
+void Time::GamePause() {
+	_deltatime = 0.0f;
+}
+
+void Time::GameResume() {
+    QueryPerformanceCounter(&_lastTime);    //最初のタイムスタンプを取得
 }
