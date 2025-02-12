@@ -43,7 +43,7 @@ void Gaussian::Init() {
 		Title* title = dynamic_cast<Title*>(scene);
 		if (title) {
 			_param.z = 10.0f;
-			_dof.x = 0.03f;
+			_dof.x = 0.128f;
 			_dof.y = 0.05f;
 		}
 	}
