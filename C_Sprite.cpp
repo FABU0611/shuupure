@@ -4,6 +4,7 @@
 #include "Main.h"
 #include "Renderer.h"
 #include "C_Sprite.h"
+#include "ErrorHandler.h"
 #include <string>
 #include <cwchar>
 
@@ -13,6 +14,8 @@ ID3D11ShaderResourceView* Sprite::_textures[MAX_TEXTURE]{};
 
 
 void Sprite::CheckFileextension(const wchar_t*& filename, ID3D11ShaderResourceView*& texture) {
+	HRESULT hr = S_OK;
+
 	std::wstring file(filename);
 	size_t pos = file.rfind(L'.');
 
@@ -22,15 +25,31 @@ void Sprite::CheckFileextension(const wchar_t*& filename, ID3D11ShaderResourceVi
 	if (extension == L".png" || extension == L".jpg") {
 		TexMetadata metadata;
 		ScratchImage image;
-		LoadFromWICFile(filename, WIC_FLAGS_NONE, &metadata, image);
-		CreateShaderResourceView(Renderer::GetDevice(), image.GetImages(), image.GetImageCount(), metadata, &texture);
+		hr = LoadFromWICFile(filename, WIC_FLAGS_NONE, &metadata, image);
+		if (FAILED(hr)) {		//png jpg画像のロード失敗
+			DispErrorMessageBox(100);
+			return;
+		}
+		hr = CreateShaderResourceView(Renderer::GetDevice(), image.GetImages(), image.GetImageCount(), metadata, &texture);
+		if (FAILED(hr)) {		//SRV作成失敗
+			DispErrorMessageBox(300);
+			return;
+		}
 		assert(texture);
 	}
 	else if (extension == L".dds") {
 		TexMetadata metadata;
 		ScratchImage image;
-		LoadFromDDSFile(filename, DDS_FLAGS_NONE, &metadata, image);
+		hr = LoadFromDDSFile(filename, DDS_FLAGS_NONE, &metadata, image);
+		if (FAILED(hr)) {		//dds画像のロード失敗
+			DispErrorMessageBox(101);
+			return;
+		}
 		CreateShaderResourceView(Renderer::GetDevice(), image.GetImages(), image.GetImageCount(), metadata, &texture);
+		if (FAILED(hr)) {		//SRV作成失敗
+			DispErrorMessageBox(300);
+			return;
+		}
 		assert(texture);
 	}
 }
@@ -62,7 +81,11 @@ void Sprite::CreateVertexBuffer(){
 	ZeroMemory(&sd, sizeof(sd));
 	sd.pSysMem = vertex;
 
-	Renderer::GetDevice()->CreateBuffer(&bd, &sd, &_vertexbuffer);
+	HRESULT hr = Renderer::GetDevice()->CreateBuffer(&bd, &sd, &_vertexbuffer);
+	if (FAILED(hr)) {		//頂点バッファ生成失敗
+		DispErrorMessageBox(200);
+		return;
+	}
 }
 
 void Sprite::LoadTexture(const wchar_t* filename) {
