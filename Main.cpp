@@ -31,6 +31,28 @@ HWND GetWindow() {
 	return g_Window;
 }
 
+void ExitApplication() {
+	Time::GamePause();
+	int result = MessageBox(g_Window, "本当に終了してよろしいですか？", "確認", MB_OKCANCEL | MB_DEFBUTTON2);
+	if (result == IDOK) {
+		DestroyWindow(g_Window);
+	}
+	else if (result == IDCANCEL) {
+		Time::GameResume();
+		return;
+	}
+}
+
+void DispErrorMessageBox(const short& num) {
+	// エラーメッセージをフォーマット
+	char errorMessage[256];
+	snprintf(errorMessage, sizeof(errorMessage), "Error Code: %03d\nThe application is closed.", num);
+
+	if (MessageBoxA(g_Window, errorMessage, "Error", MB_OK | MB_ICONERROR) == IDOK) {
+		ExitApplication();
+	}
+}
+
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
 
@@ -150,10 +172,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	case WM_KEYDOWN:
 		switch (wParam) {
 		case VK_ESCAPE:
-			DestroyWindow(hWnd);
+			ExitApplication();
 			break;
 		}
 		break;
+
+	case WM_CLOSE://ウィンドウを閉じる
+		ExitApplication();
+		return 0;
 
 	case WM_MOUSEWHEEL:
 		Input::OnMouseWheel(GET_WHEEL_DELTA_WPARAM(wParam));
