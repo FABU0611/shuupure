@@ -13,6 +13,7 @@
 #include "C_Transform.h"
 #include "C_Collision.h"
 #include "C_Audio.h"
+#include "C_Move.h"
 #include "S_Title.h"
 #include "S_Game.h"
 #include "ParticleSmoke.h"
@@ -23,17 +24,18 @@ const float Player::MAX_SPEED = 10.0f;
 const float Player::MOVE_NUM = 10.0f;
 const float Player::FRICTION_NUM = 2.0f;
 
-Player::Player(const XMFLOAT3& pos, const XMFLOAT3& scl):
-_state(nullptr){
+Player::Player(const XMFLOAT3& pos, const XMFLOAT3& scl) :
+	_state(nullptr) {
 	SetPosition(pos);
 	SetScale(scl);
 }
 
-void Player::Init(){
+void Player::Init() {
 	//Playerが持っていることを教える
 	AddComponent<AnimationModel>(this);
 	AddComponent<Collision>(this);
 	AddComponent<Audio>(this);
+	AddComponent<Move>(this);
 
 	//コリジョン設定
 	GetComponent<Collision>()->SetPosition(GetPosition());
@@ -61,18 +63,20 @@ void Player::Init(){
 	_accel.y = FALL_NUM;
 	_accel.z = 25.0f;
 	_move = { 0.0f, 0.0f, 0.0f };
-	SetRotation({ 0.0f, 0.0f, 0.0f });
+	SetRotation({ 0.0f, -XM_PIDIV4, 0.0f });
 
+	/*
 	//Y軸周りに90度回転させてX方向を向かせる
 	XMVECTOR yAxis = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 	XMVECTOR rotationQuat = XMQuaternionRotationAxis(yAxis, -XM_PIDIV4);
 	XMStoreFloat4(&GetQuaternion(), rotationQuat);
+	*/
 
 	GetComponent<Transform>()->Update();
 
 	_smoke = Manager::GetScene()->AddGameobject<Smoke>(Layer::Effect, XMFLOAT3(0.0f, 0.0f, 0.0f), 0.5f, XMFLOAT4(0.1f, 0.1f, 0.1f, 1.0f));
 
-	_smokepos = GetPosition() + (GetRight() * 1.4f) - (GetForward() * (0.75f)) + (GetUp() * 4.5f);
+	_smokepos = GetPosition() + (GetRight() * 0.3f) - (GetForward() * 0.75f) + (GetUp() * 4.5f);
 
 	_smoke->SetPosition(_smokepos);
 }
@@ -87,53 +91,35 @@ void Player::Update() {
 	Scene* scene = Manager::GetScene();
 	if (scene) {
 		Title* title = dynamic_cast<Title*>(scene);
-		if (!title) {
+		if (title) {
+			return;
 		}
-		return;
 	}
 
 	if (Input::GetKeyTrigger(VK_SPACE)) {
 		Manager::SetSceneFade<Game>(0.05f);
 	}
 
-	_smokepos += GetRight() * 0.47f;
-	_smokepos += GetForward() * -1.4f;
-	_smokepos += GetUp() * 4.3f;
+	XMFLOAT3 oldpos = GetPosition();
 
-	_smoke->SetPosition(_smokepos);
-
-	XMFLOAT3 oldPos = GetPosition();
-
-	_move = { 0.0f, 0.0f, 0.0f };
-	float dt = Time::GetDeltaTime();
 	for (auto c : _components) {
 		c->Update();
 	}
 
-	SetQuaternion(GetQuaternion());
+	_smokepos = GetPosition() + (GetRight() * 0.37f) - (GetForward() * 1.4f) + (GetUp() * 4.3f);
 
-	//速度の更新
-	_velocity.x += _accel.x * _move.x * dt;
-	_velocity.z += _accel.z * _move.z * dt;
-
-
-	//摩擦
-	_velocity.x -= _velocity.x * FRICTION_NUM * dt;
-	_velocity.z -= _velocity.z * FRICTION_NUM * dt;
-
-
-	//位置更新
-	GetPosition() += _velocity * dt;
+	_smoke->SetPosition(_smokepos);
 }
 
-void Player::Draw(){
+void Player::Draw() {
 	Shader::SetShader(ShaderName::Normallit);
 
 	//ワールドマトリクス設定
 	XMMATRIX world, scale, rot, trans;
 	scale = XMMatrixScaling(GetScale().x, GetScale().y, GetScale().z);
 	//クォータニオンで回転
-	rot = XMMatrixRotationQuaternion(XMLoadFloat4(&GetQuaternion()));
+	//rot = XMMatrixRotationQuaternion(XMLoadFloat4(&GetQuaternion()));
+	rot = XMMatrixRotationRollPitchYaw(GetRotation().x, GetRotation().y, GetRotation().z);
 	trans = XMMatrixTranslation(GetPosition().x, GetPosition().y, GetPosition().z);
 	world = scale * rot * trans;
 	Renderer::SetWorldMatrix(world, _prevworld);
@@ -143,8 +129,7 @@ void Player::Draw(){
 	}
 }
 
-void Player::Hit(GameObject* obj){
-}
+void Player::Hit(GameObject* obj) {}
 
 void Player::PlayAudioBig() {
 	PlayAudioMid();
@@ -160,6 +145,6 @@ void Player::PlayAudioSml() {
 	GetComponent<Audio>()->Play("asset\\audio\\splash01.wav", false);
 }
 
-void Player::PlayAudioJump(){
+void Player::PlayAudioJump() {
 	GetComponent<Audio>()->Play("asset\\audio\\jump.wav", false);
 }

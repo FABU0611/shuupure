@@ -76,5 +76,6 @@ void GameState1::Update() {
 		if (camera->GetRotation().y < -XM_2PI) {
 			camera->GetRotation().y += XM_2PI;
 		}
+		player->GetRotation().y = _camera->GetRotation().y;
 	}
 }
