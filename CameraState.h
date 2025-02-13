@@ -6,9 +6,8 @@
 class Camera;
 
 class CameraState {
-	Camera*		_camera{};
-
 protected:
+	Camera*		_camera{};
 	float		_time{};
 
 	Camera* GetCamera() { return _camera; }
