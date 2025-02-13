@@ -13,47 +13,6 @@ const wchar_t* Sprite::_texname[MAX_TEXTURE]{};
 ID3D11ShaderResourceView* Sprite::_textures[MAX_TEXTURE]{};
 
 
-void Sprite::CheckFileextension(const wchar_t*& filename, ID3D11ShaderResourceView*& texture) {
-	HRESULT hr = S_OK;
-
-	std::wstring file(filename);
-	size_t pos = file.rfind(L'.');
-
-	std::wstring extension = file.substr(pos);
-
-	//ägí£éqÇí≤Ç◊ÇƒÉeÉNÉXÉ`ÉÉì«Ç›çûÇ›
-	if (extension == L".png" || extension == L".jpg") {
-		TexMetadata metadata;
-		ScratchImage image;
-		hr = LoadFromWICFile(filename, WIC_FLAGS_NONE, &metadata, image);
-		if (FAILED(hr)) {		//png jpgâÊëúÇÃÉçÅ[Éhé∏îs
-			DispErrorMessageBox(100);
-			return;
-		}
-		hr = CreateShaderResourceView(Renderer::GetDevice(), image.GetImages(), image.GetImageCount(), metadata, &texture);
-		if (FAILED(hr)) {		//SRVçÏê¨é∏îs
-			DispErrorMessageBox(300);
-			return;
-		}
-		assert(texture);
-	}
-	else if (extension == L".dds") {
-		TexMetadata metadata;
-		ScratchImage image;
-		hr = LoadFromDDSFile(filename, DDS_FLAGS_NONE, &metadata, image);
-		if (FAILED(hr)) {		//ddsâÊëúÇÃÉçÅ[Éhé∏îs
-			DispErrorMessageBox(101);
-			return;
-		}
-		CreateShaderResourceView(Renderer::GetDevice(), image.GetImages(), image.GetImageCount(), metadata, &texture);
-		if (FAILED(hr)) {		//SRVçÏê¨é∏îs
-			DispErrorMessageBox(300);
-			return;
-		}
-		assert(texture);
-	}
-}
-
 void Sprite::CreateVertexBuffer(){
 	VERTEX_3D vertex[4];
 
@@ -83,13 +42,16 @@ void Sprite::CreateVertexBuffer(){
 
 	HRESULT hr = Renderer::GetDevice()->CreateBuffer(&bd, &sd, &_vertexbuffer);
 	if (FAILED(hr)) {		//í∏ì_ÉoÉbÉtÉ@ê∂ê¨é∏îs
-		DispErrorMessageBox(200);
+		//DispErrorMessageBox(200);
 		return;
 	}
 }
 
 void Sprite::LoadTexture(const wchar_t* filename) {
 	CreateVertexBuffer();
+	/*
+	_texture = TextureManager::LoadTexture(filename);
+	*/
 
 	for (int i = 0; i < _textureindex; i++) {
 		if (_texname[i] == filename) {
@@ -98,7 +60,16 @@ void Sprite::LoadTexture(const wchar_t* filename) {
 		}
 	}
 
-	CheckFileextension(filename, _texture);
+	HRESULT hr = S_OK;
+	TexMetadata metadata;
+	ScratchImage image;
+	ErrorHandler::GetInstance()->LoadTex(filename, metadata, image);
+	hr = CreateShaderResourceView(Renderer::GetDevice(), image.GetImages(), image.GetImageCount(), metadata, &_texture);
+	if (FAILED(hr)) {		//SRVçÏê¨é∏îs
+		//DispErrorMessageBox(300);
+		return;
+	}
+	assert(_texture);
 
 
 	_texname[_textureindex] = filename;
@@ -109,7 +80,9 @@ void Sprite::LoadTexture(const wchar_t* filename) {
 
 void Sprite::LoadNormalTexture(const wchar_t* filename){
 	CreateVertexBuffer();
-
+	/*
+	_normaltexture = TextureManager::LoadTexture(filename);
+	*/
 	for (int i = 0; i < _textureindex; i++) {
 		if (_texname[i] == filename) {
 			_normaltexture = _textures[i];
@@ -117,7 +90,16 @@ void Sprite::LoadNormalTexture(const wchar_t* filename){
 		}
 	}
 
-	CheckFileextension(filename, _normaltexture);
+	HRESULT hr = S_OK;
+	TexMetadata metadata;
+	ScratchImage image;
+	ErrorHandler::GetInstance()->LoadTex(filename, metadata, image);
+	hr = CreateShaderResourceView(Renderer::GetDevice(), image.GetImages(), image.GetImageCount(), metadata, &_normaltexture);
+	if (FAILED(hr)) {		//SRVçÏê¨é∏îs
+		//DispErrorMessageBox(300);
+		return;
+	}
+	assert(_normaltexture);
 
 	_texname[_textureindex] = filename;
 	_textures[_textureindex] = _normaltexture;

@@ -7,8 +7,6 @@
 
 
 class Sprite : public Component {
-	void CheckFileextension(const wchar_t*& filename, ID3D11ShaderResourceView*& texture);
-
 protected:
 	ID3D11Buffer* _vertexbuffer = NULL;
 	ID3D11ShaderResourceView* _texture = NULL;
