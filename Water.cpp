@@ -4,6 +4,7 @@
 #include "Main.h"
 #include "Renderer.h"
 #include "ShaderManager.h"
+#include "ErrorHandler.h"
 #include "Time.h"
 #include "Water.h"
 
@@ -12,9 +13,10 @@ void Water::Init(){
 	//テクスチャ読み込み
 	TexMetadata metadata;
 	ScratchImage image;
-	LoadFromWICFile(L"asset\\model\\sky02.jpg", WIC_FLAGS_NONE, &metadata, image);
+	ErrorHandler::GetInstance()->LoadTex(L"asset\\model\\sky02.jpg", metadata, image);
 	CreateShaderResourceView(Renderer::GetDevice(), image.GetImages(), image.GetImageCount(), metadata, &_envtexture);
 	assert(_envtexture);
+	//_envtexture = TextureManager::LoadTexture(L"asset\\model\\sky02.jpg");
 
 	SetRotation({ 90.0f, 0.0f, 0.0f });
 	SetPosition({ 15.0f, -0.05f, 0.0 });
