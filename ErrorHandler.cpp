@@ -2,16 +2,21 @@
 //20106_田中　蓮
 //25_02_12
 #include "ErrorHandler.h"
-#include "Main.h"
-#include <unordered_map>
+#include "TextureManager.h"
 #include <fstream>
 #include <sstream>
 #include <cstdio>
 #include <iomanip>
+#include <comdef.h>
 
-std::unordered_map<int, std::string> errorMessages;
 
-void LoadErrorMessages() {
+ErrorHandler* ErrorHandler::_instance = nullptr;
+
+//csvからエラーメッセージを取得
+void ErrorHandler::LoadErrorMessages() {
+	if (!_errormsgs.empty()) {
+		return;
+	}
 	std::ifstream file("ErrorCode.csv");
 	if (!file) {
 		MessageBoxA(NULL, "エラーメッセージの CSV を開けませんでした。", "エラー", MB_OK | MB_ICONERROR);
@@ -25,31 +30,57 @@ void LoadErrorMessages() {
 
 		if (std::getline(ss, codeStr, ',') && std::getline(ss, message)) {
 			int code = std::stoi(codeStr);
-			errorMessages[code] = message;
+			_errormsgs[code] = message;
 		}
 	}
 
 	file.close();
 }
 
-std::string GetErrorMessage(int errorCode) {
-	if (errorMessages.empty()) {
+//エラーコードからcsvのエラーメッセージを持ってくる
+std::string ErrorHandler::GetErrorMessage(const short& errorCode) {
+	if (_errormsgs.empty()) {
 		LoadErrorMessages();
 	}
 
-	if (errorMessages.find(errorCode) != errorMessages.end()) {
-		return errorMessages[errorCode];
+	if (_errormsgs.find(errorCode) != _errormsgs.end()) {
+		return _errormsgs[errorCode];
 	}
 	return "不明なエラー (" + std::to_string(errorCode) + ")";
 }
 
-void DispErrorMessageBox(const short& errorcode) {;
+//エラーメッセージ表示
+void ErrorHandler::DispErrorMessageBox(const short& errorcode, const HRESULT& hr) {
+	//エラーコードを文字列に変換
+	_com_error err(hr);
 	std::string errorMessage = GetErrorMessage(errorcode);
+
+	errorMessage += err.ErrorMessage();
 
 	char formattedMessage[256];
 	snprintf(formattedMessage, sizeof(formattedMessage), "Error Code: %03d\n%s", errorcode, errorMessage.c_str());
 
 	if (MessageBoxA(GetWindow(), formattedMessage, "Error", MB_OK | MB_ICONERROR) == IDOK) {
 		DestroyWindow(GetWindow());
+	}
+}
+
+
+void ErrorHandler::LoadTex(const std::wstring& filename, TexMetadata& metadata, ScratchImage& image) {
+	std::wstring file(filename);
+	size_t pos = file.rfind(L'.');
+
+	std::wstring extension = file.substr(pos);
+	if (extension == L".dds") {
+		HRESULT hr = LoadFromDDSFile(filename.c_str(), DDS_FLAGS_NONE, &metadata, image);
+		if (FAILED(hr)) {
+			DispErrorMessageBox(101, hr);
+		}
+		return;
+	}
+
+	HRESULT hr = LoadFromWICFile(filename.c_str(), WIC_FLAGS_NONE, &metadata, image);
+	if (FAILED(hr)) {
+		DispErrorMessageBox(100, hr);
 	}
 }

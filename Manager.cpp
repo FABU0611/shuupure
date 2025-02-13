@@ -14,6 +14,7 @@
 #include "MotionBlur.h"
 #include "Rendpoly.h"
 
+#include "ErrorHandler.h"
 #include "ShaderManager.h"
 #include "GUIManager.h"
 #include "TextManager.h"
@@ -113,6 +114,7 @@ void Manager::Uninit() {
 	delete _guimanager;
 
 	//使用していたリソース解放
+	ErrorHandler::GetInstance()->DeleteInstance();
 	Shader::UninitAll();
 	ModelRenderer::UnloadAll();
 	Audio::UninitAll();
