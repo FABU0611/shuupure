@@ -95,6 +95,15 @@ void Camera::Update() {
 	//計算結果を _transform.position に設定
 	XMStoreFloat3(&GetPosition(), rotatedPosition);
 
+	//世界の外を知られないように留める
+	float d = pow(GetPosition().x, 2) + pow(GetPosition().y, 2) + pow(GetPosition().z, 2);
+	float r = pow(Manager::GetWorldRad(), 2);
+
+	if (d > r) {
+		XMFLOAT3 dir = VectorNormalize(GetPosition());
+		SetPosition(dir * Manager::GetWorldRad());
+	}
+
 	//水面より下に行かないように
 	if (GetPosition().y < 10.0f) {
 		GetPosition().y = 10.0f;
