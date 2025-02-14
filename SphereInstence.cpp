@@ -66,7 +66,10 @@ void SphereInstance::Uninit() {
 	}
 }
 
-void SphereInstance::Update() {
+void SphereInstance::Update() {}
+
+void SphereInstance::Draw() {
+	//インスタンスごとの視錐台カリング
 	Scene* scene = Manager::GetScene();
 	if (!scene) {
 		return;
@@ -76,10 +79,10 @@ void SphereInstance::Update() {
 		return;
 	}
 	ModelRenderer* model = GetComponent<ModelRenderer>();
-	const float& rad = model->GetRadius();
+	const float& rad = model->GetRadius() * 1.5f;
 
 	std::vector<XMFLOAT3> visivlepos;
-	for (int idx : camera->CheckViewInstance(_instancepos, GetPosition(), INSTANCE_NUM, GetScale() * rad)) {
+	for (int idx : camera->CheckViewInstance(_instancepos, GetPosition(), INSTANCE_NUM, GetScale()* rad)) {
 		visivlepos.push_back(_instancepos[idx]);
 	}
 
@@ -89,9 +92,8 @@ void SphereInstance::Update() {
 	Renderer::GetDeviceContext()->Unmap(_posbuffer, 0);
 
 	model->SetInstanceNum(visivlepos.size());
-}
 
-void SphereInstance::Draw() {
+
 	Shader::SetShader(ShaderName::Instance);
 
 	//ストラクチャードバッファ設定
