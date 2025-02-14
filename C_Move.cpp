@@ -5,6 +5,7 @@
 #include "C_Move.h"
 #include "Time.h"
 #include "GameObject.h"
+#include "Manager.h"
 
 const float Move::MOVE_NUM = 10.0f;
 
@@ -42,14 +43,6 @@ void Move::Update() {
 	//斜め移動で早くならないように正規化
 	if (!XMVector3Equal(XMLoadFloat3(&_move), XMVectorZero())) {
 		_move = VectorNormalize(_move) * MOVE_NUM;
-
-		//移動ベクトルから回転角度を計算
-		float angle = std::atan2f(_move.z, -_move.x) + (XM_PI * 1.5f);
-
-		//回転角度をモデルの回転に設定
-		_gameobject->SetRotation({ _gameobject->GetRotation().x, angle, _gameobject->GetRotation().z }); // Y軸周りの回転を設定
-		//Forwardを更新
-		_gameobject->GetComponent<Transform>()->Update();
 	}
 
 	//速度の更新

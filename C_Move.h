@@ -26,4 +26,6 @@ public:
 	void SetBackKey(const BYTE& key) { _backkey = key; }
 	void SetRightKey(const BYTE& key) { _rightkey = key; }
 	void SetLeftKey(const BYTE& key) { _leftkey = key; }
+
+	const XMFLOAT3 GetMove()const { return _move; }
 };
