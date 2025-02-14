@@ -17,9 +17,9 @@ void ErrorHandler::LoadErrorMessages() {
 	if (!_errormsgs.empty()) {
 		return;
 	}
-	std::ifstream file("ErrorCode.csv");
+	std::ifstream file("asset\\ErrorCode.csv");
 	if (!file) {
-		MessageBoxA(NULL, "エラーメッセージの CSV を開けませんでした。", "エラー", MB_OK | MB_ICONERROR);
+		DispErrorMessageBox(000, "csvファイルを開けませんでした");
 		return;
 	}
 
@@ -49,7 +49,7 @@ std::string ErrorHandler::GetErrorMessage(const short& errorCode) {
 	return "不明なエラー (" + std::to_string(errorCode) + ")";
 }
 
-//エラーメッセージ表示
+//HRESULTとcsvからエラーメッセージ表示
 void ErrorHandler::DispErrorMessageBox(const short& errorcode, const HRESULT& hr) {
 	//エラーコードを文字列に変換
 	_com_error err(hr);
@@ -59,6 +59,16 @@ void ErrorHandler::DispErrorMessageBox(const short& errorcode, const HRESULT& hr
 
 	char formattedMessage[256];
 	snprintf(formattedMessage, sizeof(formattedMessage), "Error Code: %03d\n%s", errorcode, errorMessage.c_str());
+
+	if (MessageBoxA(GetWindow(), formattedMessage, "Error", MB_OK | MB_ICONERROR) == IDOK) {
+		DestroyWindow(GetWindow());
+	}
+}
+
+//任意の文字列でエラーメッセージ表示
+void ErrorHandler::DispErrorMessageBox(const short& errorcode, const std::string str) {
+	char formattedMessage[256];
+	snprintf(formattedMessage, sizeof(formattedMessage), "Error Code: %03d\n%s", errorcode, str.c_str());
 
 	if (MessageBoxA(GetWindow(), formattedMessage, "Error", MB_OK | MB_ICONERROR) == IDOK) {
 		DestroyWindow(GetWindow());

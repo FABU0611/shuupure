@@ -19,6 +19,7 @@ class ErrorHandler {
 	void LoadErrorMessages();
 	std::string GetErrorMessage(const short& errorCode);
 	void DispErrorMessageBox(const short& errorcode, const HRESULT& hr);
+	void DispErrorMessageBox(const short& errorcode, const std::string str);
 
 	static void DeleteInstance() {
 		if (!_instance) {
