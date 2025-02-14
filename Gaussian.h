@@ -26,6 +26,10 @@ public:
 	void Update();
 	void Draw();
 
+	/// <summary> ピントの位置と広さを設定 </summary>
+	/// <param name="x"> ピントの位置</param>
+	/// <param name="y"> ピントの広さ</param>
 	void SetDof(const XMFLOAT2& dof) { _dof = dof; }
+	/// <summary> ボケ具合を設定 </summary>
 	void SetBoke(const float& boke) { _param.z = boke; }
 };

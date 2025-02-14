@@ -37,17 +37,6 @@ void Gaussian::Init() {
 	_gaussianx->Init();
 	_gaussiany = new GaussianY();
 	_gaussiany->Init();
-
-	Scene* scene = Manager::GetScene();
-	if (scene) {
-		Title* title = dynamic_cast<Title*>(scene);
-		if (title) {
-			_param.z = 10.0f;
-			_dof.x = 0.128f;
-			_dof.y = 0.05f;
-		}
-	}
-	Renderer::SetParameter(_param);
 }
 
 void Gaussian::Uninit() {
