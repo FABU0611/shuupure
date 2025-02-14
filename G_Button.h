@@ -6,10 +6,8 @@
 
 class Button : public GUI {
 public:
-	Button(const XMFLOAT3& pos, const XMFLOAT3& size, const wchar_t* texname);
+	Button(const XMFLOAT3& pos, const XMFLOAT3& size);
 	~Button() {}
-
-	void Init()override;
 
 	bool OnClicked(const int& mousebutton) override;
 };
