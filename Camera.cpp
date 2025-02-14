@@ -12,9 +12,11 @@
 #include "Time.h"
 #include "CameraState_Title1.h"
 #include "CameraState_Game1.h"
+#include "Manager.h"
+#include "Gaussian.h"
 
-const float Camera::NEAR_CLIP = 1.0f;
-const float Camera::FAR_CLIP = 330.0f;
+const float Camera::NEAR_CLIP = 0.1f;
+const float Camera::FAR_CLIP = 600.0f;
 
 //ƒJƒƒ‰‹‘ä‚ğ•ªŠ„
 void Camera::CalculationCascade() {
@@ -60,6 +62,8 @@ void Camera::Init() {
 	Title* title = dynamic_cast<Title*>(scene);
 	if (title) {
 		_state = new TitleState1(this);
+		Manager::GetGaussian()->SetDof({ 0.07f, 0.05f });
+		Manager::GetGaussian()->SetBoke(10.0f);
 		return;
 	}
 	else {
