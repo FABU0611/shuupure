@@ -25,7 +25,7 @@ void TitlePush::Init(){
 
 	SetPosition({ SCREEN_WIDTH * 0.5f, 600.0f, 0.0f });
 
-	_start = Manager::GetGUIManager()->AddGUI<Button>(GetPosition(), XMFLOAT3(300.0f, 100.0f, 100.0f), L"asset\\texture\\button.dds");
+	_start = Manager::GetGUIManager()->AddGUI<Button>(GetPosition(), XMFLOAT3(300.0f, 100.0f, 100.0f));
 
 	_str = "Start";
 }
