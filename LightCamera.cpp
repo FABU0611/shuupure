@@ -55,7 +55,7 @@ void LightCamera::Draw() {
 
 
 	//éãêçë‰ÇÃ8í∏ì_ÇÃç≈ëÂÇ∆ç≈è¨ÇåvéZ
-	std::vector<XMVECTOR> corners = camera->GetCornersWorldSpace(-50.0f, farZ * 1.5f);
+	std::vector<XMVECTOR> corners = camera->GetCornersWorldSpace(nearZ * -10.0f, farZ * 1.5f);
 
 	XMVECTOR min = XMVectorSet(FLT_MAX, FLT_MAX, FLT_MAX, FLT_MAX);
 	XMVECTOR max = XMVectorSet(-FLT_MAX, -FLT_MAX, -FLT_MAX, -FLT_MAX);
