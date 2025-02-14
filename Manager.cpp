@@ -61,9 +61,6 @@ void Manager::Init() {
 	_loadingT = new LoadingText();
 	_loadingT->Init();
 
-	_scene = new Title();
-	_scene->Init();
-
 	_final = new Rendpoly();
 	_final->Init();
 
@@ -72,6 +69,9 @@ void Manager::Init() {
 
 	_motionblur = new MotionBlur();
 	_motionblur->Init();
+
+	_scene = new Title();
+	_scene->Init();
 
 //#ifdef _DEBUG
 	_checkdof = new CheckDoF();
@@ -90,6 +90,9 @@ void Manager::Uninit() {
 	delete _checkdof;
 //#endif
 
+	_scene->Uninit();
+	delete _scene;
+
 	_motionblur->Uninit();
 	delete _motionblur;
 
@@ -98,9 +101,6 @@ void Manager::Uninit() {
 
 	_final->Uninit();
 	delete _final;
-
-	_scene->Uninit();
-	delete _scene;
 
 	_loadingT->Uninit();
 	delete _loadingT;
