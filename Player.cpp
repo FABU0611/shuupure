@@ -96,18 +96,43 @@ void Player::Update() {
 		}
 	}
 
+	//リセット
 	if (Input::GetKeyTrigger(VK_SPACE)) {
 		Manager::SetSceneFade<Game>(0.05f);
 	}
 
-	XMFLOAT3 oldpos = GetPosition();
+	float groundpos = GetPosition().y;
 
 	for (auto c : _components) {
 		c->Update();
 	}
 
-	_smokepos = GetPosition() + (GetRight() * 0.37f) - (GetForward() * 1.4f) + (GetUp() * 4.3f);
+	//移動方向を向く
+	Move* m = GetComponent<Move>();
+	if (m->GetMove() != 0.0f) {
+		//移動ベクトルから回転角度を計算
+		float angle = std::atan2f(m->GetMove().z, -m->GetMove().x) + (XM_PI * 1.5f);
 
+		//回転角度をモデルの回転に設定
+		SetRotation({ GetRotation().x, angle, GetRotation().z }); // Y軸周りの回転を設定
+		//Forwardを更新
+		GetComponent<Transform>()->Update();
+	}
+
+	//世界の外を知られないように留める
+	XMFLOAT3& pos = GetPosition();
+	float d = pow(pos.x, 2) + pow(pos.y, 2) + pow(pos.z, 2);
+	float r = pow(Manager::GetWorldRad(), 2);
+
+	if (d > r) {
+		XMFLOAT3 dir = VectorNormalize(pos);
+		SetPosition(dir * Manager::GetWorldRad());
+	}
+
+	GetPosition().y = groundpos;
+
+	//パーティクル位置更新
+	_smokepos = pos + (GetRight() * 0.37f) - (GetForward() * 1.4f) + (GetUp() * 4.3f);
 	_smoke->SetPosition(_smokepos);
 }
 
