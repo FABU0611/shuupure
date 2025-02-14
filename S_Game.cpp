@@ -26,9 +26,8 @@ void Game::Init() {
 
 	AddGameobject<Sky>(Layer::BackGround, 250.0f);
 
-	AddGameobject<Player>(Layer::Object, XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(1.0f, 1.0f, 1.0f));
+	AddGameobject<Player>(Layer::Object, XMFLOAT3(0.0f, 5.0f, 0.0f), XMFLOAT3(1.0f, 1.0f, 1.0f));
 	AddGameobject<Pool>(Layer::Object, XMFLOAT3(0.0f, 0.0f, 0.0f));
-	AddGameobject<DivingBoard>(Layer::Object, XMFLOAT3(-30.0f, 0.0f, 0.0f));
 	AddGameobject<TestObject>(Layer::Object, XMFLOAT3(-10.0f, 10.0f, 30.0f));
 	AddGameobject<SphereInstance>(Layer::Object);
 	AddGameobject<Water>(Layer::Transparency, XMFLOAT3(40.0f, 20.0f, 0.0f));
