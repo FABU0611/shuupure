@@ -20,6 +20,8 @@
 #include "TextManager.h"
 #include "TakePicture.h"
 
+float Manager::WORLD_RAD = 240.0f;
+
 Scene* Manager::_scene{};
 Scene* Manager::_nextscene{};
 Scene* Manager::_prvscene{};

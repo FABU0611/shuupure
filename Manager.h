@@ -20,6 +20,8 @@ class CheckCameraDepth;
 
 
 class Manager {
+	static float	WORLD_RAD;
+
 	static Scene* _scene;
 	static Scene* _nextscene;
 	static Scene* _prvscene;
@@ -54,6 +56,7 @@ public:
 
 	static void FadeUpdate();
 
+	const static float GetWorldRad() { return WORLD_RAD; }
 	static bool& GetisDrawFromLight() { return _isdrawfromlight; }
 
 	static Scene* GetScene() { return _scene; }
@@ -68,6 +71,9 @@ public:
 
 	static GUIManager* GetGUIManager() { return _guimanager; }
 	
+
+	static void SetWorldRad(const float& worldrad) { WORLD_RAD = worldrad; }
+
 	template <typename T>
 	static void SetScene() { 
 		_nextscene = new T();
