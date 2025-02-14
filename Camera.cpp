@@ -153,6 +153,9 @@ std::vector<XMVECTOR> Camera::GetCornersWorldSpace(const float& nearZ, const flo
 }
 
 bool Camera::ChackView(const XMFLOAT3& pos, const XMFLOAT3& scl) {
+	if (Manager::GetisDrawFromLight()) {
+		return true;
+	}
 	const float& rad = std::max(std::max(scl.x, scl.y), scl.z);
 
 	XMMATRIX vp, invvp;
