@@ -11,14 +11,13 @@ class Water : public GameObject{
 
 	XMFLOAT4					_param{};
 	XMFLOAT3					_size{};
-	const wchar_t*				_texname{};		//画像ファイルのパス
 
 public:
 	Water(const XMFLOAT3& size):
-	_size(size), _texname(L"asset\\texture\\fade.png"){
+	_size(size){
 		SetScale({ size.x, size.y, size.z });
 		AddComponent<Sprite3D>(this);
-		GetComponent<Sprite3D>()->LoadTexture(_texname);
+		GetComponent<Sprite3D>()->LoadTexture(L"asset\\texture\\fade.png");
 		GetComponent<Sprite3D>()->SetTangent({ 1.0f, 0.0f, 0.0f });
 		GetComponent<Sprite3D>()->SetNormal({ 0.0f, 0.0f, -1.0f });
 		GetComponent<Sprite3D>()->LoadNormalTexture(L"asset\\texture\\water_normal.dds");

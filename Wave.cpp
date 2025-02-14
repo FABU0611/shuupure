@@ -100,7 +100,7 @@ void Wave::Init() {
 	//テクスチャ読み込み
 	TexMetadata metadata;
 	ScratchImage image;
-	ErrorHandler::GetInstance()->LoadTex(_texname, metadata, image);
+	ErrorHandler::GetInstance()->LoadTex(L"asset\\texture\\fade.png", metadata, image);
 	//LoadFromWICFile(_texname, WIC_FLAGS_NONE, &metadata, image);
 	CreateShaderResourceView(Renderer::GetDevice(), image.GetImages(), image.GetImageCount(), metadata, &_texture);
 	assert(_texture);

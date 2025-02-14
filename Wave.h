@@ -22,13 +22,12 @@ class Wave : public GameObject {
 
 	XMFLOAT4					_param{};
 	float						_size{};
-	const wchar_t*				_texname{};		//画像ファイルのパス
 
 	float						_time{};
 
 public:
 	Wave() :
-		_size(1.0f), _texname(L"asset\\texture\\fade.png") {
+		_size(1.0f) {
 		SetScale({ 1.0f, 1.0f, 1.0f });
 	}
 	~Wave() {}
