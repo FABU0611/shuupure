@@ -51,17 +51,19 @@ std::string ErrorHandler::GetErrorMessage(const short& errorCode) {
 
 //HRESULTとcsvからエラーメッセージ表示
 void ErrorHandler::DispErrorMessageBox(const short& errorcode, const HRESULT& hr) {
-	//エラーコードを文字列に変換
-	_com_error err(hr);
-	std::string errorMessage = GetErrorMessage(errorcode);
+	if (FAILED(hr)) {
+		//エラーコードを文字列に変換
+		_com_error err(hr);
+		std::string errorMessage = GetErrorMessage(errorcode);
 
-	errorMessage += err.ErrorMessage();
+		errorMessage += err.ErrorMessage();
 
-	char formattedMessage[256];
-	snprintf(formattedMessage, sizeof(formattedMessage), "Error Code: %03d\n%s", errorcode, errorMessage.c_str());
+		char formattedMessage[256];
+		snprintf(formattedMessage, sizeof(formattedMessage), "Error Code: %03d\n%s", errorcode, errorMessage.c_str());
 
-	if (MessageBoxA(GetWindow(), formattedMessage, "Error", MB_OK | MB_ICONERROR) == IDOK) {
-		DestroyWindow(GetWindow());
+		if (MessageBoxA(GetWindow(), formattedMessage, "Error", MB_OK | MB_ICONERROR) == IDOK) {
+			DestroyWindow(GetWindow());
+		}
 	}
 }
 
@@ -75,22 +77,13 @@ void ErrorHandler::DispErrorMessageBox(const short& errorcode, const std::string
 	}
 }
 
+//csvの文字列でエラーメッセージ表示
+void ErrorHandler::DispErrorMessageBox(const short& errorcode) {
+	std::string errorMessage = GetErrorMessage(errorcode);
+	char formattedMessage[256];
+	snprintf(formattedMessage, sizeof(formattedMessage), "Error Code: %03d\n%s", errorcode, errorMessage.c_str());
 
-void ErrorHandler::LoadTex(const std::wstring& filename, TexMetadata& metadata, ScratchImage& image) {
-	std::wstring file(filename);
-	size_t pos = file.rfind(L'.');
-
-	std::wstring extension = file.substr(pos);
-	if (extension == L".dds") {
-		HRESULT hr = LoadFromDDSFile(filename.c_str(), DDS_FLAGS_NONE, &metadata, image);
-		if (FAILED(hr)) {
-			DispErrorMessageBox(101, hr);
-		}
-		return;
-	}
-
-	HRESULT hr = LoadFromWICFile(filename.c_str(), WIC_FLAGS_NONE, &metadata, image);
-	if (FAILED(hr)) {
-		DispErrorMessageBox(100, hr);
+	if (MessageBoxA(GetWindow(), formattedMessage, "Error", MB_OK | MB_ICONERROR) == IDOK) {
+		DestroyWindow(GetWindow());
 	}
 }
