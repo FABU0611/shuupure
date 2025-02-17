@@ -191,8 +191,8 @@ void MeshField::Draw() {
 float MeshField::GetHeight(const XMFLOAT3& pos) {
 	int x, z;
 	//ブロック番号算出
-	x = pos.x / 5.0f + (VERTEX_NUM * 0.5f);
-	z = pos.z / -5.0f + (VERTEX_NUM * 0.5f);
+	x = (int)(pos.x / 5.0f + (VERTEX_NUM * 0.5f));
+	z = (int)(pos.z / -5.0f + (VERTEX_NUM * 0.5f));
 
 	XMFLOAT3 pos0, pos1, pos2, pos3;
 	pos0 = _vertex[x][z].Position;

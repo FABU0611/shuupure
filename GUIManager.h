@@ -25,7 +25,7 @@ public:
 		_guis.push_back(gui);
 		gui->Init();
 
-		return _guis.size() - 1;
+		return (int)_guis.size() - 1;
 	}
 	GUI* GetGUI(const int& index);
 	void Clear();

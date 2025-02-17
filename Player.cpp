@@ -121,8 +121,8 @@ void Player::Update() {
 
 	//¢ŠE‚ÌŠO‚ð’m‚ç‚ê‚È‚¢‚æ‚¤‚É—¯‚ß‚é
 	XMFLOAT3& pos = GetPosition();
-	float d = pow(pos.x, 2) + pow(pos.y, 2) + pow(pos.z, 2);
-	float r = pow(Manager::GetWorldRad(), 2);
+	float d = powf(pos.x, 2) + powf(pos.y, 2) + powf(pos.z, 2);
+	float r = powf(Manager::GetWorldRad(), 2);
 
 	if (d > r) {
 		XMFLOAT3 dir = VectorNormalize(pos);

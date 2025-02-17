@@ -252,7 +252,7 @@ void AnimationModel::Load(const char* FileName) {
 
 
 	//テクスチャ読み込み
-	for (int i = 0; i < _aiscene->mNumTextures; i++) {
+	for (unsigned int i = 0; i < _aiscene->mNumTextures; i++) {
 		aiTexture* aitexture = _aiscene->mTextures[i];
 
 		ID3D11ShaderResourceView* texture;

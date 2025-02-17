@@ -85,7 +85,7 @@ void ParticleEmitter::UpdateParticle() {
 	Renderer::GetDeviceContext()->Map(_particlebuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 	memcpy(mappedResource.pData, bufferdata.data(), sizeof(PARTICLE_INSTANCE)* bufferdata.size());
 	Renderer::GetDeviceContext()->Unmap(_particlebuffer, 0);
-	_instancecount = bufferdata.size();
+	_instancecount = (int)bufferdata.size();
 
 	//ストラクチャードバッファ設定
 	Renderer::GetDeviceContext()->VSSetShaderResources(2, 1, &_particleSRV);

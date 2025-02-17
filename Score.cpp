@@ -43,9 +43,9 @@ void Score::Init(){
 	//セーブデータをロードする
 	DataManager::LoadData(_rot, _twist, _dot);
 	//スコアの計算
-	_score += _dot * 10;
-	_score += _rot * 10;
-	_score += _twist * 5;
+	_score += (int)(_dot * 10);
+	_score += (int)(_rot * 10);
+	_score += (int)(_twist * 5);
 
 	Renderer::CreateVertexShader(&_vertexshader, &_vertexlayout,
 		"shader\\UnlitTextureVS.cso");

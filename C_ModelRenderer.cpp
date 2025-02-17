@@ -512,7 +512,7 @@ float ModelRenderer::CalculateRadius(const VERTEX_3D* vertices, const int vertex
 	for (int i = 0; i < vertexnum; i++) {
 		center += vertices[i].Position;
 	}
-	center /= vertexnum;
+	center /= (float)vertexnum;
 
 	//’†S‚©‚ç‚ÌÅ‘å‹——£‚ðŒvŽZ
 	float maxDistanceSquared = 0.0f;

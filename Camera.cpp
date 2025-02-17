@@ -96,8 +96,8 @@ void Camera::Update() {
 	XMStoreFloat3(&GetPosition(), rotatedPosition);
 
 	//¢ŠE‚ÌŠO‚ð’m‚ç‚ê‚È‚¢‚æ‚¤‚É—¯‚ß‚é
-	float d = pow(GetPosition().x, 2) + pow(GetPosition().y, 2) + pow(GetPosition().z, 2);
-	float r = pow(Manager::GetWorldRad(), 2);
+	float d = powf(GetPosition().x, 2) + powf(GetPosition().y, 2) + powf(GetPosition().z, 2);
+	float r = powf(Manager::GetWorldRad(), 2);
 
 	if (d > r) {
 		XMFLOAT3 dir = VectorNormalize(GetPosition());

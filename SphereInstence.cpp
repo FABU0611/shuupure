@@ -91,7 +91,7 @@ void SphereInstance::Draw() {
 	memcpy(msr.pData, visivlepos.data(), sizeof(XMFLOAT3) * visivlepos.size());
 	Renderer::GetDeviceContext()->Unmap(_posbuffer, 0);
 
-	model->SetInstanceNum(visivlepos.size());
+	model->SetInstanceNum((int)visivlepos.size());
 
 
 	Shader::SetShader(ShaderName::Instance);
