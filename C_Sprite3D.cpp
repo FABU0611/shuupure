@@ -119,6 +119,9 @@ void Sprite3D::Draw() {
 	if (_normaltexture != NULL) {
 		Renderer::GetDeviceContext()->PSSetShaderResources(1, 1, &_normaltexture);
 	}
+	if (_envtexture != NULL) {
+		Renderer::GetDeviceContext()->PSSetShaderResources(2, 1, &_envtexture);
+	}
 
 	//プリミティブトポロジ設定
 	Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);

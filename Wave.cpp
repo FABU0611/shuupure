@@ -5,6 +5,7 @@
 #include "Time.h"
 #include "ShaderManager.h"
 #include "ErrorHandler.h"
+#include "TextureManager.h"
 #include "Input.h"
 
 const float Wave::WAVE_AMPLITUDE = 100.0f;
@@ -98,32 +99,35 @@ void Wave::Init() {
 
 
 	//テクスチャ読み込み
-	TexMetadata metadata;
-	ScratchImage image;
-	ErrorHandler::GetInstance()->LoadTex(L"asset\\texture\\fade.png", metadata, image);
-	//LoadFromWICFile(_texname, WIC_FLAGS_NONE, &metadata, image);
-	CreateShaderResourceView(Renderer::GetDevice(), image.GetImages(), image.GetImageCount(), metadata, &_texture);
-	assert(_texture);
+	_texture = TextureManager::GetInstance()->LoadTexture(L"asset\\texture\\fade.png");
+	_normaltexture = TextureManager::GetInstance()->LoadTexture(L"asset\\texture\\water_normal.dds");
+	_envtexture = TextureManager::GetInstance()->LoadTexture(L"asset\\model\\sky02.jpg");
+	//TexMetadata metadata;
+	//ScratchImage image;
+	//ErrorHandler::GetInstance()->LoadTex(L"asset\\texture\\fade.png", metadata, image);
+	////LoadFromWICFile(_texname, WIC_FLAGS_NONE, &metadata, image);
+	//CreateShaderResourceView(Renderer::GetDevice(), image.GetImages(), image.GetImageCount(), metadata, &_texture);
+	//assert(_texture);
 
-	ErrorHandler::GetInstance()->LoadTex(L"asset\\texture\\water_normal.dds", metadata, image);
-	//LoadFromDDSFile(L"asset\\texture\\water_normal.dds", DDS_FLAGS_NONE, &metadata, image);
-	CreateShaderResourceView(Renderer::GetDevice(), image.GetImages(), image.GetImageCount(), metadata, &_normaltexture);
-	assert(_normaltexture);
+	//ErrorHandler::GetInstance()->LoadTex(L"asset\\texture\\water_normal.dds", metadata, image);
+	////LoadFromDDSFile(L"asset\\texture\\water_normal.dds", DDS_FLAGS_NONE, &metadata, image);
+	//CreateShaderResourceView(Renderer::GetDevice(), image.GetImages(), image.GetImageCount(), metadata, &_normaltexture);
+	//assert(_normaltexture);
 
-	ErrorHandler::GetInstance()->LoadTex(L"asset\\model\\sky02.jpg", metadata, image);
-	//LoadFromWICFile(L"asset\\model\\sky02.jpg", WIC_FLAGS_NONE, &metadata, image);
-	CreateShaderResourceView(Renderer::GetDevice(), image.GetImages(), image.GetImageCount(), metadata, &_envtexture);
-	assert(_envtexture);
+	//ErrorHandler::GetInstance()->LoadTex(L"asset\\model\\sky02.jpg", metadata, image);
+	////LoadFromWICFile(L"asset\\model\\sky02.jpg", WIC_FLAGS_NONE, &metadata, image);
+	//CreateShaderResourceView(Renderer::GetDevice(), image.GetImages(), image.GetImageCount(), metadata, &_envtexture);
+	//assert(_envtexture);
 
 
 	_param = { 0.0f, 0.0f, 1.0f, 0.0f };
 }
 
 void Wave::Uninit() {
+	_envtexture = nullptr;
+	_normaltexture = nullptr;
+	_texture = nullptr;
 	_vertexbuffer->Release();
-	_texture->Release();
-	_normaltexture->Release();
-	_envtexture->Release();
 }
 
 void Wave::Update() {

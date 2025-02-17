@@ -5,15 +5,15 @@
 #include "Renderer.h"
 #include "C_Sprite.h"
 #include "ErrorHandler.h"
+#include "TextureManager.h"
 #include <string>
 #include <cwchar>
 
-int Sprite::_textureindex = 0;
-const wchar_t* Sprite::_texname[MAX_TEXTURE]{};
-ID3D11ShaderResourceView* Sprite::_textures[MAX_TEXTURE]{};
-
 
 void Sprite::CreateVertexBuffer(){
+	if (_vertexbuffer != NULL) {
+		return;
+	}
 	VERTEX_3D vertex[4];
 
 	for (int i = 0; i < 4; i++) {
@@ -41,17 +41,13 @@ void Sprite::CreateVertexBuffer(){
 	sd.pSysMem = vertex;
 
 	HRESULT hr = Renderer::GetDevice()->CreateBuffer(&bd, &sd, &_vertexbuffer);
-	if (FAILED(hr)) {		//頂点バッファ生成失敗
-		//DispErrorMessageBox(200);
-		return;
-	}
+	ErrorHandler::GetInstance()->DispErrorMessageBox(200, hr);
 }
 
 void Sprite::LoadTexture(const wchar_t* filename) {
 	CreateVertexBuffer();
+	_texture = TextureManager::GetInstance()->LoadTexture(filename);
 	/*
-	_texture = TextureManager::LoadTexture(filename);
-	*/
 
 	for (int i = 0; i < _textureindex; i++) {
 		if (_texname[i] == filename) {
@@ -75,14 +71,14 @@ void Sprite::LoadTexture(const wchar_t* filename) {
 	_texname[_textureindex] = filename;
 	_textures[_textureindex] = _texture;
 	_textureindex++;
+	*/
 }
 
 
 void Sprite::LoadNormalTexture(const wchar_t* filename){
 	CreateVertexBuffer();
+	_normaltexture = TextureManager::GetInstance()->LoadTexture(filename);
 	/*
-	_normaltexture = TextureManager::LoadTexture(filename);
-	*/
 	for (int i = 0; i < _textureindex; i++) {
 		if (_texname[i] == filename) {
 			_normaltexture = _textures[i];
@@ -104,22 +100,18 @@ void Sprite::LoadNormalTexture(const wchar_t* filename){
 	_texname[_textureindex] = filename;
 	_textures[_textureindex] = _normaltexture;
 	_textureindex++;
+	*/
+}
+
+void Sprite::LoadEnvTexture(const wchar_t* filename) {
+	CreateVertexBuffer();
+	_envtexture = TextureManager::GetInstance()->LoadTexture(filename);
 }
 
 
 void Sprite::Uninit() {
 	if (_vertexbuffer != NULL) {
 		_vertexbuffer->Release();
+		_vertexbuffer = NULL;
 	}
-}
-
-void Sprite::UninitAll(){
-	for (int i = 0; i < MAX_TEXTURE; i++) {
-		_texname[i] = {};
-		if (_textures[i] != NULL) {
-			_textures[i]->Release();
-		}
-		_textures[i] = {};
-	}
-	_textureindex = 0;
 }

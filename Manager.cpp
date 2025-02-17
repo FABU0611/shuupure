@@ -18,6 +18,7 @@
 #include "ShaderManager.h"
 #include "GUIManager.h"
 #include "TextManager.h"
+#include "TextureManager.h"
 #include "TakePicture.h"
 
 float Manager::WORLD_RAD = 240.0f;
@@ -116,11 +117,11 @@ void Manager::Uninit() {
 	delete _guimanager;
 
 	//使用していたリソース解放
+	TextureManager::GetInstance()->DeleteInstance();
 	ErrorHandler::GetInstance()->DeleteInstance();
 	Shader::UninitAll();
 	ModelRenderer::UnloadAll();
 	Audio::UninitAll();
-	Sprite::UninitAll();
 
 	Audio::UninitMaster();
 	Renderer::Uninit();
@@ -216,7 +217,7 @@ void Manager::Draw() {
 	//シーンで利用していたリソース解放
 	ModelRenderer::UnloadAll();
 	Audio::UninitAll();
-	Sprite::UninitAll();
+	//TextureManager::GetInstance()->Uninit();
 
 	_fade->Uninit();
 	_fade->Init();

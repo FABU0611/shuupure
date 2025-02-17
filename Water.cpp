@@ -4,20 +4,12 @@
 #include "Main.h"
 #include "Renderer.h"
 #include "ShaderManager.h"
-#include "ErrorHandler.h"
+#include "TextureManager.h"
 #include "Time.h"
 #include "Water.h"
 
 //初期化処理
 void Water::Init(){
-	//テクスチャ読み込み
-	TexMetadata metadata;
-	ScratchImage image;
-	ErrorHandler::GetInstance()->LoadTex(L"asset\\model\\sky02.jpg", metadata, image);
-	CreateShaderResourceView(Renderer::GetDevice(), image.GetImages(), image.GetImageCount(), metadata, &_envtexture);
-	assert(_envtexture);
-	//_envtexture = TextureManager::LoadTexture(L"asset\\model\\sky02.jpg");
-
 	SetRotation({ 90.0f, 0.0f, 0.0f });
 	SetPosition({ 15.0f, -0.05f, 0.0 });
 
@@ -52,8 +44,6 @@ void Water::Draw(){
 	Shader::SetShader(ShaderName::Water);
 
 	Renderer::SetParameter(_param);
-
-	Renderer::GetDeviceContext()->PSSetShaderResources(2, 1, &_envtexture);
 
 	for (auto c : _components) {
 		c->Draw();

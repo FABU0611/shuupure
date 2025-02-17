@@ -11,8 +11,7 @@ protected:
 	ID3D11Buffer* _vertexbuffer = NULL;
 	ID3D11ShaderResourceView* _texture = NULL;
 	ID3D11ShaderResourceView* _normaltexture = NULL;
-
-	static const int MAX_TEXTURE = 100;
+	ID3D11ShaderResourceView* _envtexture = NULL;
 
 	XMFLOAT3		_pos = { 0.0f, 0.0f, 0.0f };
 	XMFLOAT3		_rot = { 0.0f, 0.0f, 0.0f };
@@ -22,19 +21,14 @@ protected:
 	XMFLOAT4		_color = { 1.0f, 1.0f, 1.0f, 1.0f };
 	XMFLOAT3		_tangent = { 1.0f, 0.0f, 0.0f };
 
-	static int				_textureindex;
-	static const wchar_t* _texname[MAX_TEXTURE];		//画像ファイルのパス
-	static ID3D11ShaderResourceView* _textures[MAX_TEXTURE];		//画像
-
 	void CreateVertexBuffer();
 
 public:
 	using Component::Component;
 	void LoadTexture(const wchar_t* filename);
 	void LoadNormalTexture(const wchar_t* filename);
+	void LoadEnvTexture(const wchar_t* filename);
 	void Uninit()override;
-	void Draw()override {}
-	static void UninitAll();
 
 	void SetPos(const XMFLOAT3& pos) { _pos = pos; }
 	/// <summary>

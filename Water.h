@@ -7,8 +7,6 @@
 #include "Renderer.h"
 
 class Water : public GameObject{
-	ID3D11ShaderResourceView*	_envtexture = NULL;
-
 	XMFLOAT4					_param{};
 	XMFLOAT3					_size{};
 
@@ -21,6 +19,7 @@ public:
 		GetComponent<Sprite3D>()->SetTangent({ 1.0f, 0.0f, 0.0f });
 		GetComponent<Sprite3D>()->SetNormal({ 0.0f, 0.0f, -1.0f });
 		GetComponent<Sprite3D>()->LoadNormalTexture(L"asset\\texture\\water_normal.dds");
+		GetComponent<Sprite3D>()->LoadEnvTexture(L"asset\\model\\sky02.jpg");
 		GetComponent<Sprite3D>()->SetDrawMode(DrawMode3D::Normal);
 	}
 	~Water() {}
