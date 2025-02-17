@@ -187,8 +187,10 @@ HRESULT DirectWriteCustomFont::Init(IDXGISwapChain* swapChain) {
 }
 
 void DirectWriteCustomFont::Uninit() {
-	pDWriteFactory->UnregisterFontCollectionLoader(pFontCollectionLoader.Get());
-	pFontCollectionLoader.Reset();
+	if (pDWriteFactory && pFontCollectionLoader) {
+		pDWriteFactory->UnregisterFontCollectionLoader(pFontCollectionLoader.Get());
+	}
+
 	pRenderTarget.Reset();
 	pD2DFactory.Reset();
 	pBrush.Reset();
@@ -197,6 +199,7 @@ void DirectWriteCustomFont::Uninit() {
 	pTextFormat.Reset();
 	pTextLayout.Reset();
 	pBackBuffer.Reset();
+	pFontCollectionLoader.Reset();
 }
 
 // 指定されたパスのフォントを読み込む
@@ -208,7 +211,7 @@ HRESULT DirectWriteCustomFont::FontLoader() {
 	(
 		pFontCollectionLoader.Get(),
 		pFontFileList.data(),
-		pFontFileList.size(),
+		(UINT32)pFontFileList.size(),
 		&fontCollection
 	);
 	if (FAILED(result)) { return result; }
@@ -237,7 +240,7 @@ std::wstring DirectWriteCustomFont::GetFontName(int num) {
 
 // 読み込んだフォント名の数を取得する
 int DirectWriteCustomFont::GetFontNameNum() {
-	return fontNamesList.size();
+	return (int)fontNamesList.size();
 }
 
 // フォント設定
@@ -479,14 +482,14 @@ HRESULT DirectWriteCustomFont::DrawString(std::string str, D2D1_RECT_F rect, D2D
 	if (shadow) {
 		// 影の描画
 		pRenderTarget->DrawText(wstr.c_str(),
-			wstr.size(),
+			(UINT32)wstr.size(),
 			pTextFormat.Get(),
 			D2D1::RectF(rect.left - Setting.shadowOffset.x, rect.top - Setting.shadowOffset.y, rect.right - Setting.shadowOffset.x, rect.bottom - Setting.shadowOffset.y),
 			pShadowBrush.Get(), options);
 	}
 
 	// 描画処理
-	pRenderTarget->DrawText(wstr.c_str(), wstr.size(), pTextFormat.Get(), rect, pBrush.Get(), options);
+	pRenderTarget->DrawText(wstr.c_str(), (UINT32)wstr.size(), pTextFormat.Get(), rect, pBrush.Get(), options);
 
 	// 描画の終了
 	result = pRenderTarget->EndDraw();
