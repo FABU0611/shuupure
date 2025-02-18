@@ -17,13 +17,21 @@ void main(in VS_IN In, out PS_IN Out) {
 		Out.LightPosition[i].xyz += g_position[In.InstanceID].xyz;
 		Out.LightPosition[i] = mul(Out.LightPosition[i], Light.ViewMatrix[i]);
 		Out.LightPosition[i] = mul(Out.LightPosition[i], Light.ProjectionMatrix[i]);
-	}
-	
+	}	
 	Out.CurPosition = mul(Out.CurPosition, View);
-	Out.CurPosition = mul(Out.CurPosition, Projection);
-	
+	Out.CurPosition = mul(Out.CurPosition, Projection);	
 	Out.Position = Out.CurPosition;
+	
+	Out.WorldPosition = mul(In.Position, World);
+	Out.WorldPosition.xyz += g_position[In.InstanceID].xyz;
     
+	//前フレームのインスタンスごとの頂点座標を計算
+	Out.PrevPosition = mul(In.Position, PrevWorld);
+	Out.PrevPosition.xyz += g_position[In.InstanceID].xyz;
+	Out.PrevPosition = mul(Out.PrevPosition, PrevView);
+	Out.PrevPosition = mul(Out.PrevPosition, PrevProjection);
+	
+	
 	float4 worldNormal, normal;
 	normal = float4(In.Normal.xyz, 0.0f);
 	worldNormal = mul(normal, World);
@@ -32,13 +40,4 @@ void main(in VS_IN In, out PS_IN Out) {
     
 	Out.Diffuse = In.Diffuse * Material.Diffuse;
 	Out.TexCoord = In.TexCoord;
-    
-	Out.WorldPosition = mul(In.Position, World);
-
-	
-	//前フレームのインスタンスごとの頂点座標を計算
-	Out.PrevPosition = mul(In.Position, PrevWorld);	
-	Out.PrevPosition.xyz += g_position[In.InstanceID].xyz;	
-	Out.PrevPosition = mul(Out.PrevPosition, PrevView);
-	Out.PrevPosition = mul(Out.PrevPosition, PrevProjection);
 }
