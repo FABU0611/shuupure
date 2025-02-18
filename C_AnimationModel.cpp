@@ -26,12 +26,19 @@ void AnimationModel::Draw() {
 		aiString normalTexture;
 		//aiString texture;
 		aiColor3D diffuse;
+		aiColor3D specularcolor;
 		float opacity;
 		float shininess = 0.0f;
 
 		aiMaterial* aimaterial = _aiscene->mMaterials[mesh->mMaterialIndex];
 		aimaterial->Get(AI_MATKEY_COLOR_DIFFUSE, diffuse);
 		aimaterial->Get(AI_MATKEY_OPACITY, opacity);
+		if (AI_SUCCESS == aimaterial->Get(AI_MATKEY_COLOR_SPECULAR, specularcolor)) {
+			material.Specular = XMFLOAT4(specularcolor.r, specularcolor.g, specularcolor.b, 1.0f);
+		}
+		else {
+			material.Specular = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+		}
 		if (AI_SUCCESS == aimaterial->Get(AI_MATKEY_SHININESS, shininess)) {
 			material.Shininess = shininess;
 		}
