@@ -6,6 +6,9 @@
 #include "GameObject.h"
 
 class Pool : public GameObject {
+	XMFLOAT4	_param;
+	int			_showcascade{};
+
 public:
 	Pool(const XMFLOAT3& pos) {
 		SetPosition(pos);

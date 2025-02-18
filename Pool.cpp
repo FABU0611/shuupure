@@ -6,12 +6,18 @@
 #include "Renderer.h"
 #include "C_AnimationModel.h"
 #include "ShaderManager.h"
+#include "G_CheckBox.h"
+#include "GUIManager.h"
 
 void Pool::Init(){
 	AddComponent<AnimationModel>(this);
 
 	//ÉÇÉfÉãì«Ç›çûÇ›
 	GetComponent<AnimationModel>()->Load("asset\\model\\pool.fbx");
+
+	_param.x = -1.0f;
+	Renderer::SetParameter(_param);
+	_showcascade = Manager::GetGUIManager()->AddGUI<CheckBox>(XMFLOAT3(25.0f, 300.0f, 0.0f));
 }
 
 void Pool::Uninit(){
@@ -21,6 +27,19 @@ void Pool::Uninit(){
 }
 
 void Pool::Update(){
+	CheckBox* checkbox = dynamic_cast<CheckBox*>(Manager::GetGUIManager()->GetGUI(_showcascade));
+	if (!checkbox) {
+		return;
+	}
+	if (checkbox->OnClicked(VK_LBUTTON)) {
+		_param.x = 1.0;
+		Renderer::SetParameter(_param);
+	}
+	else {
+		_param.x = -1.0;
+		Renderer::SetParameter(_param);
+	}
+
 	for (auto c : _components) {
 		c->Update();
 	}
