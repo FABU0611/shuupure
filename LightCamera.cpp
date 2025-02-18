@@ -37,7 +37,7 @@ void LightCamera::Draw() {
 	int index = Manager::GetCascadeIndex();
 	float nearZ = 1.0f;
 	if (index == 0) {
-		nearZ = 1.0f;
+		nearZ = 35.0f;
 	}
 	else {
 		nearZ = camera->GetCascade()[index - 1];
@@ -55,7 +55,7 @@ void LightCamera::Draw() {
 
 
 	//éãêçë‰ÇÃ8í∏ì_ÇÃç≈ëÂÇ∆ç≈è¨ÇåvéZ
-	std::vector<XMVECTOR> corners = camera->GetCornersWorldSpace(nearZ * -10.0f, farZ * 1.5f);
+	std::vector<XMVECTOR> corners = camera->GetCornersWorldSpace(nearZ * -1.2f, farZ);
 
 	XMVECTOR min = XMVectorSet(FLT_MAX, FLT_MAX, FLT_MAX, FLT_MAX);
 	XMVECTOR max = XMVectorSet(-FLT_MAX, -FLT_MAX, -FLT_MAX, -FLT_MAX);
