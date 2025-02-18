@@ -14,165 +14,142 @@ SamplerState g_SamplerBorder : register(s2);
 
 
 void main(in PS_IN In, out PS_OUT Out) {
-		//物体から光源へのベクトル
-		float4 lv = normalize(Light.Direction);
+	float4 lv = normalize(Light.Direction);
 	
-		float3 eyev;
-		EyeVector(In, eyev);
-		float distance = length(eyev);
+	float3 eyev;
+	EyeVector(In, eyev);
+	float distance = length(eyev);
 		
-		//ノーマル
-		float4 normal = normalize(In.Normal);
-		if(Material.NormalTextureEnable) {
-			float4 localnormal = g_Normal.Sample(g_SamplerState, In.TexCoord);
+	//ノーマル
+	float4 normal = normalize(In.Normal);
+	if(Material.NormalTextureEnable) {
+		float4 localnormal = g_Normal.Sample(g_SamplerState, In.TexCoord);
 		//RGBをベクトルに
-			localnormal = (localnormal * 2.0f) - 1.0f; //-1～1にする
-			localnormal.w = 0.0f;
+		localnormal = (localnormal * 2.0f) - 1.0f; //-1～1にする
+		localnormal.w = 0.0f;
 		
-			float scale = 1.0f / (1.0f + distance * 0.1f);
+		float scale = 1.0f / (1.0f + distance * 0.1f);
 	
-			localnormal = normalize(localnormal);
+		localnormal = normalize(localnormal);
 	
 	
 		//タンジェント
-			float4 tangent = normalize(In.Tangent);
+		float4 tangent = normalize(In.Tangent);
 		//バイノーマル
-			float4 binormal = normalize(In.Binormal);
+		float4 binormal = normalize(In.Binormal);
 	
 		//接空間を表す行列を作成する
-			matrix mat = matrix(tangent, //X軸
+		matrix mat = matrix(tangent, //X軸
 						binormal, //Y軸
 						normal, //Z軸
 						float4(0.0f, 0.0f, 0.0f, 0.0f));
 	
 		//法線マップ内の法線を接空間へ変換する
-			normal = mul(localnormal, mat);
-		}
-		normal = normalize(normal);
+		normal = mul(localnormal, mat);
+	}
+	normal = normalize(normal);
 	
-		//光源計算
-		float light = 0.5f - 0.5f * dot(lv.xyz, normal.xyz);
+	//光源計算
+	float light = 0.5f - 0.5f * dot(lv.xyz, normal.xyz);
 	
-		if(Material.TextureEnable) {
-			Out.Out0 = g_Texture.Sample(g_SamplerState, In.TexCoord);
-		//色に明るさを乗算
-			Out.Out0.rgb *= In.Diffuse.rgb;
-			Out.Out0.a *= In.Diffuse.a;
-		}
-		else {
-		//色に明るさを乗算
-			Out.Out0.rgb = In.Diffuse.rgb;
-			Out.Out0.a = In.Diffuse.a;
-		}
-		Out.Out0.rgb *= light;
-		//環境光
-		Out.Out0.rgb += Light.Ambient.rgb;
+	if(Material.TextureEnable) {
+		Out.Out0 = g_Texture.Sample(g_SamplerState, In.TexCoord);
+		Out.Out0.rgb *= In.Diffuse.rgb;
+		Out.Out0.a *= In.Diffuse.a;
+	}
+	else {
+		Out.Out0.rgb = In.Diffuse.rgb;
+		Out.Out0.a = In.Diffuse.a;
+	}
+	Out.Out0.rgb *= light;
+	Out.Out0.rgb += Light.Ambient.rgb;
 	
-	float specular = 0.0f;
+	float4 specular = 0.0f;
 	if(Material.Shininess > 0.0f) { //スペキュラ
 		//ハーフベクトルを計算
 		float3 halfv = lv.xyz + eyev;
 		halfv = normalize(halfv);
 	
 		//スペキュラ
-		specular = -dot(halfv, normal.xyz);
-		specular = saturate(specular);
-		specular = pow(specular, Material.Shininess);
+		float HdotN = -dot(halfv, normal.xyz);
+		HdotN = saturate(HdotN);
+		float3 specularpow = pow(HdotN, Material.Shininess);
+		specular = float4(specularpow, 1.0f) * Material.Specular;
 	}
 	
 	{	//影
 		//カスケードの決定
 		int cascadeidx = 3;
 		for(int i = 0; i < 4; i++) {
-			float4 lightpos = In.LightPosition[i];
-			lightpos.xy /= lightpos.w;
-			lightpos.x = lightpos.x * 0.5f + 0.5f;
-			lightpos.y = -lightpos.y * 0.5f + 0.5f;
+			float zLVP = In.LightPosition[i].z / In.LightPosition[i].w;
+			if(zLVP >= 0.0f && zLVP <= 1.0f) {
+			
+				float2 lightUV = In.LightPosition[i].xy / In.LightPosition[i].w;
+				lightUV.x = lightUV.x * 0.5f + 0.5f;
+				lightUV.y = lightUV.y * -0.5f + 0.5f;
 		
-			if((lightpos.x >= 0.01f && lightpos.x <= 0.999f &&
-			lightpos.y >= 0.001f && lightpos.y <= 0.899f)) {
-				cascadeidx = i;
-				break;
-			}
-		}
+				float lightdepth = 0.0f;
+				if(lightUV.x >= 0.01f && lightUV.x <= 0.999f &&
+				lightUV.y >= 0.001f && lightUV.y <= 0.899f) {
+					cascadeidx = i;
 	
-		
-		//画面上での座標をピクセル座標にする
-		float4 lightpos = In.LightPosition[cascadeidx];
-		lightpos.xyz /= lightpos.w;
-		lightpos.x = lightpos.x * 0.5f + 0.5f;
-		lightpos.y = -lightpos.y * 0.5f + 0.5f;
+					float size[4] = { 2048.0f, 1024.0f, 512.0f, 256.0f };
+					float offset = 1.0f / size[i];
+					int samplecount = 1;
 	
-		float size[4] = { 2048.0f, 1024.0f, 512.0f, 256.0f };
-		float lightdepth = 0.0f;
-		float offset = 1.0f / size[cascadeidx];
-		int samplecount = 2;
-	
-		if(lightpos.x >= 0.01f && lightpos.x <= 0.999f &&
-		lightpos.y >= 0.001f && lightpos.y <= 0.899f) { //境界線が見えてしまうのでマップの下の部分は1.0までサンプルしない
-	
-			for(int x = -samplecount; x <= samplecount; x++) {
-				for(int y = -samplecount; y <= samplecount; y++) {
-					float sampledepth = 0.0f;
-				//深度バッファからこのピクセルのライトから距離を取得	
-					if(cascadeidx == 0) {
-						sampledepth = g_Shadow0.Sample(g_SamplerBorder, lightpos.xy + float2(x, y) * offset).r;
-						if(lightpos.z <= sampledepth + 0.005f) {
-							lightdepth += 1.0f;
-							Out.Out0.rgb += specular;
+					for(int x = -samplecount; x <= samplecount; x++) {
+						for(int y = -samplecount; y <= samplecount; y++) {
+							float sampledepth = 0.0f;
+						//深度バッファからこのピクセルのライトから距離を取得	
+							if(i == 0) {
+								sampledepth = g_Shadow0.Sample(g_SamplerBorder, lightUV.xy + float2(x, y) * offset).r;
+							}
+							else if(i == 1) {
+								sampledepth = g_Shadow1.Sample(g_SamplerBorder, lightUV.xy + float2(x, y) * offset).r;
+							}
+							else if(i == 2) {
+								sampledepth = g_Shadow2.Sample(g_SamplerBorder, lightUV.xy + float2(x, y) * offset).r;
+							}
+							else if(i == 3) {
+								sampledepth = 1.0f;
+							}
+							if(zLVP <= sampledepth + 0.005f) {
+								lightdepth += 1.0f;
+								Out.Out0.rgb += specular.rgb;
+							}
 						}
 					}
-					else if(cascadeidx == 1) {
-						sampledepth = g_Shadow1.Sample(g_SamplerBorder, lightpos.xy + float2(x, y) * offset).r;
-						if(lightpos.z <= sampledepth + 0.005f) {
-							lightdepth += 1.0f;
-							Out.Out0.rgb += specular;
-						}
-					}
-					else if(cascadeidx == 2) {
-						sampledepth = g_Shadow2.Sample(g_SamplerBorder, lightpos.xy + float2(x, y) * offset).r;
-						if(lightpos.z <= sampledepth + 0.005f) {
-							lightdepth += 1.0f;
-							Out.Out0.rgb += specular;
-						}
-					}
-					else if(cascadeidx == 3) {
-						sampledepth = g_Shadow3.Sample(g_SamplerBorder, lightpos.xy + float2(x, y) * offset).r;
-						if(lightpos.z <= sampledepth + 0.005f) {
-							lightdepth += 1.0f;
-							Out.Out0.rgb += specular;
-						}
-					}
+					lightdepth /= ((2.0f * samplecount + 1.0f) * (2.0f * samplecount + 1.0f));
+
+					float3 color = Out.Out0.rgb;
+					float3 shadowcolor = Out.Out0 * 0.5f;
+					Out.Out0.rgb = lerp(shadowcolor, color, lightdepth);
+					break;
+			
 				}
 			}
-			lightdepth /= ((2.0f * samplecount + 1.0f) * (2.0f * samplecount + 1.0f));
 		}
-		else {
-			lightdepth = 0.0f;
-		}
-
-
-		float3 color = Out.Out0.rgb;
-		float3 shadowcolor = Out.Out0 * 0.5f;
-		Out.Out0.rgb = lerp(shadowcolor, color, lightdepth);
 		
-		//switch(cascadeidx) {
-		//	case 0:
-		//		Out.Out0.rgb += float3(0.3f, 0.0f, 0.0f);
-		//		break;
+		//カスケード色分け切り替え
+		if(Parameter.x == 1.0f) {
+			switch(cascadeidx) {
+				case 0:
+					Out.Out0.rgb += float3(0.3f, 0.0f, 0.0f);
+					break;
 		
-		//	case 1:
-		//		Out.Out0.rgb += float3(0.0f, 0.3f, 0.0f);
-		//		break;
+				case 1:
+					Out.Out0.rgb += float3(0.0f, 0.3f, 0.0f);
+					break;
 		
-		//	case 2:
-		//		Out.Out0.rgb += float3(0.0f, 0.0f, 0.3f);
-		//		break;
+				case 2:
+					Out.Out0.rgb += float3(0.0f, 0.0f, 0.3f);
+					break;
 				
-		//	case 3:
-		//		Out.Out0.rgb += float3(0.3f, 0.3f, 0.0f);
-		//		break;
-		//}
+				case 3:
+					Out.Out0.rgb += float3(0.3f, 0.3f, 0.0f);
+					break;
+			}
+		}
 	}
 	
 	
