@@ -12,14 +12,48 @@
 
 ErrorHandler* ErrorHandler::_instance = nullptr;
 
+std::string ErrorHandler::GetCSVPathFromConfig(const std::string& configFile) {
+	std::string str;
+	std::ifstream file(configFile, std::ios::binary);
+	if (!file) {
+		DispErrorMessageBox(000, "設定ファイルを開けませんでした");
+		return "";
+	}
+
+	size_t dataSize;
+	file.read(reinterpret_cast<char*>(&dataSize), sizeof(dataSize));  // データサイズを読み込む
+
+	if (file.fail() || dataSize == 0) {
+		DispErrorMessageBox(002, "設定ファイルの読み込みに失敗しました。");
+		return "";
+	}
+
+	std::string data(dataSize, '\0');  // 指定サイズの文字列を確保
+	file.read(&data[0], dataSize);  // 文字列データを読み込む
+	str = data;
+
+	if (file.fail()) {
+		DispErrorMessageBox(003, "設定ファイルの内容を正しく読み取れませんでした。");
+		return "";
+	}
+	
+	if (data.find("ErrorCSVPath=") == 0) {
+		return data.substr(13);     //"ErrorCSVPath="の13文字を除外して返す
+	}	
+
+	DispErrorMessageBox(001, "設定ファイルに　'ErrorCSVPath'　の項目がありません。");
+	return "";
+}
+
 //csvからエラーメッセージを取得
 void ErrorHandler::LoadErrorMessages() {
 	if (!_errormsgs.empty()) {
 		return;
 	}
-	std::ifstream file("asset\\ErrorCode.csv");
+	std::string csvpath = GetCSVPathFromConfig("config.dat");
+	std::ifstream file(csvpath);
 	if (!file) {
-		DispErrorMessageBox(000, "csvファイルを開けませんでした");
+		DispErrorMessageBox(002, "csvファイルを開けませんでした");
 		return;
 	}
 

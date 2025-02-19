@@ -16,6 +16,7 @@ class ErrorHandler {
 	static ErrorHandler* _instance;
 	std::unordered_map<int, std::string> _errormsgs;
 
+	std::string GetCSVPathFromConfig(const std::string& configFile);
 	void LoadErrorMessages();
 	std::string GetErrorMessage(const short& errorCode);
 
