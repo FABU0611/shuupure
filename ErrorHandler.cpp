@@ -24,7 +24,7 @@ std::string ErrorHandler::GetCSVPathFromConfig(const std::string& configFile) {
 	file.read(reinterpret_cast<char*>(&dataSize), sizeof(dataSize));  // データサイズを読み込む
 
 	if (file.fail() || dataSize == 0) {
-		DispErrorMessageBox(002, "設定ファイルの読み込みに失敗しました。");
+		DispErrorMessageBox(001, "設定ファイルの読み込みに失敗しました。");
 		return "";
 	}
 
@@ -41,7 +41,7 @@ std::string ErrorHandler::GetCSVPathFromConfig(const std::string& configFile) {
 		return data.substr(13);     //"ErrorCSVPath="の13文字を除外して返す
 	}	
 
-	DispErrorMessageBox(001, "設定ファイルに　'ErrorCSVPath'　の項目がありません。");
+	DispErrorMessageBox(004, "設定ファイルに　'ErrorCSVPath'　の項目がありません。");
 	return "";
 }
 
@@ -53,7 +53,7 @@ void ErrorHandler::LoadErrorMessages() {
 	std::string csvpath = GetCSVPathFromConfig("config.dat");
 	std::ifstream file(csvpath);
 	if (!file) {
-		DispErrorMessageBox(002, "csvファイルを開けませんでした");
+		DispErrorMessageBox(005, "csvファイルを開けませんでした");
 		return;
 	}
 
