@@ -16,32 +16,32 @@ std::string ErrorHandler::GetCSVPathFromConfig(const std::string& configFile) {
 	std::string str;
 	std::ifstream file(configFile, std::ios::binary);
 	if (!file) {
-		DispErrorMessageBox(000, "設定ファイルを開けませんでした");
+		DispErrorMessageBox("000", "設定ファイルを開けませんでした");
 		return "";
 	}
 
 	size_t dataSize;
-	file.read(reinterpret_cast<char*>(&dataSize), sizeof(dataSize));  // データサイズを読み込む
+	file.read(reinterpret_cast<char*>(&dataSize), sizeof(dataSize));  //データサイズを読み込む
 
 	if (file.fail() || dataSize == 0) {
-		DispErrorMessageBox(001, "設定ファイルの読み込みに失敗しました。");
+		DispErrorMessageBox("001", "設定ファイルの読み込みに失敗しました。");
 		return "";
 	}
 
-	std::string data(dataSize, '\0');  // 指定サイズの文字列を確保
-	file.read(&data[0], dataSize);  // 文字列データを読み込む
+	std::string data(dataSize, '\0');	//指定サイズの文字列を確保
+	file.read(&data[0], dataSize);		//文字列データを読み込む
 	str = data;
 
 	if (file.fail()) {
-		DispErrorMessageBox(003, "設定ファイルの内容を正しく読み取れませんでした。");
+		DispErrorMessageBox("003", "設定ファイルの内容を正しく読み取れませんでした。");
 		return "";
 	}
 	
 	if (data.find("ErrorCSVPath=") == 0) {
-		return data.substr(13);     //"ErrorCSVPath="の13文字を除外して返す
+		return data.substr(13);			//"ErrorCSVPath="の13文字を除外して返す
 	}	
 
-	DispErrorMessageBox(004, "設定ファイルに　'ErrorCSVPath'　の項目がありません。");
+	DispErrorMessageBox("004", "設定ファイルに　'ErrorCSVPath'　の項目がありません。");
 	return "";
 }
 
@@ -53,7 +53,7 @@ void ErrorHandler::LoadErrorMessages() {
 	std::string csvpath = GetCSVPathFromConfig("config.dat");
 	std::ifstream file(csvpath);
 	if (!file) {
-		DispErrorMessageBox(005, "csvファイルを開けませんでした");
+		DispErrorMessageBox("005", "csvファイルを開けませんでした");
 		return;
 	}
 
@@ -63,7 +63,7 @@ void ErrorHandler::LoadErrorMessages() {
 		std::string codeStr, message;
 
 		if (std::getline(ss, codeStr, ',') && std::getline(ss, message)) {
-			int code = std::stoi(codeStr);
+			unsigned short code = std::stoi(codeStr);
 			_errormsgs[code] = message;
 		}
 	}
@@ -72,7 +72,7 @@ void ErrorHandler::LoadErrorMessages() {
 }
 
 //エラーコードからcsvのエラーメッセージを持ってくる
-std::string ErrorHandler::GetErrorMessage(const short& errorCode) {
+std::string ErrorHandler::GetErrorMessage(const unsigned short& errorCode) {
 	if (_errormsgs.empty()) {
 		LoadErrorMessages();
 	}
@@ -80,20 +80,20 @@ std::string ErrorHandler::GetErrorMessage(const short& errorCode) {
 	if (_errormsgs.find(errorCode) != _errormsgs.end()) {
 		return _errormsgs[errorCode];
 	}
-	return "不明なエラー (" + std::to_string(errorCode) + ")";
+	return "登録されていないエラー (" + std::to_string(errorCode) + ")";
 }
 
 //HRESULTとcsvからエラーメッセージ表示
-void ErrorHandler::DispErrorMessageBox(const short& errorcode, const HRESULT& hr) {
+void ErrorHandler::DispErrorMessageBox(const std::string& errorcode, const HRESULT& hr) {
 	if (FAILED(hr)) {
 		//エラーコードを文字列に変換
 		_com_error err(hr);
-		std::string errorMessage = GetErrorMessage(errorcode);
+		std::string errorMessage = GetErrorMessage(std::stoi(errorcode));
 
 		errorMessage += err.ErrorMessage();
 
 		char formattedMessage[256];
-		snprintf(formattedMessage, sizeof(formattedMessage), "Error Code: %03d\n%s", errorcode, errorMessage.c_str());
+		snprintf(formattedMessage, sizeof(formattedMessage), "Error Code: %s\n%s", errorcode.c_str(), errorMessage.c_str());
 
 		if (MessageBoxA(GetWindow(), formattedMessage, "Error", MB_OK | MB_ICONERROR) == IDOK) {
 			DestroyWindow(GetWindow());
@@ -102,9 +102,9 @@ void ErrorHandler::DispErrorMessageBox(const short& errorcode, const HRESULT& hr
 }
 
 //任意の文字列でエラーメッセージ表示
-void ErrorHandler::DispErrorMessageBox(const short& errorcode, const std::string str) {
+void ErrorHandler::DispErrorMessageBox(const std::string& errorcode, const std::string str) {
 	char formattedMessage[256];
-	snprintf(formattedMessage, sizeof(formattedMessage), "Error Code: %03d\n%s", errorcode, str.c_str());
+	snprintf(formattedMessage, sizeof(formattedMessage), "Error Code: %s\n%s", errorcode.c_str(), str.c_str());
 
 	if (MessageBoxA(GetWindow(), formattedMessage, "Error", MB_OK | MB_ICONERROR) == IDOK) {
 		DestroyWindow(GetWindow());
@@ -112,10 +112,10 @@ void ErrorHandler::DispErrorMessageBox(const short& errorcode, const std::string
 }
 
 //csvの文字列でエラーメッセージ表示
-void ErrorHandler::DispErrorMessageBox(const short& errorcode) {
-	std::string errorMessage = GetErrorMessage(errorcode);
+void ErrorHandler::DispErrorMessageBox(const std::string& errorcode) {
+	std::string errorMessage = GetErrorMessage(std::stoi(errorcode));
 	char formattedMessage[256];
-	snprintf(formattedMessage, sizeof(formattedMessage), "Error Code: %03d\n%s", errorcode, errorMessage.c_str());
+	snprintf(formattedMessage, sizeof(formattedMessage), "Error Code: %s\n%s", errorcode.c_str(), errorMessage.c_str());
 
 	if (MessageBoxA(GetWindow(), formattedMessage, "Error", MB_OK | MB_ICONERROR) == IDOK) {
 		DestroyWindow(GetWindow());
