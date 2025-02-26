@@ -41,7 +41,7 @@ void Sprite::CreateVertexBuffer(){
 	sd.pSysMem = vertex;
 
 	HRESULT hr = Renderer::GetDevice()->CreateBuffer(&bd, &sd, &_vertexbuffer);
-	ErrorHandler::GetInstance()->DispErrorMessageBox(200, hr);
+	ErrorHandler::GetInstance()->DispErrorMessageBox("200", hr);
 }
 
 void Sprite::LoadTexture(const wchar_t* filename) {

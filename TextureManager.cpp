@@ -19,45 +19,45 @@ void TextureManager::ImageFormat(const wchar_t* filename, TexMetadata& metadata,
 	const wchar_t* extension = wcsrchr(filename, L'.');
 
 	if (!extension) {
-		return ErrorHandler::GetInstance()->DispErrorMessageBox(108);
+		return ErrorHandler::GetInstance()->DispErrorMessageBox("108");
 	}
 
 	HRESULT hr = E_FAIL;
 
 	if (wcscmp(extension, L".png") == 0) {
 		hr = LoadFromWICFile(filename, WIC_FLAGS_NONE, &metadata, image);
-		ErrorHandler::GetInstance()->DispErrorMessageBox(100, hr);
+		ErrorHandler::GetInstance()->DispErrorMessageBox("100", hr);
 	}
 	else if (wcscmp(extension, L".jpg") == 0) {
 		hr = LoadFromWICFile(filename, WIC_FLAGS_NONE, &metadata, image);
-		ErrorHandler::GetInstance()->DispErrorMessageBox(101, hr);
+		ErrorHandler::GetInstance()->DispErrorMessageBox("101", hr);
 	}
 	else if (wcscmp(extension, L".jpeg") == 0) {
 		hr = LoadFromWICFile(filename, WIC_FLAGS_NONE, &metadata, image);
-		ErrorHandler::GetInstance()->DispErrorMessageBox(102, hr);
+		ErrorHandler::GetInstance()->DispErrorMessageBox("102", hr);
 	}
 	else if (wcscmp(extension, L".bmp") == 0) {
 		hr = LoadFromWICFile(filename, WIC_FLAGS_NONE, &metadata, image);
-		ErrorHandler::GetInstance()->DispErrorMessageBox(103, hr);
+		ErrorHandler::GetInstance()->DispErrorMessageBox("103", hr);
 	}
 	else if (wcscmp(extension, L".gif") == 0) {
 		hr = LoadFromWICFile(filename, WIC_FLAGS_NONE, &metadata, image);
-		ErrorHandler::GetInstance()->DispErrorMessageBox(104, hr);
+		ErrorHandler::GetInstance()->DispErrorMessageBox("104", hr);
 	}
 	else if (wcscmp(extension, L".tiff") == 0 || wcscmp(extension, L".TIFF") == 0) {
 		hr = LoadFromWICFile(filename, WIC_FLAGS_NONE, &metadata, image);
-		ErrorHandler::GetInstance()->DispErrorMessageBox(105, hr);
+		ErrorHandler::GetInstance()->DispErrorMessageBox("105", hr);
 	}
 	else if (wcscmp(extension, L".tif") == 0 || wcscmp(extension, L".TIF") == 0) {
 		hr = LoadFromWICFile(filename, WIC_FLAGS_NONE, &metadata, image);
-		ErrorHandler::GetInstance()->DispErrorMessageBox(106, hr);
+		ErrorHandler::GetInstance()->DispErrorMessageBox("106", hr);
 	}
 	else if (wcscmp(extension, L".dds") == 0) {
 		hr = LoadFromDDSFile(filename, DDS_FLAGS_NONE, &metadata, image);
-		ErrorHandler::GetInstance()->DispErrorMessageBox(107, hr);
+		ErrorHandler::GetInstance()->DispErrorMessageBox("107", hr);
 	}
 	else {
-		ErrorHandler::GetInstance()->DispErrorMessageBox(109);
+		ErrorHandler::GetInstance()->DispErrorMessageBox("109");
 	}
 }
 
@@ -93,7 +93,7 @@ ID3D11ShaderResourceView* TextureManager::LoadTexture(const wchar_t* filename) {
 	_instance->ImageFormat(filename, metadata, image);
 	hr = CreateShaderResourceView(Renderer::GetDevice(), image.GetImages(), image.GetImageCount(), metadata, &texture);
 	assert(texture);
-	ErrorHandler::GetInstance()->DispErrorMessageBox(300, hr);
+	ErrorHandler::GetInstance()->DispErrorMessageBox("300", hr);
 
 	_instance->_textures[filename] = texture;
 
