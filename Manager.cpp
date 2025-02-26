@@ -32,7 +32,6 @@ Rendpoly* Manager::_final;
 Gaussian* Manager::_gaussian;
 MotionBlur* Manager::_motionblur;
 GUIManager* Manager::_guimanager;
-TextManager* Manager::_textmanager;
 bool Manager::_isdrawfromlight;
 int Manager::_cascadeidx = 0;
 
@@ -52,8 +51,6 @@ void Manager::Init() {
 	Shader::LoadShader();
 
 	_guimanager = new GUIManager();
-
-	_textmanager = new TextManager();
 
 	//フェード初期化
 	_fade = new Fade();
@@ -110,8 +107,7 @@ void Manager::Uninit() {
 	_fade->Uninit();
 	delete _fade;
 
-	_textmanager->Uninit();
-	delete _textmanager;
+	TextManager::GetInstance()->DeleteInstance();
 
 	_guimanager->Uninit();
 	delete _guimanager;
@@ -134,7 +130,7 @@ void Manager::Update() {
 	if (_fade->GetFadeMode() == FadeMode::None) {
 		_scene->Update();
 		_guimanager->Update();
-		_textmanager->Update();
+		TextManager::GetInstance()->Update();
 		_gaussian->Update();
 		_motionblur->Update();
 		_final->Update();
@@ -179,7 +175,7 @@ void Manager::Draw() {
 	_guimanager->Draw();
 
 	//テキストのみ描画
-	_textmanager->Draw();
+	TextManager::GetInstance()->Draw();
 	
 
 	//確認用
@@ -207,7 +203,7 @@ void Manager::Draw() {
 		_checkcamera->Uninit();
 		_checkdof->Uninit();
 //#endif
-		_textmanager->Uninit();
+		TextManager::GetInstance()->Uninit();
 		_guimanager->Uninit();
 		_scene->Uninit();
 		delete _scene;

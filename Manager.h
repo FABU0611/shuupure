@@ -38,7 +38,6 @@ class Manager {
 
 	static GUIManager* _guimanager;
 
-	static TextManager* _textmanager;
 //#ifdef _DEBUG
 	static CheckDoF* _checkdof;
 	static CheckCameraDepth* _checkcamera;
@@ -60,7 +59,6 @@ public:
 	static bool& GetisDrawFromLight() { return _isdrawfromlight; }
 
 	static Scene* GetScene() { return _scene; }
-	static TextManager* GetTextManager() { return _textmanager; }
 	static Gaussian* GetGaussian() { return _gaussian; }
 	static int& GetCascadeIndex() { return _cascadeidx; }
 

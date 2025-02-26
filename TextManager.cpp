@@ -3,6 +3,7 @@
 //24_11_21
 #include "TextManager.h"
 
+TextManager* TextManager::_instance = nullptr;
 
 void TextManager::Uninit() {
 	for (auto& t : _texts) {

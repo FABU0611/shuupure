@@ -34,7 +34,6 @@ void Title::Init(){
 
 	AddGameobject<Sky>(Layer::BackGround, 250.0f);
 
-	TextManager* tm = Manager::GetTextManager();
-	tm->AddText<TitlePush>(60.0f, D2D1::ColorF::Yellow, TextAnchor::Center);
-	tm->AddText<TitleText>(80.0f, D2D1::ColorF::GreenYellow, TextAnchor::Center);
+	TextManager::GetInstance()->AddText<TitlePush>(60.0f, D2D1::ColorF::Yellow, TextAnchor::Center);
+	TextManager::GetInstance()->AddText<TitleText>(80.0f, D2D1::ColorF::GreenYellow, TextAnchor::Center);
 }
