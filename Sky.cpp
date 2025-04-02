@@ -15,7 +15,7 @@ void Sky::Init() {
 	//ƒ‚ƒfƒ‹“Ç‚İ‚İ
 	GetComponent<ModelRenderer>()->Load("asset\\model\\sky.obj");
 
-	GetRotation().y = XM_PI * 0.5f;
+	//GetRotation().y = XM_PI * 0.5f;
 }
 
 void Sky::Uninit() {
