@@ -67,6 +67,8 @@ void Camera::Init() {
 		return;
 	}
 	else {
+		Manager::GetGaussian()->SetDof({ 0.0f, 0.0f });
+		Manager::GetGaussian()->SetBoke(0.1f);
 		_state = new GameState1(this);
 	}
 }
