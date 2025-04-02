@@ -30,6 +30,9 @@ void ModelRenderer::Draw() {
 
 	for (unsigned int i = 0; i < _model->SubsetNum; i++) {
 		// マテリアル設定
+		_model->SubsetArray[i].Material.Material.Roughness = 0.5f;
+		_model->SubsetArray[i].Material.Material.Metallic = 0.5f;
+
 		Renderer::SetMaterial(_model->SubsetArray[i].Material.Material);
 
 		// テクスチャ設定
@@ -213,7 +216,7 @@ void ModelRenderer::LoadObj(const char* FileName, MODEL_OBJ* ModelObj) {
 
 	//要素数カウント
 	while (true) {
-		fscanf(file, "%s", str);
+		(void)fscanf(file, "%s", str);
 
 		if (feof(file) != 0)
 			break;
@@ -234,7 +237,7 @@ void ModelRenderer::LoadObj(const char* FileName, MODEL_OBJ* ModelObj) {
 			in = 0;
 
 			do {
-				fscanf(file, "%s", str);
+				(void)fscanf(file, "%s", str);
 				vertexNum++;
 				in++;
 				c = fgetc(file);
@@ -280,14 +283,14 @@ void ModelRenderer::LoadObj(const char* FileName, MODEL_OBJ* ModelObj) {
 	fseek(file, 0, SEEK_SET);
 
 	while (true) {
-		fscanf(file, "%s", str);
+		(void)fscanf(file, "%s", str);
 
 		if (feof(file) != 0)
 			break;
 
 		if (strcmp(str, "mtllib") == 0) {
 			//マテリアルファイル
-			fscanf(file, "%s", str);
+			(void)fscanf(file, "%s", str);
 
 			char path[256];
 			strcpy(path, dir);
@@ -298,33 +301,33 @@ void ModelRenderer::LoadObj(const char* FileName, MODEL_OBJ* ModelObj) {
 		}
 		else if (strcmp(str, "o") == 0) {
 			//オブジェクト名
-			fscanf(file, "%s", str);
+			(void)fscanf(file, "%s", str);
 		}
 		else if (strcmp(str, "v") == 0) {
 			//頂点座標
-			fscanf(file, "%f", &position->x);
-			fscanf(file, "%f", &position->y);
-			fscanf(file, "%f", &position->z);
+			(void)fscanf(file, "%f", &position->x);
+			(void)fscanf(file, "%f", &position->y);
+			(void)fscanf(file, "%f", &position->z);
 			position++;
 		}
 		else if (strcmp(str, "vn") == 0) {
 			//法線
-			fscanf(file, "%f", &normal->x);
-			fscanf(file, "%f", &normal->y);
-			fscanf(file, "%f", &normal->z);
+			(void)fscanf(file, "%f", &normal->x);
+			(void)fscanf(file, "%f", &normal->y);
+			(void)fscanf(file, "%f", &normal->z);
 			normal++;
 		}
 		else if (strcmp(str, "vt") == 0) {
 			//テクスチャ座標
-			fscanf(file, "%f", &texcoord->x);
-			fscanf(file, "%f", &texcoord->y);
+			(void)fscanf(file, "%f", &texcoord->x);
+			(void)fscanf(file, "%f", &texcoord->y);
 			texcoord->x = 1.0f - texcoord->x;
 			texcoord->y = 1.0f - texcoord->y;
 			texcoord++;
 		}
 		else if (strcmp(str, "usemtl") == 0) {
 			//マテリアル
-			fscanf(file, "%s", str);
+			(void)fscanf(file, "%s", str);
 
 			if (sc != 0)
 				ModelObj->SubsetArray[sc - 1].IndexNum = ic - ModelObj->SubsetArray[sc - 1].StartIndex;
@@ -350,7 +353,7 @@ void ModelRenderer::LoadObj(const char* FileName, MODEL_OBJ* ModelObj) {
 			in = 0;
 
 			do {
-				fscanf(file, "%s", str);
+				(void)fscanf(file, "%s", str);
 
 				s = strtok(str, "/");
 				ModelObj->VertexArray[vc].Position = positionArray[atoi(s) - 1];
@@ -419,7 +422,7 @@ void ModelRenderer::LoadMaterial(const char* FileName, MODEL_MATERIAL** Material
 
 	//要素数カウント
 	while (true) {
-		fscanf(file, "%s", str);
+		(void)fscanf(file, "%s", str);
 
 		if (feof(file) != 0)
 			break;
@@ -441,7 +444,7 @@ void ModelRenderer::LoadMaterial(const char* FileName, MODEL_MATERIAL** Material
 	fseek(file, 0, SEEK_SET);
 
 	while (true) {
-		fscanf(file, "%s", str);
+		(void)fscanf(file, "%s", str);
 
 		if (feof(file) != 0)
 			break;
@@ -450,7 +453,7 @@ void ModelRenderer::LoadMaterial(const char* FileName, MODEL_MATERIAL** Material
 		if (strcmp(str, "newmtl") == 0) {
 			//マテリアル名
 			mc++;
-			fscanf(file, "%s", materialArray[mc].Name);
+			(void)fscanf(file, "%s", materialArray[mc].Name);
 			strcpy(materialArray[mc].TextureName, "");
 
 			materialArray[mc].Material.Emission.x = 0.0f;
@@ -460,36 +463,36 @@ void ModelRenderer::LoadMaterial(const char* FileName, MODEL_MATERIAL** Material
 		}
 		else if (strcmp(str, "Ka") == 0) {
 			//アンビエント
-			fscanf(file, "%f", &materialArray[mc].Material.Ambient.x);
-			fscanf(file, "%f", &materialArray[mc].Material.Ambient.y);
-			fscanf(file, "%f", &materialArray[mc].Material.Ambient.z);
+			(void)fscanf(file, "%f", &materialArray[mc].Material.Ambient.x);
+			(void)fscanf(file, "%f", &materialArray[mc].Material.Ambient.y);
+			(void)fscanf(file, "%f", &materialArray[mc].Material.Ambient.z);
 			materialArray[mc].Material.Ambient.w = 1.0f;
 		}
 		else if (strcmp(str, "Kd") == 0) {
 			//ディフューズ
-			fscanf(file, "%f", &materialArray[mc].Material.Diffuse.x);
-			fscanf(file, "%f", &materialArray[mc].Material.Diffuse.y);
-			fscanf(file, "%f", &materialArray[mc].Material.Diffuse.z);
+			(void)fscanf(file, "%f", &materialArray[mc].Material.Diffuse.x);
+			(void)fscanf(file, "%f", &materialArray[mc].Material.Diffuse.y);
+			(void)fscanf(file, "%f", &materialArray[mc].Material.Diffuse.z);
 			materialArray[mc].Material.Diffuse.w = 1.0f;
 		}
 		else if (strcmp(str, "Ks") == 0) {
 			//スペキュラ
-			fscanf(file, "%f", &materialArray[mc].Material.Specular.x);
-			fscanf(file, "%f", &materialArray[mc].Material.Specular.y);
-			fscanf(file, "%f", &materialArray[mc].Material.Specular.z);
+			(void)fscanf(file, "%f", &materialArray[mc].Material.Specular.x);
+			(void)fscanf(file, "%f", &materialArray[mc].Material.Specular.y);
+			(void)fscanf(file, "%f", &materialArray[mc].Material.Specular.z);
 			materialArray[mc].Material.Specular.w = 1.0f;
 		}
 		else if (strcmp(str, "Ns") == 0) {
 			//スペキュラ強度
-			fscanf(file, "%f", &materialArray[mc].Material.Shininess);
+			(void)fscanf(file, "%f", &materialArray[mc].Material.Shininess);
 		}
 		else if (strcmp(str, "d") == 0) {
 			//アルファ
-			fscanf(file, "%f", &materialArray[mc].Material.Diffuse.w);
+			(void)fscanf(file, "%f", &materialArray[mc].Material.Diffuse.w);
 		}
 		else if (strcmp(str, "map_Kd") == 0) {
 			//テクスチャ
-			fscanf(file, "%s", str);
+			(void)fscanf(file, "%s", str);
 
 			char path[256];
 			strcpy(path, dir);
