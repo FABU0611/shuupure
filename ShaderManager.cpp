@@ -31,6 +31,7 @@ void Shader::LoadShader() {
     AddShader("shader\\ParticleInstanceVS.cso", "shader\\ParticlePS.cso", ShaderName::ParticleInstance);
     AddShader("shader\\NormalLightingInstanceVS.cso", "shader\\DepthShadowPS.cso", ShaderName::Instance);
 	AddShader("shader\\DepthShadowVS.cso", "shader\\DepthShadowPS.cso", ShaderName::DepthShadow);
+	AddShader("shader\\UnlitTextureVS.cso", "shader\\PBRPS.cso", ShaderName::PBR);
 }
 
 void Shader::UninitAll() {

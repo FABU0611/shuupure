@@ -8,12 +8,14 @@ void main(in VS_IN In, out PS_IN Out) {
 
 	matrix wvp;
 	wvp = mul(World, View);
+	Out.WorldPosition = mul(In.Position, World);
 	wvp = mul(wvp, Projection);
 	Out.Position = mul(In.Position, wvp);
 	Out.CurPosition = Out.Position;
 	
 	Out.TexCoord = In.TexCoord;
 	Out.Diffuse = In.Diffuse * Material.Diffuse;
+	Out.Normal = In.Normal;
 
 	matrix prevmvp;
 	prevmvp = mul(PrevWorld, PrevView);
