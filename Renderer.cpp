@@ -961,7 +961,7 @@ void Renderer::BeginPE() {
 		_sceneDSV);		//Zバッファ
 
 	//レンダリングテクスチャクリア
-	float ClearColor[4] = { 0.0f, 0.0f, 0.5f, 1.0f };
+	float ClearColor[4] = { 0.5f, 0.5f, 0.0f, 1.0f };
 	_devicecontext->ClearRenderTargetView(_sceneRTV, ClearColor);
 	_devicecontext->ClearRenderTargetView(_velRTV, ClearColor);
 
