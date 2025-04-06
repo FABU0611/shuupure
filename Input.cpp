@@ -12,6 +12,7 @@ POINT Input::_oldmousepos;
 POINT Input::_mousepos;
 BYTE Input::_oldmousestate[3];
 BYTE Input::_mousestate[3];
+int Input::_oldmousewheeldelta = 0;
 int Input::_mousewheeldelta = 0;
 CONTROLER_STATE Input::_gamepad[MAX_CONTROLLERS];
 
@@ -59,12 +60,14 @@ HRESULT Input::UpdateControllerState()
 
 void Input::Update(){
 	memcpy(_oldkeystate, _keystate, 256);
-	GetKeyboardState(_keystate);
+	(void)GetKeyboardState(_keystate);
 
 	memcpy(_oldmousestate, _mousestate, 3);
 	_mousestate[0] = GetAsyncKeyState(VK_RBUTTON) & 0x8000 ? 1 : 0;
 	_mousestate[1] = GetAsyncKeyState(VK_LBUTTON) & 0x8000 ? 1 : 0;
 	_mousestate[2] = GetAsyncKeyState(VK_MBUTTON) & 0x8000 ? 1 : 0;
+	_oldmousewheeldelta = _mousewheeldelta;
+	_mousewheeldelta = 0;
 
 	_oldmousepos = _mousepos;
 	//現在のマウス位置を取得（画面全体の座標）
@@ -100,7 +103,7 @@ POINT Input::GetMousePosition(){
 	return _mousepos;
 }
 int Input::GetMouseWheelDelta(){
-	return _mousewheeldelta;
+	return _oldmousewheeldelta;
 }
 void Input::OnMouseWheel(int delta) {
 	_mousewheeldelta = delta;

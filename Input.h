@@ -30,6 +30,7 @@ class Input {
 	static POINT			_oldmousepos;
 	static POINT			_mousepos;
 
+	static int				_oldmousewheeldelta;
 	static int				_mousewheeldelta;
 
 	static CONTROLER_STATE	_gamepad[MAX_CONTROLLERS];
