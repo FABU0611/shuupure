@@ -7,8 +7,8 @@
 #define MAX_CONTROLLERS (4) // 最大コントローラ数
 
 static enum MOUSE_BUTTON {
-	MOUSE_LBUTTON = 0,	//左クリック
-	MOUSE_RBUTTON,		//右クリック
+	MOUSE_RBUTTON = 0,	//左クリック
+	MOUSE_LBUTTON,		//右クリック
 	MOUSE_MBUTTON,		//ホイールボタン
 };
 
