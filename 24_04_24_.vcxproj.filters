@@ -204,6 +204,12 @@
     <ClCompile Include="TextureManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="G_Slidebar.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="PBRObject.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Main.h">
@@ -434,6 +440,12 @@
     <ClInclude Include="TextureManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="G_Slidebar.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="PBRObject.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shader\common.hlsl">
@@ -498,6 +510,9 @@
     </FxCompile>
     <FxCompile Include="shader\ParticleInstanceVS.hlsl">
       <Filter>シェーダー\VS</Filter>
+    </FxCompile>
+    <FxCompile Include="shader\PBRPS.hlsl">
+      <Filter>シェーダー\PS</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

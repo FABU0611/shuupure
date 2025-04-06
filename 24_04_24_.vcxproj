@@ -193,6 +193,7 @@
     <ClCompile Include="GUIManager.cpp" />
     <ClCompile Include="G_Button.cpp" />
     <ClCompile Include="G_CheckBox.cpp" />
+    <ClCompile Include="G_Slidebar.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="LightCamera.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -201,6 +202,7 @@
     <ClCompile Include="MeshField.cpp" />
     <ClCompile Include="MotionBlur.cpp" />
     <ClCompile Include="ParticleEmitter.cpp" />
+    <ClCompile Include="PBRObject.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Player_Tutorial.cpp" />
     <ClCompile Include="Polygon2D.cpp" />
@@ -261,6 +263,7 @@
     <ClInclude Include="GUIManager.h" />
     <ClInclude Include="G_Button.h" />
     <ClInclude Include="G_CheckBox.h" />
+    <ClInclude Include="G_Slidebar.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="LightCamera.h" />
     <ClInclude Include="Main.h" />
@@ -274,6 +277,7 @@
     <ClInclude Include="ParticleJump.h" />
     <ClInclude Include="ParticleSmoke.h" />
     <ClInclude Include="ParticleSpraywarter.h" />
+    <ClInclude Include="PBRObject.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerState.h" />
     <ClInclude Include="Player_Tutorial.h" />
@@ -405,6 +409,10 @@
     <FxCompile Include="shader\ParticlePS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="shader\PBRPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
