@@ -44,6 +44,10 @@ public:
 		Uninit();
 	}
 
+	void SetString(const std::string& str) {
+		_str = str;
+	}
+
 	void Init()override;
 	void Uninit()override;
 	void Update()override;
