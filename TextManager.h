@@ -37,9 +37,11 @@ public:
 	}
 
 	template <typename T, typename... Args>
-	void AddText(Args&& ...args) {
+	T* AddText(Args&& ...args) {
 		T* text = new T(std::forward<Args>(args)...);
 		_texts.push_back(text);
 		text->Init();
+
+		return text;
 	}
 };
