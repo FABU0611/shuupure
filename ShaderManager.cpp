@@ -32,6 +32,7 @@ void Shader::LoadShader() {
     AddShader("shader\\NormalLightingInstanceVS.cso", "shader\\DepthShadowPS.cso", ShaderName::Instance);
 	AddShader("shader\\DepthShadowVS.cso", "shader\\DepthShadowPS.cso", ShaderName::DepthShadow);
 	AddShader("shader\\UnlitTextureVS.cso", "shader\\PBRPS.cso", ShaderName::PBR);
+	AddShader("shader\\UnlitTextureVS.cso", "shader\\CheckDoFPS.cso", ShaderName::CheckDoF);
 }
 
 void Shader::UninitAll() {

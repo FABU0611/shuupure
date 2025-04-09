@@ -18,6 +18,7 @@ enum class ShaderName : short {
 	Instance,
 	DepthShadow,
 	PBR,
+	CheckDoF,
 };
 
 struct ShaderPack {
