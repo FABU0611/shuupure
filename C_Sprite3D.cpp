@@ -7,6 +7,7 @@
 #include "Manager.h"
 #include "ParticleEmitter.h"
 #include "C_Sprite3D.h"
+#include "Camera.h"
 
 void Sprite3D::Draw() {
 	_scl = _gameobject->GetScale();
