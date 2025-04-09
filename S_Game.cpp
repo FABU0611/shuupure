@@ -20,6 +20,7 @@
 #include "SphereInstence.h"
 #include "Water.h"
 #include "UIManager.h"
+#include "CheckTexture.h"
 
 void Game::Init() {
 	AddGameobject<Camera>(Layer::System);
@@ -33,4 +34,5 @@ void Game::Init() {
 	AddGameobject<PBRObject>(Layer::Object);
 	AddGameobject<SphereInstance>(Layer::Object);
 	AddGameobject<Water>(Layer::Transparency, XMFLOAT3(40.0f, 20.0f, 0.0f));
+	AddGameobject<CheckTexture>(Layer::UI, "DoF", Renderer::GetDepthTexture(), ShaderName::CheckDoF);
 }
