@@ -20,6 +20,7 @@
 #include "TextManager.h"
 #include "TextureManager.h"
 #include "TakePicture.h"
+#include "CheckTexture.h"
 
 float Manager::WORLD_RAD = 240.0f;
 
@@ -31,16 +32,8 @@ Fade* Manager::_fade;
 Rendpoly* Manager::_final;
 Gaussian* Manager::_gaussian;
 MotionBlur* Manager::_motionblur;
-GUIManager* Manager::_guimanager;
 bool Manager::_isdrawfromlight;
 int Manager::_cascadeidx = 0;
-
-//#ifdef _DEBUG
-#include "CheckDoF.h"
-#include "CheckCameraDepth.h"
-CheckDoF* Manager::_checkdof;
-CheckCameraDepth* Manager::_checkcamera;
-//#endif
 
 
 
@@ -49,8 +42,6 @@ void Manager::Init() {
 	Renderer::Init();
 	Audio::InitMaster();
 	Shader::LoadShader();
-
-	_guimanager = new GUIManager();
 
 	//フェード初期化
 	_fade = new Fade();
@@ -70,24 +61,10 @@ void Manager::Init() {
 
 	_scene = new Title();
 	_scene->Init();
-
-//#ifdef _DEBUG
-	_checkdof = new CheckDoF();
-	_checkdof->Init();
-	_checkcamera = new CheckCameraDepth();
-	_checkcamera->Init();
-//#endif
 }
 
 
 void Manager::Uninit() {
-//#ifdef _DEBUG
-	_checkcamera->Uninit();
-	delete _checkcamera;
-	_checkdof->Uninit();
-	delete _checkdof;
-//#endif
-
 	_scene->Uninit();
 	delete _scene;
 
@@ -109,10 +86,8 @@ void Manager::Uninit() {
 
 	TextManager::GetInstance()->DeleteInstance();
 
-	_guimanager->Uninit();
-	delete _guimanager;
-
 	//使用していたリソース解放
+	GUIManager::GetInstance()->DeleteInstance();
 	TextureManager::GetInstance()->DeleteInstance();
 	ErrorHandler::GetInstance()->DeleteInstance();
 	Shader::UninitAll();
@@ -129,14 +104,11 @@ void Manager::Update() {
 
 	if (_fade->GetFadeMode() == FadeMode::None) {
 		_scene->Update();
-		_guimanager->Update();
+		GUIManager::GetInstance()->Update();
 		TextManager::GetInstance()->Update();
 		_gaussian->Update();
 		_motionblur->Update();
 		_final->Update();
-//#ifdef _DEBUG
-		_checkdof->Update();
-//#endif
 	}
 
 	FadeUpdate();
@@ -171,18 +143,8 @@ void Manager::Draw() {
 
 	TakePicture::TakePic();
 
-	//GUI描画
-	_guimanager->Draw();
-
-	//テキストのみ描画
-	TextManager::GetInstance()->Draw();
-	
-
-	//確認用
-//#ifdef _DEBUG
-	_checkcamera->Draw();
-	_checkdof->Draw();
-//#endif
+	//UIのみ描画
+	_scene->DrawUI();
 
 	//フェードの描画
 	if (_fade->GetFadeMode() != FadeMode::None) {
@@ -199,12 +161,8 @@ void Manager::Draw() {
 	}
 	//次のシーンがセットされていたら
 	if (_scene) {
-//#ifdef _DEBUG
-		_checkcamera->Uninit();
-		_checkdof->Uninit();
-//#endif
 		TextManager::GetInstance()->Uninit();
-		_guimanager->Uninit();
+		GUIManager::GetInstance()->Uninit();
 		_scene->Uninit();
 		delete _scene;
 		_scene = nullptr;
@@ -221,11 +179,6 @@ void Manager::Draw() {
 	//次のシーンをセット
 	_scene = _nextscene;
 	_scene->Init();
-
-//#ifdef _DEBUG
-	_checkdof->Init();
-	_checkcamera->Init();
-//#endif
 
 	_nextscene = nullptr;
 }

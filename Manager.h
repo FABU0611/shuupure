@@ -11,12 +11,6 @@ class Rendpoly;
 class Gaussian;
 class MotionBlur;
 class LoadingText;
-class GUIManager;
-class TextManager;
-//#ifdef _DEBUG
-class CheckDoF;
-class CheckCameraDepth;
-//#endif
 
 
 class Manager {
@@ -35,13 +29,6 @@ class Manager {
 	static Gaussian* _gaussian;
 
 	static MotionBlur* _motionblur;
-
-	static GUIManager* _guimanager;
-
-//#ifdef _DEBUG
-	static CheckDoF* _checkdof;
-	static CheckCameraDepth* _checkcamera;
-//#endif
 
 	static bool _isdrawfromlight;
 
@@ -65,10 +52,7 @@ public:
 	static void ChangeNextScene() {
 		_nextscene = _prvscene;
 		_prvscene = nullptr;
-	}
-
-	static GUIManager* GetGUIManager() { return _guimanager; }
-	
+	}	
 
 	static void SetWorldRad(const float& worldrad) { WORLD_RAD = worldrad; }
 
