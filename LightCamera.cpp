@@ -5,6 +5,8 @@
 #include "Manager.h"
 #include "Scene.h"
 #include "Camera.h"
+#include "CheckTexture.h"
+#include "ShaderManager.h"
 #include <vector>
 
 void LightCamera::Init() {
@@ -16,6 +18,12 @@ void LightCamera::Init() {
 	_light.Direction = VectorNormalize(_light.Direction);
 	_light.Ambient = { 0.1f, 0.1f, 0.1f, 1.0f };
 	_light.Diffuse = { 1.0f, 1.0f, 1.0f, 1.0f };
+	
+	std::vector<ID3D11ShaderResourceView*> srv(Renderer::CASCADE_NUM);
+	for (int i = 0; i < Renderer::CASCADE_NUM; i++) {
+		srv[i] = (Renderer::GetCameraDepthTexture(i));
+	}
+	Manager::GetScene()->AddGameobject<CheckTexture>(Layer::UI, "LightDepth", srv.size(), srv, ShaderName::Unlit);
 }
 
 void LightCamera::Uninit() {}
