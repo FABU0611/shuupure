@@ -9,10 +9,11 @@ class GUI : public GameObject{
 protected:
 	XMFLOAT3			_size{};
 	const wchar_t*		_texname{};
+	bool				_iscenter = false;	
 
 public:
 	GUI() {};
-	GUI(const XMFLOAT3& pos, const XMFLOAT3& size, const wchar_t* texname);
+	GUI(const XMFLOAT3& pos, const bool& iscenter, const XMFLOAT3& size, const wchar_t* texname);
 	virtual ~GUI() {}
 
 	virtual void Init();

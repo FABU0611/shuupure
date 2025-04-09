@@ -6,9 +6,16 @@
 
 #include "C_Sprite2D.h"
 #include "Input.h"
+#include "TextManager.h"
+#include "GUIManager.h"
 
-CheckBox::CheckBox(const XMFLOAT3& pos)
-	:GUI(pos, XMFLOAT3(50.0f, 50.0f, 50.0f), L"asset\\texture\\checkbox.png") {}
+CheckBox::CheckBox(const std::string& label)
+	:GUI(CalcPosition(), false, XMFLOAT3(50.0f, 50.0f, 50.0f), L"asset\\texture\\checkbox.png") {
+	XMFLOAT3 pos = GetPosition();
+	auto text = TextManager::GetInstance()->AddText<Text>(50.0f, D2D1::ColorF::Black, TextAnchor::CenterLeft);
+	text->SetString(label);
+	text->SetPosition({ pos.x + _size.x, pos.y + _size.y * 0.5f, 0.0f });
+}
 
 void CheckBox::Init() {
 	GUI::Init();

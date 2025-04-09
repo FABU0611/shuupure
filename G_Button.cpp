@@ -5,7 +5,7 @@
 #include "Input.h"
 
 Button::Button(const XMFLOAT3& pos, const XMFLOAT3& size)
-	:GUI(pos, size, L"asset\\texture\\button.png") {}
+	:GUI(pos, true, size, L"asset\\texture\\button.png") {}
 
 bool Button::OnClicked(const int& mousebutton) {
 	if (IsHovered(Input::GetMousePosition())) {
