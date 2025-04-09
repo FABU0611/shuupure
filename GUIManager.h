@@ -4,18 +4,25 @@
 #pragma once
 #include <vector>
 #include "GUI.h"
-#include "Manager.h"
-#include "Scene.h"
+
 
 class GUIManager {
+	GUIManager() = default;
+	~GUIManager() = default;
+	GUIManager(const GUIManager&) = delete;
+	GUIManager& operator=(const GUIManager&) = delete;
+	
+	static void DeleteInstance();
 	std::vector<GUI*>	_guis;		//óvëfî‘çÜÇ™ó~ÇµÇ¢ÇÃÇ≈vector
 
-public:
-	GUIManager() {}
-	~GUIManager() {}
-
-	void Init();
+	static GUIManager* _instance;
 	void Uninit();
+
+	friend class Manager;
+
+public:
+	static GUIManager* GetInstance();
+
 	void Update();
 	void Draw();
 
@@ -28,5 +35,5 @@ public:
 		return (int)_guis.size() - 1;
 	}
 	GUI* GetGUI(const int& index);
-	void Clear();
+	int GetGUISize() { return (int)_guis.size(); }
 };

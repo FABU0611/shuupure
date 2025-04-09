@@ -2,9 +2,26 @@
 //20106_“c’†@˜@
 //24_11_17
 #include "GUIManager.h"
+#include "Manager.h"
+#include "Scene.h"
 
+GUIManager* GUIManager::_instance = nullptr;
 
-void GUIManager::Init() {}
+GUIManager* GUIManager::GetInstance() {
+	if (_instance == nullptr) {
+		_instance = new GUIManager();
+	}
+	return _instance;
+}
+
+void GUIManager::DeleteInstance() {
+	if (!_instance) {
+		return;
+	}
+	_instance->Uninit();
+	delete _instance;
+	_instance = nullptr;
+}
 
 void GUIManager::Uninit() {
 	for (auto& g : _guis) {
@@ -35,8 +52,4 @@ GUI* GUIManager::GetGUI(const int& index) {
 		return _guis[index];
 	}
 	return nullptr;
-}
-
-void GUIManager::Clear() {
-	_guis.clear();
 }
