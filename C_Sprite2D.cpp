@@ -57,6 +57,14 @@ void Sprite2D::Draw(){
 			vertex[i].Diffuse = { 1.0f, 1.0f, 1.0f, 1.0f };
 		}
 	}
+	else if (_mode == DrawMode::Multiply) {
+		for (int i = 0; i < _dispNum; i++) {
+			vertex[i * 4 + 0].Position = { _pos.x + SCREEN_HEIGHT * (0.25f * i) + (10.0f * i), _pos.y, 0.0f };
+			vertex[i * 4 + 1].Position = { _pos.x + SCREEN_HEIGHT * (0.25f * (i + 1)) + (10.0f * i), _pos.y, 0.0f };
+			vertex[i * 4 + 2].Position = { _pos.x + SCREEN_HEIGHT * (0.25f * i) + (10.0f * i), _pos.y + SCREEN_HEIGHT * 0.25f, 0.0f };
+			vertex[i * 4 + 3].Position = { _pos.x + SCREEN_HEIGHT * (0.25f * (i + 1)) + (10.0f * i), _pos.y + SCREEN_HEIGHT * 0.25f, 0.0f };
+		}
+	}
 	else {
 		float hw, hh;
 		hw = _size.x * 0.5f;
@@ -69,7 +77,7 @@ void Sprite2D::Draw(){
 	}
 
 	//法線設定---------------------------------------------------------------------------
-	for (int i = 0; i < 4; i++) {
+	for (int i = 0; i < 4 * _dispNum; i++) {
 		vertex[i].Normal = { 0.0f, 0.0f, -1.0f };
 	}
 
@@ -83,18 +91,26 @@ void Sprite2D::Draw(){
 		vertex[3].Diffuse = _color;
 	}
 	else {
-		vertex[0].Diffuse = { 1.0f, 1.0f, 1.0f, 1.0f };
-		vertex[1].Diffuse = { 1.0f, 1.0f, 1.0f, 1.0f };
-		vertex[2].Diffuse = { 1.0f, 1.0f, 1.0f, 1.0f };
-		vertex[3].Diffuse = { 1.0f, 1.0f, 1.0f, 1.0f };
+		for (int i = 0; i < 4 * _dispNum; i++) {
+			vertex[i].Diffuse = { 1.0f, 1.0f, 1.0f, 1.0f };
+		}
 	}
 
 	//UV設定-----------------------------------------------------------------------------
-	vertex[0].TexCoord = { _uv.x, _uv.y };
-	vertex[1].TexCoord = { _uv.x + _uvend.x, _uv.y };
-	vertex[2].TexCoord = { _uv.x, _uv.y + _uvend.y };
-	vertex[3].TexCoord = { _uv.x + _uvend.x, _uv.y + _uvend.y };
-
+	if (_mode == DrawMode::Multiply) {
+		for (int i = 0; i < _dispNum; i++) {
+			vertex[i * 4 + 0].TexCoord = { 0.0f, 0.0f };
+			vertex[i * 4 + 1].TexCoord = { 1.0f, 0.0f };
+			vertex[i * 4 + 2].TexCoord = { 0.0f, 1.0f };
+			vertex[i * 4 + 3].TexCoord = { 1.0f, 1.0f };
+		}
+	}
+	else{
+		vertex[0].TexCoord = { _uv.x, _uv.y };
+		vertex[1].TexCoord = { _uv.x + _uvend.x, _uv.y };
+		vertex[2].TexCoord = { _uv.x, _uv.y + _uvend.y };
+		vertex[3].TexCoord = { _uv.x + _uvend.x, _uv.y + _uvend.y };
+	}
 
 	Renderer::GetDeviceContext()->Unmap(_vertexbuffer, 0);
 
@@ -111,12 +127,24 @@ void Sprite2D::Draw(){
 	material.TextureEnable = true;
 	Renderer::SetMaterial(material);
 
-	//テクスチャ設定
-	Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &_texture);
-
 	//プリミティブトポロジ設定
 	Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
-	//ポリゴン描画
-	Renderer::GetDeviceContext()->Draw(4, 0);
+	if (_mode == DrawMode::Multiply) {
+		std::vector<ID3D11ShaderResourceView*> srv(Renderer::CASCADE_NUM);
+		for (int i = 0; i < Renderer::CASCADE_NUM; i++) {
+			srv[i] = (Renderer::GetCameraDepthTexture(i));
+		}
+		//テクスチャ設定
+		for (int i = 0; i < _dispNum; i++) {
+			//テクスチャ設定
+			Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &srv[i]);
+			Renderer::GetDeviceContext()->Draw(4, 4 * i);
+		}
+	}
+	else {
+		//テクスチャ設定
+		Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &_texture);
+		Renderer::GetDeviceContext()->Draw(4, 0);
+	}
 }

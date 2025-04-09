@@ -7,6 +7,8 @@
 
 
 class Sprite : public Component {
+	friend class CheckTexture;
+
 protected:
 	ID3D11Buffer* _vertexbuffer = NULL;
 	ID3D11ShaderResourceView* _texture = NULL;
@@ -21,7 +23,9 @@ protected:
 	XMFLOAT4		_color = { 1.0f, 1.0f, 1.0f, 1.0f };
 	XMFLOAT3		_tangent = { 1.0f, 0.0f, 0.0f };
 
-	void CreateVertexBuffer();
+	int				_dispNum = 1;	//表示するスプライトの数
+
+	void CreateVertexBuffer(const unsigned short& num);
 
 public:
 	using Component::Component;
