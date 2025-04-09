@@ -17,7 +17,8 @@ void Pool::Init(){
 
 	_param.x = -1.0f;
 	Renderer::SetParameter(_param);
-	_showcascade = Manager::GetGUIManager()->AddGUI<CheckBox>(XMFLOAT3(25.0f, 300.0f, 0.0f));
+	int size = GUIManager::GetInstance()->GetGUISize();
+	_showcascade = GUIManager::GetInstance()->AddGUI<CheckBox>("Cascade");
 }
 
 void Pool::Uninit(){
@@ -27,17 +28,15 @@ void Pool::Uninit(){
 }
 
 void Pool::Update(){
-	CheckBox* checkbox = dynamic_cast<CheckBox*>(Manager::GetGUIManager()->GetGUI(_showcascade));
+	CheckBox* checkbox = dynamic_cast<CheckBox*>(GUIManager::GetInstance()->GetGUI(_showcascade));
 	if (!checkbox) {
 		return;
 	}
 	if (checkbox->OnClicked(VK_LBUTTON)) {
 		_param.x = 1.0;
-		Renderer::SetParameter(_param);
 	}
 	else {
 		_param.x = -1.0;
-		Renderer::SetParameter(_param);
 	}
 
 	for (auto c : _components) {
@@ -46,6 +45,7 @@ void Pool::Update(){
 }
 
 void Pool::Draw(){
+	Renderer::SetParameter(_param);
 	Shader::SetShader(ShaderName::DepthShadow);
 
 	//ワールドマトリクス設定

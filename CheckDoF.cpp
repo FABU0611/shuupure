@@ -49,7 +49,7 @@ void CheckDoF::Init() {
 	Renderer::CreateVertexShader(&_vertexshader, &_vertexlayout, "shader\\UnlitTextureVS.cso");
 	Renderer::CreatePixelShader(&_pixelshader, "shader\\CheckDoFPS.cso");
 
-	_screen = Manager::GetGUIManager()->AddGUI<CheckBox>(XMFLOAT3(25.0f, 225.0f, 0.0f));
+	_screen = GUIManager::GetInstance()->AddGUI<CheckBox>("DoF");
 }
 
 void CheckDoF::Uninit() {
@@ -63,7 +63,7 @@ void CheckDoF::Uninit() {
 void CheckDoF::Update() {}
 
 void CheckDoF::Draw() {
-	CheckBox* checkbox = dynamic_cast<CheckBox*>(Manager::GetGUIManager()->GetGUI(_screen));
+	CheckBox* checkbox = dynamic_cast<CheckBox*>(GUIManager::GetInstance()->GetGUI(_screen));
 	if (!checkbox) {
 		return;
 	}

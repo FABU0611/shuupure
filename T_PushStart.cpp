@@ -25,13 +25,13 @@ void TitlePush::Init(){
 
 	SetPosition({ SCREEN_WIDTH * 0.5f, 600.0f, 0.0f });
 
-	_start = Manager::GetGUIManager()->AddGUI<Button>(GetPosition(), XMFLOAT3(300.0f, 100.0f, 100.0f));
+	_start = GUIManager::GetInstance()->AddGUI<Button>(GetPosition(), XMFLOAT3(300.0f, 100.0f, 100.0f));
 
 	_str = "Start";
 }
 
 void TitlePush::Update(){
-	Button* button = dynamic_cast<Button*>(Manager::GetGUIManager()->GetGUI(_start));
+	Button* button = dynamic_cast<Button*>(GUIManager::GetInstance()->GetGUI(_start));
 	if (!button) {
 		return;
 	}

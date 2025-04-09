@@ -109,7 +109,7 @@ void CheckCameraDepth::Init() {
 
 	Renderer::GetDevice()->CreateBuffer(&bd, &sd, &_vertexbuffer);
 
-	_screen = Manager::GetGUIManager()->AddGUI<CheckBox>(XMFLOAT3(100.0f, 225.0f, 0.0f));
+	_screen = GUIManager::GetInstance()->AddGUI<CheckBox>("CameraDepth");
 }
 
 void CheckCameraDepth::Uninit() {
@@ -119,7 +119,7 @@ void CheckCameraDepth::Uninit() {
 void CheckCameraDepth::Update() {}
 
 void CheckCameraDepth::Draw() {
-	CheckBox* checkbox = dynamic_cast<CheckBox*>(Manager::GetGUIManager()->GetGUI(_screen));
+	CheckBox* checkbox = dynamic_cast<CheckBox*>(GUIManager::GetInstance()->GetGUI(_screen));
 	if (!checkbox) {
 		return;
 	}
