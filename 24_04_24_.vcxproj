@@ -175,6 +175,7 @@
     <ClCompile Include="CameraState_Title2.cpp" />
     <ClCompile Include="CheckCameraDepth.cpp" />
     <ClCompile Include="CheckDoF.cpp" />
+    <ClCompile Include="CheckTexture.cpp" />
     <ClCompile Include="C_AnimationModel.cpp" />
     <ClCompile Include="C_Audio.cpp" />
     <ClCompile Include="Camera.cpp" />
@@ -209,6 +210,7 @@
     <ClCompile Include="Pool.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Rendpoly.cpp" />
+    <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Score.cpp" />
     <ClCompile Include="ShaderManager.cpp" />
     <ClCompile Include="SphereInstence.cpp" />
@@ -226,7 +228,6 @@
     <ClCompile Include="S_Tutorial.cpp" />
     <ClCompile Include="Time.cpp" />
     <ClCompile Include="T_Title.cpp" />
-    <ClCompile Include="T_PushStart.cpp" />
     <ClCompile Include="T_Tutorial.cpp" />
     <ClCompile Include="T_Loading.cpp" />
     <ClCompile Include="UIManager.cpp" />
@@ -240,6 +241,7 @@
     <ClInclude Include="CameraState_Title2.h" />
     <ClInclude Include="CheckCameraDepth.h" />
     <ClInclude Include="CheckDoF.h" />
+    <ClInclude Include="CheckTexture.h" />
     <ClInclude Include="C_AnimationModel.h" />
     <ClInclude Include="C_Audio.h" />
     <ClInclude Include="Camera.h" />
@@ -305,7 +307,6 @@
     <ClInclude Include="S_Tutorial.h" />
     <ClInclude Include="Time.h" />
     <ClInclude Include="T_Title.h" />
-    <ClInclude Include="T_PushStart.h" />
     <ClInclude Include="T_Tutorial.h" />
     <ClInclude Include="T_Loading.h" />
     <ClInclude Include="UIManager.h" />
