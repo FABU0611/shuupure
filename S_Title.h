@@ -6,9 +6,12 @@
 #include "Scene.h"
 
 class Title : public Scene {
+	int _start;
+
 public:
 	Title() {}
 	~Title() {}
 
 	void Init() override;
+	void Update() override;
 };

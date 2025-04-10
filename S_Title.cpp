@@ -5,6 +5,7 @@
 #include "Renderer.h"
 #include "Manager.h"
 #include "TextManager.h"
+#include "GUIManager.h"
 
 #include "S_Title.h"
 #include "S_Tutorial.h"
@@ -18,8 +19,9 @@
 #include "Pool.h"
 #include "DivingBoard.h"
 #include "Polygon2D.h"
-#include "T_Pushstart.h"
 #include "T_Title.h"
+#include "G_Button.h"
+#include "S_Game.h"
 
 void Title::Init(){
 	AddGameobject<Camera>(Layer::System);
@@ -32,6 +34,19 @@ void Title::Init(){
 
 	AddGameobject<Sky>(Layer::BackGround, 250.0f);
 
-	TextManager::GetInstance()->AddText<TitlePush>(60.0f, D2D1::ColorF::Yellow, TextAnchor::Center);
+	_start = GUIManager::GetInstance()->AddGUI<Button>("Start", D2D1::ColorF::Yellow, XMFLOAT3(SCREEN_WIDTH * 0.5f, 600.0f, 0.0f), XMFLOAT3(300.0f, 100.0f, 100.0f));
 	TextManager::GetInstance()->AddText<TitleText>(80.0f, D2D1::ColorF::GreenYellow, TextAnchor::Center);
+}
+
+void Title::Update() {
+	Button* button = dynamic_cast<Button*>(GUIManager::GetInstance()->GetGUI(_start));
+	if (!button) {
+		return;
+	}
+	//ƒV[ƒ“‘JˆÚ
+	if (button->OnClicked(VK_LBUTTON)) {
+		Manager::SetSceneFade<Game>(0.05f);
+	}
+
+	Scene::Update();
 }
