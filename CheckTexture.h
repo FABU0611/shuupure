@@ -14,8 +14,8 @@ class CheckTexture : public GameObject {
 	ShaderName _shadername = ShaderName::Unlit;
 
 public:
-	CheckTexture(const std::string& label, const unsigned short& dispnum, std::vector<ID3D11ShaderResourceView*> srv, const ShaderName& shadername);
-	CheckTexture(const std::string& label, ID3D11ShaderResourceView* srv, const ShaderName& shadername);
+	CheckTexture(const std::string& label, std::vector<ID3D11ShaderResourceView*> srv, const ShaderName& shadername, const XMFLOAT3& dispsize);
+	CheckTexture(const std::string& label, ID3D11ShaderResourceView* srv, const ShaderName& shadername, const XMFLOAT3& dispsize);
 	~CheckTexture() {}
 
 	void Init() override;

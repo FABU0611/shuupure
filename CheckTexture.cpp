@@ -6,26 +6,33 @@
 #include "G_CheckBox.h"
 #include "GUIManager.h"
 
-CheckTexture::CheckTexture(const std::string& label, const unsigned short& dispnum, std::vector<ID3D11ShaderResourceView*> srv, const ShaderName& shadername)
-:_dispnum(dispnum), _srv(srv), _shadername(shadername) {
+CheckTexture::CheckTexture(const std::string& label, std::vector<ID3D11ShaderResourceView*> srv, const ShaderName& shadername, const XMFLOAT3& dispsize)
+:_dispnum(srv.size()), _srv(srv), _shadername(shadername) {
 	int size = GUIManager::GetInstance()->GetGUISize();
 	_index = GUIManager::GetInstance()->AddGUI<CheckBox>(label);
-}
 
-CheckTexture::CheckTexture(const std::string& label, ID3D11ShaderResourceView* srv, const ShaderName& shadername) :
-	_dispnum(1), _shadername(shadername) {
-	_srv.push_back(srv);
-	int size = GUIManager::GetInstance()->GetGUISize();
-	_index = GUIManager::GetInstance()->AddGUI<CheckBox>(label);
-}
-
-//‰Šú‰»ˆ—
-void CheckTexture::Init() {
 	Sprite2D* sprite = AddComponent<Sprite2D>(this);
 	sprite->SetPos(XMFLOAT3(0.0f, 0.0f, 0.0f));
 	sprite->SetDrawMode(DrawMode::Multiply);
 	sprite->Sprite::CreateVertexBuffer(_dispnum);
+	sprite->SetSize(dispsize);
 }
+
+CheckTexture::CheckTexture(const std::string& label, ID3D11ShaderResourceView* srv, const ShaderName& shadername, const XMFLOAT3& dispsize) :
+	_dispnum(1), _shadername(shadername) {
+	_srv.push_back(srv);
+	int size = GUIManager::GetInstance()->GetGUISize();
+	_index = GUIManager::GetInstance()->AddGUI<CheckBox>(label);
+
+	Sprite2D* sprite = AddComponent<Sprite2D>(this);
+	sprite->SetPos(XMFLOAT3(0.0f, 0.0f, 0.0f));
+	sprite->SetDrawMode(DrawMode::Multiply);
+	sprite->Sprite::CreateVertexBuffer(_dispnum);
+	sprite->SetSize(dispsize);
+}
+
+//‰Šú‰»ˆ—
+void CheckTexture::Init() {}
 
 //I—¹ˆ—
 void CheckTexture::Uninit() {
@@ -57,6 +64,5 @@ void CheckTexture::Draw() {
 		return;
 	}
 	sprite->SetDispSRV(_srv);
-	//sprite->Sprite::_texture = _srv[0];
 	sprite->Draw();
 }
