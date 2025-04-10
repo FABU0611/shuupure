@@ -25,6 +25,7 @@ public:
 	void Uninit();
 	void Update();
 	void Draw();
+	void SetSlider();
 
 	/// <summary> ピントの位置と広さを設定 </summary>
 	/// <param name="x"> ピントの位置</param>

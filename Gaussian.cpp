@@ -7,6 +7,8 @@
 #include "GaussianY.h"
 #include "Input.h"
 #include "Manager.h"
+#include "GUIManager.h"
+#include "G_Slidebar.h"
 #include "Scene.h"
 #include "S_Title.h"
 
@@ -37,6 +39,8 @@ void Gaussian::Init() {
 	_gaussianx->Init();
 	_gaussiany = new GaussianY();
 	_gaussiany->Init();
+
+	SetSlider();
 }
 
 void Gaussian::Uninit() {
@@ -86,4 +90,10 @@ void Gaussian::Draw() {
 	_gaussianx->Draw();
 	Renderer::BeginBlurY();
 	_gaussiany->Draw();
+}
+
+void Gaussian::SetSlider() {
+	GUIManager::GetInstance()->AddGUI<Slidebar>("ボケ具合", XMFLOAT3(10.0f, 400.0f, 0.0f), 10.0f, 0.01f, &_param.z);
+	GUIManager::GetInstance()->AddGUI<Slidebar>("ボケ位置", XMFLOAT3(10.0f, 450.0f, 0.0f), 2.0f, 0.0f, &_dof.x);
+	GUIManager::GetInstance()->AddGUI<Slidebar>("ボケ範囲", XMFLOAT3(10.0f, 500.0f, 0.0f), 1.0f, 0.01f, &_dof.y);
 }

@@ -180,6 +180,8 @@ void Manager::Draw() {
 	_scene = _nextscene;
 	_scene->Init();
 
+	_gaussian->SetSlider();
+
 	_nextscene = nullptr;
 }
 
