@@ -93,7 +93,7 @@ void Gaussian::Draw() {
 }
 
 void Gaussian::SetSlider() {
-	GUIManager::GetInstance()->AddGUI<Slidebar>("ボケ具合", XMFLOAT3(10.0f, 400.0f, 0.0f), 10.0f, 0.01f, &_param.z);
-	GUIManager::GetInstance()->AddGUI<Slidebar>("ボケ位置", XMFLOAT3(10.0f, 450.0f, 0.0f), 2.0f, 0.0f, &_dof.x);
-	GUIManager::GetInstance()->AddGUI<Slidebar>("ボケ範囲", XMFLOAT3(10.0f, 500.0f, 0.0f), 1.0f, 0.01f, &_dof.y);
+	GUIManager::GetInstance()->AddGUI<Slidebar>("ボケ具合", XMFLOAT3(10.0f, 470.0f, 0.0f), 10.0f, 0.01f, &_param.z);
+	GUIManager::GetInstance()->AddGUI<Slidebar>("ボケ位置", XMFLOAT3(10.0f, 520.0f, 0.0f), 2.0f, 0.0f, &_dof.x);
+	GUIManager::GetInstance()->AddGUI<Slidebar>("ボケ範囲", XMFLOAT3(10.0f, 570.0f, 0.0f), 1.0f, 0.01f, &_dof.y);
 }
