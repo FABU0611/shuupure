@@ -4,8 +4,12 @@
 #include "G_Button.h"
 #include "Input.h"
 
-Button::Button(const XMFLOAT3& pos, const XMFLOAT3& size)
-	:GUI(pos, true, size, L"asset\\texture\\button.png") {}
+Button::Button(const std::string& label, const D2D1::ColorF& color, const XMFLOAT3& pos, const XMFLOAT3& size)
+	:GUI(pos, true, size, L"asset\\texture\\button.png") {
+	auto text = TextManager::GetInstance()->AddText<Text>(size.y * 0.6f, color, TextAnchor::Center);
+	text->SetString(label);
+	text->SetPosition(pos);
+}
 
 bool Button::OnClicked(const int& mousebutton) {
 	if (IsHovered(Input::GetMousePosition())) {
