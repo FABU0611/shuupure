@@ -59,10 +59,10 @@ void Sprite2D::Draw(){
 	}
 	else if (_mode == DrawMode::Multiply) {
 		for (int i = 0; i < _dispNum; i++) {
-			vertex[i * 4 + 0].Position = { _pos.x + SCREEN_HEIGHT * (0.25f * i) + (10.0f * i), _pos.y, 0.0f };
-			vertex[i * 4 + 1].Position = { _pos.x + SCREEN_HEIGHT * (0.25f * (i + 1)) + (10.0f * i), _pos.y, 0.0f };
-			vertex[i * 4 + 2].Position = { _pos.x + SCREEN_HEIGHT * (0.25f * i) + (10.0f * i), _pos.y + SCREEN_HEIGHT * 0.25f, 0.0f };
-			vertex[i * 4 + 3].Position = { _pos.x + SCREEN_HEIGHT * (0.25f * (i + 1)) + (10.0f * i), _pos.y + SCREEN_HEIGHT * 0.25f, 0.0f };
+			vertex[i * 4 + 0].Position = { _pos.x + _size.x * (0.25f * i) + (10.0f * i), _pos.y, 0.0f };
+			vertex[i * 4 + 1].Position = { _pos.x + _size.x * (0.25f * (i + 1)) + (10.0f * i), _pos.y, 0.0f };
+			vertex[i * 4 + 2].Position = { _pos.x + _size.x * (0.25f * i) + (10.0f * i), _pos.y + _size.y * 0.25f, 0.0f };
+			vertex[i * 4 + 3].Position = { _pos.x + _size.x * (0.25f * (i + 1)) + (10.0f * i), _pos.y + _size.y * 0.25f, 0.0f };
 		}
 	}
 	else {
@@ -131,14 +131,10 @@ void Sprite2D::Draw(){
 	Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
 	if (_mode == DrawMode::Multiply) {
-		std::vector<ID3D11ShaderResourceView*> srv(Renderer::CASCADE_NUM);
-		for (int i = 0; i < Renderer::CASCADE_NUM; i++) {
-			srv[i] = (Renderer::GetCameraDepthTexture(i));
-		}
 		//テクスチャ設定
 		for (int i = 0; i < _dispNum; i++) {
 			//テクスチャ設定
-			Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &srv[i]);
+			Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &_srv[i]);
 			Renderer::GetDeviceContext()->Draw(4, 4 * i);
 		}
 	}
