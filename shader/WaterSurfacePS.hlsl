@@ -92,7 +92,7 @@ void main(in PS_IN In, out PS_OUT Out) {
 	refv = normalize(refv);
 	
 	float2 uv;
-	uv.x = (-atan2(refv.x, refv.z) / (PI * 2)) + 0.75f;
+	uv.x = -atan2(refv.x, refv.z) / (PI * 2);
 	uv.y = acos(refv.y) / PI;
 	
 	float3 reflect = g_Env.Sample(g_SamplerState, uv);
