@@ -7,14 +7,16 @@
 #include "Time.h"
 #include "Resource.h"
 
-//#define _CRTDBG_MAP_ALLOC
-//#include <cstdlib>
-//#include <crtdbg.h>
+#define _CRTDBG_MAP_ALLOC
+#include <cstdlib>
+#include <crtdbg.h>
 //#define new  ::new( _NORMAL_BLOCK, __FILE__, __LINE__ )
 //#define malloc(p1)  _malloc_dbg(p1,_NORMAL_BLOCK,__FILE__,__LINE__)
 
 const char* CLASS_NAME = "AppClass";
-const char* WINDOW_NAME = "Spin Dive";
+const char* WINDOW_NAME = "就職作品";
+const unsigned int ACTIVE_WINDOW_TIME = 1000;	// アクティブウィンドウの時間
+const unsigned int INACTIVE_WINDOW_TIME = 5000;	// 非アクティブウィンドウの時間
 
 #ifdef _DEBUG
 float		g_CountFPS;				// FPSカウンタ
@@ -46,9 +48,10 @@ void ExitApplication() {
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
 
-	//_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
 	DWORD dwFPSLastTime;
+	unsigned int updateTime = 1000;
 
 	WNDCLASSEX wcex;
 	{
@@ -110,31 +113,33 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 		else {
 			dwCurrentTime = timeGetTime();
 
-			if ((dwCurrentTime - dwFPSLastTime) >= 1000) {	// 1秒ごとに実行
+			if ((dwCurrentTime - dwFPSLastTime) >= updateTime) {	// 1秒ごとに実行
 #ifdef _DEBUG
 				g_CountFPS = Time::GetFrameRate();
 #endif
 				dwFPSLastTime = dwCurrentTime;				// FPSを測定した時刻を保存
 			}
 
-			//if ((dwCurrentTime - dwExecLastTime) >= (1000 / 60)) {
+			//ウィンドウが異なる場合は更新を行わない
+			if (GetActiveWindow() != GetWindow()) {
+				updateTime = INACTIVE_WINDOW_TIME;
+			}
+			else {
+				updateTime = ACTIVE_WINDOW_TIME;
+			}
+			if ((dwCurrentTime - dwExecLastTime) >= (updateTime / 60)) {
 
 #ifdef _DEBUG	// デバッグ版の時だけFPSを表示する
 				sprintf_s(g_DebugStr, " FPS:%.0f", g_CountFPS);
 				SetWindowText(g_Window, g_DebugStr);
 #endif
 
-				//float fps = 1000.0f / (dwCurrentTime - dwExecLastTime);
-				//std::string title;
-				//title = "Game" + std::to_string(fps) + "fps";
-				//SetWindowText(g_Window, title.c_str());
-
 				dwExecLastTime = dwCurrentTime;
 
 				Time::Update();
 				Manager::Update();
 				Manager::Draw();
-			//}
+			}
 		}
 	}
 
