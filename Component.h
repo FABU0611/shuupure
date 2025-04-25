@@ -10,7 +10,9 @@ protected:
 public:
 	Component() = delete;
 	Component(GameObject* object) { _gameobject = object; }
-	virtual ~Component() {}
+	virtual ~Component() {
+		_gameobject = nullptr;
+	}
 
 	virtual void Init() {};
 	virtual void Uninit() {};
