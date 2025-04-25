@@ -8,7 +8,7 @@
 class CheckCameraDepth {
 	ID3D11Buffer* _vertexbuffer = NULL;
 
-	int					_screen{};
+	class CheckBox*	_screen{};
 
 public:
 	CheckCameraDepth() {}

@@ -25,7 +25,7 @@ void CheckBox::Init() {
 	GetComponent<Sprite2D>()->SetUVend({ 0.5f, 1.0f });
 }
 
-bool CheckBox::OnClicked(const int& mousebutton) {
+bool CheckBox::OnClicked(const MOUSE_BUTTON& mousebutton) {
 	if (IsHovered(Input::GetMousePosition())){
 		Sprite2D* s = dynamic_cast<Sprite2D*>(GetComponent<Sprite2D>());
 		if (!s) {

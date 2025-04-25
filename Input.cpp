@@ -59,6 +59,10 @@ HRESULT Input::UpdateControllerState()
 }
 
 void Input::Update(){
+	//アクティブウィンドウが異なる場合は、入力を無視
+	if (GetActiveWindow() != GetWindow()) {
+		return;
+	}
 	memcpy(_oldkeystate, _keystate, 256);
 	(void)GetKeyboardState(_keystate);
 
@@ -90,14 +94,16 @@ bool Input::GetKeyRelease(BYTE KeyCode){
 }
 
 //マウス入力-------------------------------------------------------------------
-bool Input::GetMousePress(int Button){
-	return _mousestate[Button];
+bool Input::GetMousePress(MOUSE_BUTTON Button){
+	return _mousestate[static_cast<int>(Button)];
 }
-bool Input::GetMouseTrigger(int Button){
-	return (_mousestate[Button] && !_oldmousestate[Button]);
+bool Input::GetMouseTrigger(MOUSE_BUTTON Button){
+	int button = static_cast<int>(Button);
+	return (_mousestate[button] && !_oldmousestate[button]);
 }
-bool Input::GetMouseRelease(int Button){
-	return (!_mousestate[Button] && _oldmousestate[Button]);
+bool Input::GetMouseRelease(MOUSE_BUTTON Button){
+	int button = static_cast<int>(Button);
+	return (!_mousestate[button] && _oldmousestate[button]);
 }
 POINT Input::GetMousePosition(){
 	return _mousepos;
@@ -171,12 +177,12 @@ float Input::GetRightTrigger(const int& padindex) {
 //バイブレーション
 void Input::SetLeftVibration(const int& padindex, float speed) {
 	if (padindex >= 0 && padindex < MAX_CONTROLLERS) {
-		_gamepad[padindex].Vibration.wLeftMotorSpeed = (speed * 65535.0f);
+		_gamepad[padindex].Vibration.wLeftMotorSpeed = static_cast<WORD>(speed * 65535.0f);
 	}
 }
 void Input::SetRightVibration(const int& padindex, float speed) {
 	if (padindex >= 0 && padindex < MAX_CONTROLLERS) {
-		_gamepad[padindex].Vibration.wRightMotorSpeed = (speed * 65535.0f);
+		_gamepad[padindex].Vibration.wRightMotorSpeed = static_cast<WORD>(speed * 65535.0f);
 	}
 }
 void Input::StopVibration(const int& padindex) {

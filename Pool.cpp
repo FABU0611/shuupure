@@ -18,7 +18,7 @@ void Pool::Init(){
 	_param.x = -1.0f;
 	Renderer::SetParameter(_param);
 	int size = GUIManager::GetInstance()->GetGUISize();
-	_showcascade = GUIManager::GetInstance()->AddGUI<CheckBox>("Cascade");
+	//_showcascade = GUIManager::GetInstance()->AddGUI<CheckBox>("Cascade");
 }
 
 void Pool::Uninit(){
@@ -28,11 +28,10 @@ void Pool::Uninit(){
 }
 
 void Pool::Update(){
-	CheckBox* checkbox = dynamic_cast<CheckBox*>(GUIManager::GetInstance()->GetGUI(_showcascade));
-	if (!checkbox) {
+	if (!_showcascade) {
 		return;
 	}
-	if (checkbox->OnClicked(VK_LBUTTON)) {
+	if (_showcascade->OnClicked(MOUSE_BUTTON::MOUSE_LBUTTON)) {
 		_param.x = 1.0;
 	}
 	else {

@@ -36,5 +36,5 @@ public:
 	void Update() override;
 	void Draw() override;
 
-	bool OnClicked(const int& mousebutton) override;
+	bool OnClicked(const MOUSE_BUTTON& mousebutton) override;
 };

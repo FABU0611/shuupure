@@ -6,7 +6,7 @@
 
 #define MAX_CONTROLLERS (4) // 最大コントローラ数
 
-static enum MOUSE_BUTTON {
+enum class MOUSE_BUTTON {
 	MOUSE_RBUTTON = 0,	//左クリック
 	MOUSE_LBUTTON,		//右クリック
 	MOUSE_MBUTTON,		//ホイールボタン
@@ -45,9 +45,9 @@ public:
 	static bool GetKeyTrigger(BYTE KeyCode);
 	static bool GetKeyRelease(BYTE KeyCode);
 
-	static bool GetMousePress(int Button);
-	static bool GetMouseTrigger(int Button);
-	static bool GetMouseRelease(int Button);
+	static bool GetMousePress(MOUSE_BUTTON Button);
+	static bool GetMouseTrigger(MOUSE_BUTTON Button);
+	static bool GetMouseRelease(MOUSE_BUTTON Button);
 	static POINT GetMousePosition();
 	static int GetMouseWheelDelta();
 

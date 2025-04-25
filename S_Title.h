@@ -6,7 +6,7 @@
 #include "Scene.h"
 
 class Title : public Scene {
-	int _start;
+	class Button* _start;
 
 public:
 	Title() {}

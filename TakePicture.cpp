@@ -4,14 +4,25 @@
 #include "TakePicture.h"
 #include "Main.h"
 #include "Renderer.h"
+#include "GUIManager.h"
+#include "G_Button.h"
 #include "Input.h"
 #include "Time.h"
 #include <string>
 #include <sstream>
 #include <filesystem>
 
+Button* TakePicture::_button = nullptr;
+
+void TakePicture::Init() {
+	//_button = GUIManager::GetInstance()->AddGUI<Button>("imaging", D2D1::ColorF::Black, XMFLOAT3(1100.0f, 600.0f, 0.0f), XMFLOAT3(225.0f, 75.0f, 100.0f));
+}
+
 void TakePicture::TakePic() {
-	if (Input::GetKeyTrigger('T')) {
+	if (!_button) {
+		return;
+	}
+	if (Input::GetKeyTrigger('T') || _button->OnClicked(MOUSE_BUTTON::MOUSE_LBUTTON)) {
 		D3D11_TEXTURE2D_DESC desc;
 		ID3D11Texture2D* tex = Renderer::GetRendertargetTEX();
 		ID3D11Device* device = Renderer::GetDevice();
@@ -31,7 +42,7 @@ void TakePicture::TakePic() {
 		}
 
 		//レンダリングターゲットからステージングバッファにコピー
-		Renderer::GetDeviceContext()->CopyResource(stagingTexture, tex);
+		devicecontext->CopyResource(stagingTexture, tex);
 
 		//ステージングバッファからデータを取得
 		D3D11_MAPPED_SUBRESOURCE mappedResource;

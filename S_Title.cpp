@@ -39,12 +39,11 @@ void Title::Init(){
 }
 
 void Title::Update() {
-	Button* button = dynamic_cast<Button*>(GUIManager::GetInstance()->GetGUI(_start));
-	if (!button) {
+	if (!_start) {
 		return;
 	}
 	//ƒV[ƒ“‘JˆÚ
-	if (button->OnClicked(VK_LBUTTON)) {
+	if (_start->OnClicked(MOUSE_BUTTON::MOUSE_LBUTTON)) {
 		Manager::SetSceneFade<Game>(0.05f);
 	}
 

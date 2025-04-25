@@ -4,6 +4,7 @@
 #pragma once
 
 #include "GameObject.h"
+#include "Input.h"
 
 class GUI : public GameObject{
 protected:
@@ -22,5 +23,5 @@ public:
 	virtual void Draw();
 
 	virtual bool IsHovered(const POINT pos);	//マウスが重なっているか
-	virtual bool OnClicked(const int& mousebutton) = 0;
+	virtual bool OnClicked(const MOUSE_BUTTON& mousebutton) = 0;
 };

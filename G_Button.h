@@ -11,5 +11,5 @@ public:
 	Button(const std::string& label, const D2D1::ColorF& color, const XMFLOAT3& pos, const XMFLOAT3& size);
 	~Button() {}
 
-	bool OnClicked(const int& mousebutton) override;
+	bool OnClicked(const MOUSE_BUTTON& mousebutton) override;
 };

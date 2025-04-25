@@ -11,7 +11,7 @@ Button::Button(const std::string& label, const D2D1::ColorF& color, const XMFLOA
 	text->SetPosition(pos);
 }
 
-bool Button::OnClicked(const int& mousebutton) {
+bool Button::OnClicked(const MOUSE_BUTTON& mousebutton) {
 	if (IsHovered(Input::GetMousePosition())) {
 		return Input::GetMouseTrigger(mousebutton);
 	}

@@ -89,6 +89,6 @@ void Slidebar::Draw() {
 }
 
 //ƒNƒŠƒbƒN‚µ‚½‚Æ‚«‚Í“Á‚É‰½‚à‚È‚µ
-bool Slidebar::OnClicked(const int& mousebutton) {
+bool Slidebar::OnClicked(const MOUSE_BUTTON& mousebutton) {
 	return false;
 }

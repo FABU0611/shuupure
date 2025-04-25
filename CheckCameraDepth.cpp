@@ -119,11 +119,10 @@ void CheckCameraDepth::Uninit() {
 void CheckCameraDepth::Update() {}
 
 void CheckCameraDepth::Draw() {
-	CheckBox* checkbox = dynamic_cast<CheckBox*>(GUIManager::GetInstance()->GetGUI(_screen));
-	if (!checkbox) {
+	if (!_screen) {
 		return;
 	}
-	if (!checkbox->OnClicked(VK_LBUTTON)) {
+	if (!_screen->OnClicked(MOUSE_BUTTON::MOUSE_LBUTTON)) {
 		return;
 	}
 
