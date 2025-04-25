@@ -8,7 +8,6 @@
 #include "GUIManager.h"
 
 #include "S_Title.h"
-#include "S_Tutorial.h"
 
 #include "Camera.h"
 #include "LightCamera.h"
