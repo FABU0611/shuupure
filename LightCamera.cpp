@@ -7,7 +7,7 @@
 #include "Camera.h"
 #include "CheckTexture.h"
 #include "ShaderManager.h"
-#include <vector>
+#include <list>
 
 void LightCamera::Init() {
 	SetPosition({ 0.0f, 1.5f, 3.0f });
@@ -19,16 +19,19 @@ void LightCamera::Init() {
 	_light.Ambient = { 0.1f, 0.1f, 0.1f, 1.0f };
 	_light.Diffuse = { 1.0f, 1.0f, 1.0f, 1.0f };
 	
-	std::vector<ID3D11ShaderResourceView*> srv(Renderer::CASCADE_NUM);
+	std::list<ID3D11ShaderResourceView*> srv;
 	for (int i = 0; i < Renderer::CASCADE_NUM; i++) {
-		srv[i] = (Renderer::GetCameraDepthTexture(i));
+		srv.push_back((Renderer::GetCameraDepthTexture(i)));
 	}
-	Manager::GetScene()->AddGameobject<CheckTexture>(Layer::UI, "LightDepth", srv, ShaderName::Unlit, XMFLOAT3(SCREEN_HEIGHT, SCREEN_HEIGHT, 0.0f));
+	//Manager::GetScene()->AddGameobject<CheckTexture>(Layer::UI, "LightDepth", srv, ShaderName::Unlit, XMFLOAT3(SCREEN_HEIGHT, SCREEN_HEIGHT, 0.0f));
+	srv.clear();
 }
 
-void LightCamera::Uninit() {}
-
-void LightCamera::Update() {}
+void LightCamera::Uninit() {
+	for (auto& comp : _components) {
+		comp->Uninit();
+	}
+}
 
 void LightCamera::Draw() {
 	//ƒV[ƒ“‚ÌƒJƒƒ‰‚ğæ“¾

@@ -61,6 +61,8 @@ void Manager::Init() {
 
 	_scene = new Title();
 	_scene->Init();
+
+	TakePicture::Init();
 }
 
 
@@ -181,6 +183,7 @@ void Manager::Draw() {
 	_scene->Init();
 
 	_gaussian->SetSlider();
+	TakePicture::Init();
 
 	_nextscene = nullptr;
 }

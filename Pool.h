@@ -7,7 +7,7 @@
 
 class Pool : public GameObject {
 	XMFLOAT4	_param;
-	int			_showcascade{};
+	class CheckBox*	_showcascade{};
 
 public:
 	Pool(const XMFLOAT3& pos) {

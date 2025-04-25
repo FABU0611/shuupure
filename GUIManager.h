@@ -2,7 +2,7 @@
 //20106_ìcíÜÅ@ò@
 //24_11_17
 #pragma once
-#include <vector>
+#include <list>
 #include "GUI.h"
 
 
@@ -13,7 +13,7 @@ class GUIManager {
 	GUIManager& operator=(const GUIManager&) = delete;
 	
 	static void DeleteInstance();
-	std::vector<GUI*>	_guis;		//óvëfî‘çÜÇ™ó~ÇµÇ¢ÇÃÇ≈vector
+	std::list<GUI*>	_guis;
 
 	static GUIManager* _instance;
 	void Uninit();
@@ -27,13 +27,13 @@ public:
 	void Draw();
 
 	template <typename T, typename... Args>
-	int AddGUI(Args&& ...args) {
-		GUI* gui = new T(std::forward<Args>(args)...);
+	T* AddGUI(Args&& ...args) {
+		T* gui = new T(std::forward<Args>(args)...);
 		_guis.push_back(gui);
 		gui->Init();
 
-		return (int)_guis.size() - 1;
+		return gui;
 	}
-	GUI* GetGUI(const int& index);
 	int GetGUISize() { return (int)_guis.size(); }
+	int GetCkeckBoxSize();
 };

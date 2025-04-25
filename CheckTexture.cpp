@@ -6,10 +6,9 @@
 #include "G_CheckBox.h"
 #include "GUIManager.h"
 
-CheckTexture::CheckTexture(const std::string& label, std::vector<ID3D11ShaderResourceView*> srv, const ShaderName& shadername, const XMFLOAT3& dispsize)
-:_dispnum(srv.size()), _srv(srv), _shadername(shadername) {
-	int size = GUIManager::GetInstance()->GetGUISize();
-	_index = GUIManager::GetInstance()->AddGUI<CheckBox>(label);
+CheckTexture::CheckTexture(const std::string& label, std::list<ID3D11ShaderResourceView*>& srv, const ShaderName& shadername, const XMFLOAT3& dispsize)
+:_dispnum(static_cast<unsigned short>(srv.size())), _srv(std::move(srv)), _shadername(shadername) {
+	_checkbox = GUIManager::GetInstance()->AddGUI<CheckBox>(label);
 
 	Sprite2D* sprite = AddComponent<Sprite2D>(this);
 	sprite->SetPos(XMFLOAT3(0.0f, 0.0f, 0.0f));
@@ -21,8 +20,7 @@ CheckTexture::CheckTexture(const std::string& label, std::vector<ID3D11ShaderRes
 CheckTexture::CheckTexture(const std::string& label, ID3D11ShaderResourceView* srv, const ShaderName& shadername, const XMFLOAT3& dispsize) :
 	_dispnum(1), _shadername(shadername) {
 	_srv.push_back(srv);
-	int size = GUIManager::GetInstance()->GetGUISize();
-	_index = GUIManager::GetInstance()->AddGUI<CheckBox>(label);
+	_checkbox = GUIManager::GetInstance()->AddGUI<CheckBox>(label);
 
 	Sprite2D* sprite = AddComponent<Sprite2D>(this);
 	sprite->SetPos(XMFLOAT3(0.0f, 0.0f, 0.0f));
@@ -31,14 +29,12 @@ CheckTexture::CheckTexture(const std::string& label, ID3D11ShaderResourceView* s
 	sprite->SetSize(dispsize);
 }
 
-//‰Šú‰»ˆ—
-void CheckTexture::Init() {}
-
 //I—¹ˆ—
 void CheckTexture::Uninit() {
 	for (auto& comp : _components) {
 		comp->Uninit();
 	}
+	_srv.clear();
 }
 
 //XVˆ—
@@ -50,11 +46,10 @@ void CheckTexture::Update() {
 
 //•`‰æˆ—
 void CheckTexture::Draw() {
-	CheckBox* checkbox = dynamic_cast<CheckBox*>(GUIManager::GetInstance()->GetGUI(_index));
-	if (!checkbox) {
+	if (!_checkbox) {
 		return;
 	}
-	if (!checkbox->OnClicked(VK_LBUTTON)) {
+	if (!_checkbox->OnClicked(MOUSE_BUTTON::MOUSE_LBUTTON)) {
 		return;
 	}
 	Shader::SetShader(_shadername);

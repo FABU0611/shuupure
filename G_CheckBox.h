@@ -15,9 +15,9 @@ public:
 
 	void Init()override;
 
-	bool OnClicked(const int& mousebutton) override;
+	bool OnClicked(const MOUSE_BUTTON& mousebutton) override;
 	XMFLOAT3 CalcPosition(){
-		float pos = 100.0f * (GUIManager::GetInstance()->GetGUISize() + 2);
+		float pos = 200.0f + 75.0f * GUIManager::GetInstance()->GetCkeckBoxSize();
 		return { 0.0f, pos, 0.0f };
 	}
 };

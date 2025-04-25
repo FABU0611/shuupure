@@ -132,10 +132,11 @@ void Sprite2D::Draw(){
 
 	if (_mode == DrawMode::Multiply) {
 		//テクスチャ設定
-		for (int i = 0; i < _dispNum; i++) {
-			//テクスチャ設定
-			Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &_srv[i]);
+		int i = 0;
+		for (const auto& srv : _srv) {
+			Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &srv);
 			Renderer::GetDeviceContext()->Draw(4, 4 * i);
+			i++;
 		}
 	}
 	else {
@@ -143,4 +144,11 @@ void Sprite2D::Draw(){
 		Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &_texture);
 		Renderer::GetDeviceContext()->Draw(4, 0);
 	}
+	_srv.clear();
+}
+
+void Sprite2D::Uninit() {
+	Sprite::Uninit();
+
+	_srv.clear();
 }
