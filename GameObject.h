@@ -29,7 +29,9 @@ public:
 				continue;
 			}
 			delete c;
+			c = nullptr;
 		}
+		_components.clear();
 	}
 
 	virtual void Init() = 0 {}
