@@ -4,6 +4,7 @@
 #include "GUIManager.h"
 #include "Manager.h"
 #include "Scene.h"
+#include "G_CheckBox.h"
 
 GUIManager* GUIManager::_instance = nullptr;
 
@@ -24,7 +25,7 @@ void GUIManager::DeleteInstance() {
 }
 
 void GUIManager::Uninit() {
-	for (auto& g : _guis) {
+	for (auto& g : _instance->_guis) {
 		if (!g) {
 			continue;
 		}
@@ -32,24 +33,28 @@ void GUIManager::Uninit() {
 		delete g;
 		g = nullptr;
 	}
-	_guis.clear();
+	_instance->_guis.clear();
 }
 
 void GUIManager::Update() {
-	for (auto& g : _guis) {
+	for (auto& g : _instance->_guis) {
 		g->Update();
 	}
 }
 
 void GUIManager::Draw() {
-	for (auto& g : _guis) {
+	for (auto& g : _instance->_guis) {
 		g->Draw();
 	}
 }
 
-GUI* GUIManager::GetGUI(const int& index) {
-	if (index >= 0 && index < _guis.size()) {
-		return _guis[index];
+int GUIManager::GetCkeckBoxSize() {
+	int count = 0;
+	for (auto& g : _instance->_guis) {
+		if (!dynamic_cast<CheckBox*>(g)) {
+			continue;
+		}
+		count++;
 	}
-	return nullptr;
+	return count;
 }
