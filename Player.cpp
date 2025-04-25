@@ -104,11 +104,6 @@ void Player::Update() {
 		}
 	}
 
-	//ƒŠƒZƒbƒg
-	if (Input::GetKeyTrigger(VK_SPACE)) {
-		Manager::SetSceneFade<Game>(0.05f);
-	}
-
 	float groundpos = GetPosition().y;
 
 	for (auto c : _components) {

@@ -12,4 +12,5 @@ public:
 	~Game() {}
 
 	void Init() override;
+	void Update() override;
 };
