@@ -8,6 +8,7 @@
 #include "Scene.h"
 #include "Input.h"
 #include "Player.h"
+#include "PlayerState.h"
 #include "ParticleSmoke.h"
 #include "C_AnimationModel.h"
 #include "C_Transform.h"
@@ -28,6 +29,13 @@ Player::Player(const XMFLOAT3& pos, const XMFLOAT3& scl) :
 	_state(nullptr) {
 	SetPosition(pos);
 	SetScale(scl);
+}
+
+Player::~Player() {
+	if (!_state) {
+		return;
+	}
+	delete _state;
 }
 
 void Player::Init() {
@@ -155,6 +163,14 @@ void Player::Draw() {
 }
 
 void Player::Hit(GameObject* obj) {}
+
+void Player::ChangeState(PlayerState* next) {
+	if (!_state) {
+		return;
+	}
+	delete _state;
+	_state = next;
+}
 
 void Player::PlayAudioBig() {
 	PlayAudioMid();

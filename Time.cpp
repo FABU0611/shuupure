@@ -23,11 +23,11 @@ void Time::Update(){
     _lastTime = currentTime;                //次のフレームのために時間を更新
 }
 
-const float& Time::GetDeltaTime() {
+const float Time::GetDeltaTime() {
     return _deltatime * _gamespeed;
 }
 
-const float& Time::GetFrameRate() {
+const float Time::GetFrameRate() {
     float deltaTime = GetDeltaTime();
     return 1.0f / deltaTime;
 }

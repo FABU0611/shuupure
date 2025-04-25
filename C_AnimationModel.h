@@ -16,8 +16,8 @@ struct DEFORM_VERTEX {
 	aiVector3D Position{};
 	aiVector3D Normal{};
 	int				BoneNum{};
-	std::string		BoneName[4];//本来はボーンインデックスで管理するべき
-	float			BoneWeight[4];
+	std::string		BoneName[4]{};//本来はボーンインデックスで管理するべき
+	float			BoneWeight[4]{};
 };
 
 //ボーン構造体

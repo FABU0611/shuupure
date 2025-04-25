@@ -6,8 +6,6 @@
 #include "Renderer.h"
 #include <vector>
 
-class CameraState;
-
 class Camera : public GameObject {
 	static const float NEAR_CLIP;
 	static const float FAR_CLIP;
@@ -25,7 +23,7 @@ class Camera : public GameObject {
 	XMMATRIX		_prevview{};
 	XMMATRIX		_prevprojection{};
 
-	CameraState*	_state{};
+	class CameraState*	_state{};
 
 	void CalculationCascade();
 
@@ -43,13 +41,7 @@ public:
 
 	XMFLOAT3& GetTartgetPos() { return _target; }
 
-	void ChangeState(CameraState* state) {
-		if (!_state) {
-			return;
-		}
-		delete _state;
-		_state = state;
-	}
+	void ChangeState(CameraState* state);
 
 	XMVECTOR GetZDirection() const{ 
 		//ãtçsóÒ

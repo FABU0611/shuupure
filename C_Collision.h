@@ -6,7 +6,7 @@
 #include "Main.h"
 #include "Component.h"
 
-static enum class ColiderType {
+enum class ColiderType {
 	BOX,
 	SQUARE,
 	CYLINDER,

@@ -16,9 +16,9 @@ public:
     static void Update();
 
     //フレーム間の経過時間を取得
-    static const float& GetDeltaTime();
+    static const float GetDeltaTime();
     //現在のフレームレートを取得
-    static const float& GetFrameRate();
+    static const float GetFrameRate();
 	static const float& GetGameSpeed() { return _gamespeed; }
     static const std::wstring GetNowRealTime();
 

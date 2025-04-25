@@ -132,6 +132,14 @@ void Camera::Draw() {
 	Renderer::SetCameraPosition(GetPosition());
 }
 
+void Camera::ChangeState(CameraState* state) {
+	if (!_state) {
+		return;
+	}
+	delete _state;
+	_state = state;
+}
+
 //視錐台の８頂点をワールド座標にして出力
 std::vector<XMVECTOR> Camera::GetCornersWorldSpace(const float& nearZ, const float& farZ) const {
 	std::vector<XMVECTOR> corners(8);

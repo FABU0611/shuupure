@@ -6,18 +6,16 @@
 #include "GameObject.h"
 #include "Time.h"
 
-class PlayerState;
-class Smoke;
 
 class Player : public GameObject {
-	PlayerState*		_state{};
+	class PlayerState*	_state{};
 
 	XMFLOAT3			_velocity{};
 	XMFLOAT3			_accel{};
 	XMFLOAT3			_move{};
 
 	XMFLOAT3			_smokepos{};
-	Smoke*				_smoke{};
+	class Smoke*		_smoke{};
 
 	static const float FALL_NUM;
 	static const float JUMP_POWER;
@@ -26,11 +24,7 @@ class Player : public GameObject {
 	static const float FRICTION_NUM;
 public:
 	Player(const XMFLOAT3& pos, const XMFLOAT3& scl);
-	~Player() {
-		if (_state) {
-			delete _state;
-		}
-	}
+	~Player();
 
 	void Init()override;
 	void Uninit()override;
@@ -45,12 +39,7 @@ public:
 	const void SetVelocity(const XMFLOAT3& vel) { _velocity = vel; }
 
 	void Fall(const float& deltatime) { _velocity.y += _accel.y * deltatime; }
-	void ChangeState(PlayerState* next) {
-		if (_state) {
-			delete _state;
-			_state = next;
-		}
-	}
+	void ChangeState(PlayerState* next);
 	PlayerState* GetPlayerState()const { return _state; }
 	void TrunHeadup() {
 		XMFLOAT4 headup = { 0.0f, 0.0f, 0.0f, 1.0f };
