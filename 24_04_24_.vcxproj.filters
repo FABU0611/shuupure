@@ -105,12 +105,6 @@
     <ClCompile Include="T_Title.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="S_Tutorial.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Player_Tutorial.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Skyobj.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -130,9 +124,6 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="GaussianY.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="CheckDoF.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="MotionBlur.cpp">
@@ -335,12 +326,6 @@
     <ClInclude Include="ParticleJump.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="S_Tutorial.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Player_Tutorial.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Skyobj.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -363,9 +348,6 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="GaussianY.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="CheckDoF.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="MotionBlur.h">

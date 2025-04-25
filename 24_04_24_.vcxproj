@@ -174,7 +174,6 @@
     <ClCompile Include="CameraState_Title1.cpp" />
     <ClCompile Include="CameraState_Title2.cpp" />
     <ClCompile Include="CheckCameraDepth.cpp" />
-    <ClCompile Include="CheckDoF.cpp" />
     <ClCompile Include="CheckTexture.cpp" />
     <ClCompile Include="C_AnimationModel.cpp" />
     <ClCompile Include="C_Audio.cpp" />
@@ -205,7 +204,6 @@
     <ClCompile Include="ParticleEmitter.cpp" />
     <ClCompile Include="PBRObject.cpp" />
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="Player_Tutorial.cpp" />
     <ClCompile Include="Polygon2D.cpp" />
     <ClCompile Include="Pool.cpp" />
     <ClCompile Include="Renderer.cpp" />
@@ -225,7 +223,6 @@
     <ClCompile Include="S_Game.cpp" />
     <ClCompile Include="S_Result.cpp" />
     <ClCompile Include="S_Title.cpp" />
-    <ClCompile Include="S_Tutorial.cpp" />
     <ClCompile Include="Time.cpp" />
     <ClCompile Include="T_Title.cpp" />
     <ClCompile Include="T_Tutorial.cpp" />
@@ -240,7 +237,6 @@
     <ClInclude Include="CameraState_Title1.h" />
     <ClInclude Include="CameraState_Title2.h" />
     <ClInclude Include="CheckCameraDepth.h" />
-    <ClInclude Include="CheckDoF.h" />
     <ClInclude Include="CheckTexture.h" />
     <ClInclude Include="C_AnimationModel.h" />
     <ClInclude Include="C_Audio.h" />
@@ -282,7 +278,6 @@
     <ClInclude Include="PBRObject.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerState.h" />
-    <ClInclude Include="Player_Tutorial.h" />
     <ClInclude Include="Polygon2D.h" />
     <ClInclude Include="Pool.h" />
     <ClInclude Include="Renderer.h" />
@@ -304,7 +299,6 @@
     <ClInclude Include="S_Game.h" />
     <ClInclude Include="S_Result.h" />
     <ClInclude Include="S_Title.h" />
-    <ClInclude Include="S_Tutorial.h" />
     <ClInclude Include="Time.h" />
     <ClInclude Include="T_Title.h" />
     <ClInclude Include="T_Tutorial.h" />
