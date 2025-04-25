@@ -30,9 +30,11 @@ struct MATERIAL {
 	float4 Specular;
 	float4 Emission;
 	float Shininess;
+	float Roughness;
+	float Metallic;
 	bool TextureEnable;
 	bool NormalTextureEnable;
-	float Dummy;
+	float3 Dummy;
 };
 
 cbuffer MaterialBuffer : register(b3) {

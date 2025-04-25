@@ -21,9 +21,11 @@ struct MATERIAL {
 	XMFLOAT4	Specular;
 	XMFLOAT4	Emission;
 	float		Shininess;
+	float		Roughness;
+	float		Metallic;
 	BOOL		TextureEnable;
 	BOOL		NormalTextureEnable;
-	float		Dummy[1];
+	float		Dummy[3];
 };
 
 
