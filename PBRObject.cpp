@@ -4,9 +4,12 @@
 #include "PBRObject.h"
 #include "Renderer.h"
 #include "Manager.h"
+#include "Camera.h"
 #include "C_ModelRenderer.h"
+#include "G_Slidebar.h"
 #include "ShaderManager.h"
 #include "TextureManager.h"
+#include "GUIManager.h"
 #include "Input.h"
 
 
