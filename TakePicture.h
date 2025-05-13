@@ -4,9 +4,9 @@
 #pragma once
 
 class TakePicture {
-	static class Button* _button;
+	class Button* _button;
 
 public:
-	static void Init();
-	static void TakePic();
+	void Init();
+	void TakePic();
 };

@@ -12,10 +12,8 @@
 #include <sstream>
 #include <filesystem>
 
-Button* TakePicture::_button = nullptr;
-
 void TakePicture::Init() {
-	//_button = GUIManager::GetInstance()->AddGUI<Button>("imaging", D2D1::ColorF::Black, XMFLOAT3(1100.0f, 600.0f, 0.0f), XMFLOAT3(225.0f, 75.0f, 100.0f));
+	_button = GUIManager::GetInstance()->AddGUI<Button>("imaging", D2D1::ColorF::Black, XMFLOAT3(1100.0f, 600.0f, 0.0f), XMFLOAT3(225.0f, 75.0f, 100.0f));
 }
 
 void TakePicture::TakePic() {
