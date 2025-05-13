@@ -11,6 +11,7 @@ class Rendpoly;
 class Gaussian;
 class MotionBlur;
 class LoadingText;
+class TakePicture;
 
 
 class Manager {
@@ -29,6 +30,8 @@ class Manager {
 	static Gaussian* _gaussian;
 
 	static MotionBlur* _motionblur;
+
+	static TakePicture* _takepic;
 
 	static bool _isdrawfromlight;
 

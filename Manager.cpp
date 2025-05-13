@@ -32,6 +32,7 @@ Fade* Manager::_fade;
 Rendpoly* Manager::_final;
 Gaussian* Manager::_gaussian;
 MotionBlur* Manager::_motionblur;
+TakePicture* Manager::_takepic;
 bool Manager::_isdrawfromlight;
 int Manager::_cascadeidx = 0;
 
@@ -62,13 +63,16 @@ void Manager::Init() {
 	_scene = new Title();
 	_scene->Init();
 
-	TakePicture::Init();
+	_takepic = new TakePicture();
+	_takepic->Init();
 }
 
 
 void Manager::Uninit() {
 	_scene->Uninit();
 	delete _scene;
+
+	delete _takepic;
 
 	_motionblur->Uninit();
 	delete _motionblur;
@@ -143,7 +147,7 @@ void Manager::Draw() {
 	Renderer::Begin();
 	_final->Draw();
 
-	TakePicture::TakePic();
+	_takepic->TakePic();
 
 	//UIのみ描画
 	_scene->DrawUI();
@@ -163,8 +167,8 @@ void Manager::Draw() {
 	}
 	//次のシーンがセットされていたら
 	if (_scene) {
-		TextManager::GetInstance()->Uninit();
 		GUIManager::GetInstance()->Uninit();
+		TextManager::GetInstance()->Uninit();
 		_scene->Uninit();
 		delete _scene;
 		_scene = nullptr;
@@ -173,7 +177,7 @@ void Manager::Draw() {
 	//シーンで利用していたリソース解放
 	ModelRenderer::UnloadAll();
 	Audio::UninitAll();
-	//TextureManager::GetInstance()->Uninit();
+	TextureManager::GetInstance()->Uninit();
 
 	_fade->Uninit();
 	_fade->Init();
@@ -183,7 +187,7 @@ void Manager::Draw() {
 	_scene->Init();
 
 	_gaussian->SetSlider();
-	TakePicture::Init();
+	_takepic->Init();
 
 	_nextscene = nullptr;
 }
