@@ -27,15 +27,15 @@ void Game::Init() {
 	AddGameobject<Camera>(Layer::System);
 	AddGameobject<LightCamera>(Layer::System);
 
-	//AddGameobject<Sky>(Layer::BackGround, 250.0f);
+	AddGameobject<Sky>(Layer::BackGround, 250.0f);
 
-	//AddGameobject<Player>(Layer::Object, XMFLOAT3(0.0f, 5.0f, 0.0f), XMFLOAT3(1.0f, 1.0f, 1.0f));
-	//AddGameobject<Pool>(Layer::Object, XMFLOAT3(0.0f, 0.0f, 0.0f));
+	AddGameobject<Player>(Layer::Object, XMFLOAT3(0.0f, 5.0f, 0.0f), XMFLOAT3(1.0f, 1.0f, 1.0f));
+	AddGameobject<Pool>(Layer::Object, XMFLOAT3(0.0f, 0.0f, 0.0f));
 	AddGameobject<TestObject>(Layer::Object, XMFLOAT3(-10.0f, 10.0f, 30.0f));
 	AddGameobject<PBRObject>(Layer::Object);
 	AddGameobject<SphereInstance>(Layer::Object);
-	//AddGameobject<Water>(Layer::Transparency, XMFLOAT3(40.0f, 20.0f, 0.0f));
-	//AddGameobject<CheckTexture>(Layer::UI, "DoF", Renderer::GetDepthTexture(), ShaderName::CheckDoF, XMFLOAT3(SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f));
+	AddGameobject<Water>(Layer::Transparency, XMFLOAT3(40.0f, 20.0f, 0.0f));
+	AddGameobject<CheckTexture>(Layer::UI, "DoF", Renderer::GetDepthTexture(), ShaderName::CheckDoF, XMFLOAT3(SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f));
 }
 void Game::Update() {
 	//ÉVÅ[ÉìëJà⁄

@@ -19,14 +19,14 @@ Slidebar::Slidebar(const std::string& label, const XMFLOAT3& pos, const float& m
 	*_value = std::max(_min, std::min(_max, *_value));
 
 	//値を右側に表示
-	_valuetext = TextManager::GetInstance()->AddText<Text>(_size.y, D2D1::ColorF::Black, TextAnchor::CenterLeft);
-	_valuetext->SetString(std::to_string(*_value));
-	_valuetext->SetPosition({ pos.x + _size.x + _slidersize.y, pos.y + _size.y * 0.5f, 0.0f });
+	//_valuetext = TextManager::GetInstance()->AddText<Text>(_size.y, D2D1::ColorF::Black, TextAnchor::CenterLeft);
+	//_valuetext->SetString(std::to_string(*_value));
+	//_valuetext->SetPosition({ pos.x + _size.x + _slidersize.y, pos.y + _size.y * 0.5f, 0.0f });
 
-	//ラベルを左側に表示
-	_labeltext = TextManager::GetInstance()->AddText<Text>(_size.y, D2D1::ColorF::Black, TextAnchor::TopLeft);
-	_labeltext->SetString(label);
-	_labeltext->SetPosition({ pos.x, pos.y - _size.y, 0.0f });
+	////ラベルを左側に表示
+	//_labeltext = TextManager::GetInstance()->AddText<Text>(_size.y, D2D1::ColorF::Black, TextAnchor::TopLeft);
+	//_labeltext->SetString(label);
+	//_labeltext->SetPosition({ pos.x, pos.y - _size.y, 0.0f });
 }
 
 //初期化処理
@@ -66,7 +66,9 @@ void Slidebar::Update() {
 	float normalized = (*_value - _min) / (_max - _min);
 	_handleoffset.x = pos.x + _slidersize.x * normalized;
 	_handleoffset.y = pos.y + _slidersize.y * 0.5f;
-	_valuetext->SetString(std::to_string(*_value));
+	if (_valuetext) {
+		_valuetext->SetString(std::to_string(*_value));
+	}
 
 	_handle->SetPos(_handleoffset);
 

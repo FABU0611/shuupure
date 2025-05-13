@@ -23,7 +23,7 @@ void LightCamera::Init() {
 	for (int i = 0; i < Renderer::CASCADE_NUM; i++) {
 		srv.push_back((Renderer::GetCameraDepthTexture(i)));
 	}
-	//Manager::GetScene()->AddGameobject<CheckTexture>(Layer::UI, "LightDepth", srv, ShaderName::Unlit, XMFLOAT3(SCREEN_HEIGHT, SCREEN_HEIGHT, 0.0f));
+	Manager::GetScene()->AddGameobject<CheckTexture>(Layer::UI, "LightDepth", srv, ShaderName::Unlit, XMFLOAT3(SCREEN_HEIGHT, SCREEN_HEIGHT, 0.0f));
 	srv.clear();
 }
 
