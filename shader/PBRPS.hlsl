@@ -100,8 +100,8 @@ void main(in PS_IN In, out float4 Out : SV_Target0) {
 	float roughness = Parameter.y;
 	float metallic = Parameter.z;
 	
-	float intensity = 2.0;
-	float indirectIntensity = 0.64;
+	float intensity = 1.0;			//ÉâÉCÉgÇÃã≠Ç≥
+	float indirectIntensity = 0.64;	//ä‘ê⁄åıÇÃã≠Ç≥
 	
 	float linearRoughness = roughness * roughness;
 	float3 diffuseColor = (1.0 - metallic) * baseColor.rgb;
@@ -117,10 +117,11 @@ void main(in PS_IN In, out float4 Out : SV_Target0) {
 	float3 Fd = diffuseColor * Fd_Burley(linearRoughness, NdotV, NdotL, LdotH);
 		
 	color = Fd + Fr;
-	color *= (intensity * NdotL) * float3(0.98, 0.92, 0.89);
+	color *= (intensity * NdotL) * Light.Diffuse.rgb;
 	
     // diffuse indirect
 	float3 indirectDiffuse = Irradiance_SphericalHarmonics(N) * (1.0 / PI);
+	indirectDiffuse += Light.Ambient.rgb;
 	float3 indirectSpecular = float3(0.5, 0.5, 0.5);
 	
     // indirect contribution
@@ -130,7 +131,7 @@ void main(in PS_IN In, out float4 Out : SV_Target0) {
 
 	color += ibl * indirectIntensity;
 
-	color = Tonemap_ACES(color);
+	//color = Tonemap_ACES(color);
 	color = OECF_sRGBFast(color);
 	
 	Out = float4(color, In.Diffuse.a);
