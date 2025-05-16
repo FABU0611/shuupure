@@ -8,6 +8,9 @@
 #include "Scene.h"
 #include "Enemy.h"
 #include "Player.h"
+#include "Camera.h"
+#include "Gaussian.h"
+#include "EnemyBeheviorSequence.h"
 #include "C_ModelRenderer.h"
 #include "C_Transform.h"
 #include "C_Collision.h"
@@ -26,9 +29,10 @@ void Enemy::Init() {
 	GetComponent<ModelRenderer>()->Load("asset\\model\\kuma.obj");
 
 
-	_beheviorRoot = new BeheviorSequence(this);
-	_beheviorRoot->AddChild(new BeheviorIdle(this));
-	_beheviorRoot->AddChild(new BeheviorMove(this));
+	_beheviorRoot = new EnemyBeheviorSequence(this);
+	_beheviorRoot->AddChild(new BeheviorIdle(this))->SetUp();
+	_beheviorRoot->AddChild(new BeheviorMove(this))->SetUp();
+	_beheviorRoot->SetUp();
 }
 
 //終了処理===============================================================================
@@ -68,65 +72,95 @@ void Enemy::Hit(GameObject* obj) {
 	}
 }
 
+void BeheviorIdle::SetUp() {
+	_scene = Manager::GetScene();
+	if (_scene) {
+		_player = _scene->GetGameobject<Player>();
+		_camera = _scene->GetGameobject<Camera>();
+		_gaussian = Manager::GetGaussian();
+	}
+}
 
+//プレイヤーを探す
 BEHEVIOR_RESULT BeheviorIdle::Update() {
 	_time += Time::GetDeltaTime();
 	if (_time > 2.0f) {
 		_time = 0.0f;
 	}
 	else{
-		return BEHEVIOR_RESULT::CONTINUE;
+		//return BEHEVIOR_RESULT::CONTINUE;
+	}
+	if (!_scene) {
+		return BEHEVIOR_RESULT::FAILRE;
+	}
+	if (!_player) {
+		return BEHEVIOR_RESULT::FAILRE;
+	}
+	if (!_camera) {
+		return BEHEVIOR_RESULT::FAILRE;
+	}
+	if (!_gaussian) {
+		return BEHEVIOR_RESULT::FAILRE;
 	}
 
 	//プレイヤーとの距離を調べる
-	Scene* scene = Manager::GetScene();
-	if (!scene) {
-		return BEHEVIOR_RESULT::FAILRE;
-	}
-	Player* player = scene->GetGameobject<Player>();
-	if (!player) {
-		return BEHEVIOR_RESULT::FAILRE;
-	}
+	XMFLOAT3 playerpos = _player->GetPosition();
+	XMFLOAT3 dir = playerpos - _gameobject->GetPosition();
+	
+	float length = dir.x * dir.x + dir.y * dir.y + dir.z * dir.z;
 
-	XMFLOAT3 playerpos = player->GetPosition();
-	XMFLOAT3 dir = playerpos - _enemy->GetPosition();
-	//距離
-	float length = sqrtf(dir.x * dir.x + dir.y * dir.y + dir.z * dir.z);
-
+	_camera->LerpFoV(1.0f, 0.8f);
+	_gaussian->LerpDoF({ 0.1f, 0.1f }, 0.8f);
+	_gaussian->LerpBoke(0.0f, 0.8f);
 	//15いないなら近づく
-	if (length < 15.0f) {
+	if (length < pow(30.0f, 2)) {
 		return BEHEVIOR_RESULT::SUCCESS;
 	}
 	return BEHEVIOR_RESULT::CONTINUE;
 }
 
+void BeheviorMove::SetUp() {
+	_scene = Manager::GetScene();
+	if (_scene) {
+		_player = _scene->GetGameobject<Player>();
+		_camera = _scene->GetGameobject<Camera>();
+		_gaussian = Manager::GetGaussian();
+	}
+}
+
+//プレイヤーに近づく
 BEHEVIOR_RESULT BeheviorMove::Update() {
 	//プレイヤーとの距離を調べる
-	Scene* scene = Manager::GetScene();
-	if (!scene) {
+	if (!_scene) {
 		return BEHEVIOR_RESULT::FAILRE;
 	}
-	Player* player = scene->GetGameobject<Player>();
-	if (!player) {
+	if (!_player) {
 		return BEHEVIOR_RESULT::FAILRE;
 	}
+	if (!_camera) {
+		return BEHEVIOR_RESULT::FAILRE;
+	}
+	if (!_gaussian) {
+		return BEHEVIOR_RESULT::FAILRE;
+	}
+	_camera->LerpFoV(XMConvertToRadians(55.0f), 0.4f);
+	_gaussian->LerpDoF({ 0.15f, 0.36f }, 0.4f);
+	_gaussian->LerpBoke(5.0f, 0.4f);
 
-	XMFLOAT3 playerpos = player->GetPosition();
-	XMFLOAT3 dir = playerpos - _enemy->GetPosition();
+	XMFLOAT3 playerpos = _player->GetPosition();
+	XMFLOAT3 dir = playerpos - _gameobject->GetPosition();
 	//距離
-	float length = sqrtf(dir.x * dir.x + dir.y * dir.y + dir.z * dir.z);
+	float length = dir.x * dir.x + dir.y * dir.y + dir.z * dir.z;
 	float speed = 0.0f;
-	XMFLOAT3 vel = { 0.0f, 0.0f, 0.0f };;
 
-	//5いないなら近づく
-	vel = dir / length;
-	_enemy->GetRotation().y = atan2f(dir.x, dir.z);
-	_enemy->GetComponent<Transform>()->Update();
+	//ターゲットの方向に回転
+	_gameobject->GetRotation().y = atan2f(dir.x, dir.z);
+	_gameobject->GetComponent<Transform>()->Update();
 	speed = 10.0f;
 
-	_enemy->GetPosition() += _enemy->GetForward() * speed * (1.0f / 60.0f);
+	_gameobject->GetPosition() += _gameobject->GetForward() * speed * Time::GetDeltaTime();
 
-	if (length > 30.0f) {
+	if (length > pow(45.0f, 2)) {
 		return BEHEVIOR_RESULT::SUCCESS;
 	}
 	return BEHEVIOR_RESULT::CONTINUE;

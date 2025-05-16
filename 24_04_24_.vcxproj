@@ -392,6 +392,7 @@
     <ClCompile Include="src\DirectWriteCustomFont.cpp" />
     <ClCompile Include="src\DivingBoard.cpp" />
     <ClCompile Include="src\Enemy.cpp" />
+    <ClCompile Include="src\EnemyBeheviorSequence.cpp" />
     <ClCompile Include="src\ErrorHandler.cpp" />
     <ClCompile Include="src\Fade.cpp" />
     <ClCompile Include="src\Gaussian.cpp" />
@@ -439,6 +440,8 @@
     <ClCompile Include="src\Wave.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\BeheviorNode.h" />
+    <ClInclude Include="src\EnemyBeheviorSequence.h" />
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\CameraState.h" />
     <ClInclude Include="src\CameraState_Game1.h" />
