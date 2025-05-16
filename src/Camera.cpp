@@ -132,6 +132,29 @@ void Camera::Draw() {
 	Renderer::SetCameraPosition(GetPosition());
 }
 
+bool Camera::LerpFoV(const float& fov, const float& time) {
+	if (fov == _fov) {
+		return true;
+	}
+	if (!_islerping) {
+		_startfov = _fov;
+		_islerping = true;
+	}
+
+	_time += Time::GetDeltaTime();
+	float d = std::clamp(_time / time, 0.0f, 1.0f);
+
+	SetCameraFoV(std::lerp(_startfov, fov, d));
+
+	if (d >= 1.0f) {
+		_fov = fov;
+		_time = 0.0f;
+		_islerping = false;
+		return true;
+	}
+	return false;
+}
+
 void Camera::ChangeState(CameraState* state) {
 	if (!_state) {
 		return;

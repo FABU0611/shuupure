@@ -17,8 +17,10 @@ class Camera : public GameObject {
 	float			_cameraspeed{};
 	float			_time{};
 	float			_cascade[Renderer::CASCADE_NUM]{};
+	float			_startfov{};
 	float			_fov{};
 	float			_aspect{};
+	bool			_islerping{ false };
 
 	XMMATRIX		_prevview{};
 	XMMATRIX		_prevprojection{};
@@ -36,8 +38,11 @@ public:
 	void Update()override;
 	void Draw()override;
 
+	bool LerpFoV(const float& fov, const float& time);
+
 	void SetTarget(const XMFLOAT3& targetpos) { _target = targetpos; }
 	void SetLength(const float& length) { _length = length; }
+	void SetCameraFoV(const float& fov) { _fov = fov; }
 
 	XMFLOAT3& GetTartgetPos() { return _target; }
 

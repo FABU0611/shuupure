@@ -6,6 +6,7 @@
 #include "GaussianX.h"
 #include "GaussianY.h"
 #include "Input.h"
+#include "Time.h"
 #include "Manager.h"
 #include "GUIManager.h"
 #include "G_Slidebar.h"
@@ -96,4 +97,51 @@ void Gaussian::SetSlider() {
 	GUIManager::GetInstance()->AddGUI<Slidebar>("ボケ具合", XMFLOAT3(10.0f, 470.0f, 0.0f), 10.0f, 0.01f, &_param.z);
 	GUIManager::GetInstance()->AddGUI<Slidebar>("ボケ位置", XMFLOAT3(10.0f, 520.0f, 0.0f), 2.0f, 0.0f, &_dof.x);
 	GUIManager::GetInstance()->AddGUI<Slidebar>("ボケ範囲", XMFLOAT3(10.0f, 570.0f, 0.0f), 1.0f, 0.01f, &_dof.y);
+}
+
+bool Gaussian::LerpDoF(const XMFLOAT2& dof, const float& time) {
+	if (dof == _dof) {
+		return true;
+	}
+	if (!_isdoflerping) {
+		_startdof = _dof;
+		_isdoflerping = true;
+	}
+
+	_doftime += Time::GetDeltaTime();
+	float d = std::clamp(_doftime / time, 0.0f, 1.0f);
+
+	SetDof({ std::lerp(_startdof.x, dof.x, d), std::lerp(_startdof.y, dof.y, d)} );
+
+	if (d >= 1.0f) {
+		SetDof(dof);
+		_doftime = 0.0f;
+		_isdoflerping = false;
+		return true;
+	}
+	return false;
+}
+
+bool Gaussian::LerpBoke(float boke, const float& time) {
+	boke = std::clamp(boke, 0.01f, 10.0f);
+	if (boke == _param.z) {
+		return true;
+	}
+	if (!_isbokelerping) {
+		_startboke = _param.z;
+		_isbokelerping = true;
+	}
+
+	_boketime += Time::GetDeltaTime();
+	float d = std::clamp(_boketime / time, 0.0f, 1.0f);
+
+	SetBoke(std::lerp(_startboke, boke, d));
+
+	if (d >= 1.0f) {
+		SetBoke(boke);
+		_boketime = 0.0f;
+		_isbokelerping = false;
+		return true;
+	}
+	return false;
 }
