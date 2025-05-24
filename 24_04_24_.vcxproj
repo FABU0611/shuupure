@@ -204,15 +204,7 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
-    <FxCompile Include="shader\GaussianPS_X.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-    </FxCompile>
-    <FxCompile Include="shader\GaussianPS_Y.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+    <FxCompile Include="shader\GaussianPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
@@ -414,6 +406,7 @@
     <ClCompile Include="src\Player.cpp" />
     <ClCompile Include="src\Polygon2D.cpp" />
     <ClCompile Include="src\Pool.cpp" />
+    <ClCompile Include="src\PostEffectBase.cpp" />
     <ClCompile Include="src\Renderer.cpp" />
     <ClCompile Include="src\Rendpoly.cpp" />
     <ClCompile Include="src\Scene.cpp" />
@@ -492,6 +485,7 @@
     <ClInclude Include="src\PlayerState.h" />
     <ClInclude Include="src\Polygon2D.h" />
     <ClInclude Include="src\Pool.h" />
+    <ClInclude Include="src\PostEffectBase.h" />
     <ClInclude Include="src\Renderer.h" />
     <ClInclude Include="src\Rendpoly.h" />
     <ClInclude Include="src\Resource.h" />

@@ -33,12 +33,6 @@
     <FxCompile Include="shader\DepthPS.hlsl">
       <Filter>シェーダー\PS</Filter>
     </FxCompile>
-    <FxCompile Include="shader\GaussianPS_X.hlsl">
-      <Filter>シェーダー\PS</Filter>
-    </FxCompile>
-    <FxCompile Include="shader\GaussianPS_Y.hlsl">
-      <Filter>シェーダー\PS</Filter>
-    </FxCompile>
     <FxCompile Include="shader\NormalLightingPS.hlsl">
       <Filter>シェーダー\PS</Filter>
     </FxCompile>
@@ -88,6 +82,9 @@
       <Filter>シェーダー\VS</Filter>
     </FxCompile>
     <FxCompile Include="shader\PBRPS.hlsl">
+      <Filter>シェーダー\PS</Filter>
+    </FxCompile>
+    <FxCompile Include="shader\GaussianPS.hlsl">
       <Filter>シェーダー\PS</Filter>
     </FxCompile>
   </ItemGroup>
@@ -286,6 +283,9 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="src\EnemyBeheviorSequence.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PostEffectBase.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -522,6 +522,9 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="src\EnemyBeheviorSequence.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PostEffectBase.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
