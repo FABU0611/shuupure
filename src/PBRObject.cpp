@@ -22,6 +22,13 @@ void PBRObject::Init() {
 	_param = { 0.0f, 0.5f, 0.5f, 0.0f };
 
 	_envtex = TextureManager::GetInstance()->LoadTexture(L"asset\\model\\sky02.jpg");
+
+	//GUIの初期化
+	GUIManager* guimanager = GUIManager::GetInstance();
+	//スライダーバーの作成
+	guimanager->AddGUI<Slidebar>("Metallic", XMFLOAT3(10.0f, 620.0f, 0.0f), 1.0f, 0.0f, &_param.z);
+	guimanager->AddGUI<Slidebar>("Roughness", XMFLOAT3(10.0f, 670.0f, 0.0f), 1.0f, 0.0f, &_param.y);
+
 }
 
 void PBRObject::Uninit() {
