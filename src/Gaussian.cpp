@@ -47,9 +47,11 @@ void Gaussian::Init() {
 void Gaussian::Uninit() {
 	if (_gaussiany) {
 		_gaussiany->Uninit();
+		delete _gaussiany;
 	}
 	if (_gaussianx) {
 		_gaussianx->Uninit();
+		delete _gaussianx;
 	}
 }
 
