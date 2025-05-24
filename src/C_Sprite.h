@@ -25,10 +25,14 @@ protected:
 
 	int				_dispNum = 1;	//表示するスプライトの数
 
-	void CreateVertexBuffer(const unsigned short& num);
 
 public:
 	using Component::Component;
+	/// <summary>
+	/// 通常はLoadTextureで呼び出されます。
+	/// </summary>
+	/// <param name="num"></param>
+	void CreateVertexBuffer(const unsigned short& num);
 	void LoadTexture(const wchar_t* filename);
 	void LoadNormalTexture(const wchar_t* filename);
 	void LoadEnvTexture(const wchar_t* filename);
