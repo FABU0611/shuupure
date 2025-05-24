@@ -19,6 +19,8 @@ enum class ShaderName : short {
 	DepthShadow,
 	PBR,
 	CheckDoF,
+	Gaussian,
+	MotionBlur,
 };
 
 struct ShaderPack {

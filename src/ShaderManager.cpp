@@ -33,6 +33,8 @@ void Shader::LoadShader() {
 	AddShader("shader\\DepthShadowVS.cso", "shader\\DepthShadowPS.cso", ShaderName::DepthShadow);
 	AddShader("shader\\UnlitTextureVS.cso", "shader\\PBRPS.cso", ShaderName::PBR);
 	AddShader("shader\\UnlitTextureVS.cso", "shader\\CheckDoFPS.cso", ShaderName::CheckDoF);
+	AddShader("shader\\UnlitTextureVS.cso", "shader\\GaussianPS.cso", ShaderName::Gaussian);
+	AddShader("shader\\UnlitTextureVS.cso", "shader\\MotionBlurPS.cso", ShaderName::MotionBlur);
 }
 
 void Shader::UninitAll() {
