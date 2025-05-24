@@ -19,7 +19,8 @@ void Sprite2D::Draw(){
 
 	//頂点設定---------------------------------------------------------------------------
 	if (_mode == DrawMode::LeftTop ||
-		_mode == DrawMode::LeftTopColor) {
+		_mode == DrawMode::LeftTopColor ||
+		_mode == DrawMode::PostEffect) {
 		vertex[0].Position = { _pos.x, _pos.y, 0.0f };
 		vertex[1].Position = { _pos.x + _size.x, _pos.y, 0.0f };
 		vertex[2].Position = { _pos.x, _pos.y + _size.y, 0.0f };
@@ -138,6 +139,9 @@ void Sprite2D::Draw(){
 			Renderer::GetDeviceContext()->Draw(4, 4 * i);
 			i++;
 		}
+	}
+	else if (_mode == DrawMode::PostEffect) {
+		Renderer::GetDeviceContext()->Draw(4, 0);
 	}
 	else {
 		//テクスチャ設定

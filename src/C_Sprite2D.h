@@ -14,6 +14,7 @@ enum class DrawMode {
 	Rotate,			//回転
 	RotateColor,	//回転色変更可能
 	Multiply,		//マルチ
+	PostEffect,		//ポストエフェクト
 
 	ModeNum,
 };
