@@ -14,6 +14,7 @@
 #include "CameraState_Game1.h"
 #include "Manager.h"
 #include "Gaussian.h"
+#include "PostEffectManager.h"
 
 const float Camera::NEAR_CLIP = 0.1f;
 const float Camera::FAR_CLIP = 600.0f;
@@ -62,13 +63,13 @@ void Camera::Init() {
 	Title* title = dynamic_cast<Title*>(scene);
 	if (title) {
 		_state = new TitleState1(this);
-		Manager::GetGaussian()->SetDof({ 0.07f, 0.05f });
-		Manager::GetGaussian()->SetBoke(10.0f);
+		PostEffectManager::GetInstance()->GetGaussian()->SetDof({ 0.07f, 0.05f });
+		PostEffectManager::GetInstance()->GetGaussian()->SetBoke(10.0f);
 		return;
 	}
 	else {
-		Manager::GetGaussian()->SetDof({ 0.0f, 0.0f });
-		Manager::GetGaussian()->SetBoke(0.1f);
+		PostEffectManager::GetInstance()->GetGaussian()->SetDof({ 0.0f, 0.0f });
+		PostEffectManager::GetInstance()->GetGaussian()->SetBoke(0.1f);
 		_state = new GameState1(this);
 	}
 }

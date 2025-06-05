@@ -29,8 +29,6 @@ class Manager {
 
 	static Gaussian* _gaussian;
 
-	static MotionBlur* _motionblur;
-
 	static TakePicture* _takepic;
 
 	static bool _isdrawfromlight;

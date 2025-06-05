@@ -5,13 +5,15 @@
 #include "Renderer.h"
 #include "ShaderManager.h"
 
-void GaussianY::Draw() {
+void GaussianY::Draw(ID3D11ShaderResourceView* inputSRV) {
+	Renderer::BeginBlurY();
+	_writeSRV = Renderer::GetBYTexture();
+
 	Renderer::SetParameter({ 0.0f, 1.0f, 0.0f, 0.0f });
 
 	Shader::SetShader(ShaderName::Gaussian);
 
-	ID3D11ShaderResourceView* bxTexture = Renderer::GetBXTexture();
-	Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &bxTexture);
+	Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &inputSRV);
 
-	PostEffectBase::Draw();
+	PostEffectBase::Draw(inputSRV);
 }

@@ -407,6 +407,7 @@
     <ClCompile Include="src\Polygon2D.cpp" />
     <ClCompile Include="src\Pool.cpp" />
     <ClCompile Include="src\PostEffectBase.cpp" />
+    <ClCompile Include="src\PostEffectManager.cpp" />
     <ClCompile Include="src\Renderer.cpp" />
     <ClCompile Include="src\Rendpoly.cpp" />
     <ClCompile Include="src\Scene.cpp" />
@@ -486,6 +487,7 @@
     <ClInclude Include="src\Polygon2D.h" />
     <ClInclude Include="src\Pool.h" />
     <ClInclude Include="src\PostEffectBase.h" />
+    <ClInclude Include="src\PostEffectManager.h" />
     <ClInclude Include="src\Renderer.h" />
     <ClInclude Include="src\Rendpoly.h" />
     <ClInclude Include="src\Resource.h" />

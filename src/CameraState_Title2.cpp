@@ -7,6 +7,7 @@
 #include "Time.h"
 #include "Manager.h"
 #include "Gaussian.h"
+#include "PostEffectManager.h"
 
 
 void TitleState2::Update() {
@@ -17,8 +18,8 @@ void TitleState2::Update() {
 	camera->GetRotation().x -= 0.01f * Time::GetDeltaTime();
 
 	if (_time >= 7.0f) {
-		Manager::GetGaussian()->SetDof({ 0.07f, 0.05f });
-		Manager::GetGaussian()->SetBoke(10.0f);
+		PostEffectManager::GetInstance()->GetGaussian()->SetDof({ 0.07f, 0.05f });
+		PostEffectManager::GetInstance()->GetGaussian()->SetBoke(10.0f);
 		_time = 0.0f;
 		camera->SetPosition({ 0.0f, 25.0f, 30.0f });
 		camera->SetRotation({ -0.76f, -0.8f, 0.6f });

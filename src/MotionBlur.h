@@ -10,5 +10,5 @@ public:
 	MotionBlur() {}
 	~MotionBlur() {}
 
-	void Draw();
+	void Draw(ID3D11ShaderResourceView* inputSRV)override;
 };

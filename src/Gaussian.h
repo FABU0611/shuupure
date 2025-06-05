@@ -2,12 +2,12 @@
 //20106_田中　蓮
 //24_11_07
 #pragma once
-#include "Main.h"
+#include "PostEffectBase.h"
 
 class GaussianX;
 class GaussianY;
 
-class Gaussian {
+class Gaussian : public PostEffectBase {
 	GaussianX*	_gaussianx{};
 	GaussianY*	_gaussiany{};
 
@@ -27,10 +27,10 @@ public:
 	Gaussian() {}
 	~Gaussian() {}
 
-	void Init();
-	void Uninit();
-	void Update();
-	void Draw();
+	void Init()override;
+	void Uninit()override;
+	void Update()override;
+	void Draw(ID3D11ShaderResourceView* inputSRV)override;
 	void SetSlider();
 
 	/// <summary> ピントの位置と広さを設定 </summary>

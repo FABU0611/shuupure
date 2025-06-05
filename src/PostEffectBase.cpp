@@ -18,7 +18,7 @@ void PostEffectBase::Uninit() {
 	}
 }
 
-void PostEffectBase::Draw() {
+void PostEffectBase::Draw(ID3D11ShaderResourceView* inputSRV) {
 	for (auto c : _components) {
 		c->Draw();
 	}

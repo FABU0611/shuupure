@@ -10,7 +10,6 @@
 #include "S_Game.h"
 #include "S_Result.h"
 
-#include "Gaussian.h"
 #include "MotionBlur.h"
 #include "Rendpoly.h"
 
@@ -19,6 +18,7 @@
 #include "GUIManager.h"
 #include "TextManager.h"
 #include "TextureManager.h"
+#include "PostEffectManager.h"
 #include "TakePicture.h"
 #include "CheckTexture.h"
 
@@ -30,8 +30,6 @@ Scene* Manager::_prvscene{};
 LoadingText* Manager::_loadingT;
 Fade* Manager::_fade;
 Rendpoly* Manager::_final;
-Gaussian* Manager::_gaussian;
-MotionBlur* Manager::_motionblur;
 TakePicture* Manager::_takepic;
 bool Manager::_isdrawfromlight;
 int Manager::_cascadeidx = 0;
@@ -44,6 +42,8 @@ void Manager::Init() {
 	Audio::InitMaster();
 	Shader::LoadShader();
 
+	PostEffectManager::GetInstance()->Init();
+
 	//フェード初期化
 	_fade = new Fade();
 	_fade->Init();
@@ -53,12 +53,6 @@ void Manager::Init() {
 
 	_final = new Rendpoly();
 	_final->Init();
-
-	_gaussian = new Gaussian();
-	_gaussian->Init();
-
-	_motionblur = new MotionBlur();
-	_motionblur->Init();
 
 	_scene = new Title();
 	_scene->Init();
@@ -73,12 +67,6 @@ void Manager::Uninit() {
 	delete _scene;
 
 	delete _takepic;
-
-	_motionblur->Uninit();
-	delete _motionblur;
-
-	_gaussian->Uninit();
-	delete _gaussian;
 
 	_final->Uninit();
 	delete _final;
@@ -95,6 +83,7 @@ void Manager::Uninit() {
 	//使用していたリソース解放
 	GUIManager::GetInstance()->DeleteInstance();
 	TextureManager::GetInstance()->DeleteInstance();
+	PostEffectManager::GetInstance()->DeleteInstance();
 	ErrorHandler::GetInstance()->DeleteInstance();
 	Shader::UninitAll();
 	ModelRenderer::UnloadAll();
@@ -112,8 +101,7 @@ void Manager::Update() {
 		_scene->Update();
 		GUIManager::GetInstance()->Update();
 		TextManager::GetInstance()->Update();
-		_gaussian->Update();
-		_motionblur->Update();
+		PostEffectManager::GetInstance()->Update();
 		_final->Update();
 	}
 
@@ -135,12 +123,7 @@ void Manager::Draw() {
 	_isdrawfromlight = false;
 	_scene->Draw();	
 
-	//モーションブラーを掛ける
-	Renderer::BeginMotionBlur();
-	_motionblur->Draw();
-
-	//シーンにガウシアンブラーを掛ける
-	_gaussian->Draw();
+	PostEffectManager::GetInstance()->Draw(Renderer::GetPETexture());
 
 
 	//最終的な描画
@@ -186,7 +169,7 @@ void Manager::Draw() {
 	_scene = _nextscene;
 	_scene->Init();
 
-	_gaussian->SetSlider();
+	PostEffectManager::GetInstance()->SetSlider();
 	_takepic->Init();
 
 	_nextscene = nullptr;

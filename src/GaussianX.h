@@ -10,5 +10,5 @@ public:
 	GaussianX() {}
 	~GaussianX() {}
 
-	void Draw();
+	void Draw(ID3D11ShaderResourceView* inputSRV)override;
 };

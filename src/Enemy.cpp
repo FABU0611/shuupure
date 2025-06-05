@@ -5,6 +5,7 @@
 #include "Renderer.h"
 #include "Manager.h"
 #include "ShaderManager.h"
+#include "PostEffectManager.h"
 #include "Scene.h"
 #include "Enemy.h"
 #include "Player.h"
@@ -77,7 +78,7 @@ void BeheviorIdle::SetUp() {
 	if (_scene) {
 		_player = _scene->GetGameobject<Player>();
 		_camera = _scene->GetGameobject<Camera>();
-		_gaussian = Manager::GetGaussian();
+		_gaussian = PostEffectManager::GetInstance()->GetGaussian();
 	}
 }
 
@@ -124,7 +125,7 @@ void BeheviorMove::SetUp() {
 	if (_scene) {
 		_player = _scene->GetGameobject<Player>();
 		_camera = _scene->GetGameobject<Camera>();
-		_gaussian = Manager::GetGaussian();
+		_gaussian = PostEffectManager::GetInstance()->GetGaussian();
 	}
 }
 

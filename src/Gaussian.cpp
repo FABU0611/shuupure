@@ -10,8 +10,6 @@
 #include "Manager.h"
 #include "GUIManager.h"
 #include "G_Slidebar.h"
-#include "Scene.h"
-#include "S_Title.h"
 
 void Gaussian::CalcGaussianweight(float dispersion) {
 	float total = 0;
@@ -84,15 +82,15 @@ void Gaussian::Update() {
 	}
 }
 
-void Gaussian::Draw() {
+void Gaussian::Draw(ID3D11ShaderResourceView* inputSRV) {
 	Renderer::SetParameter(_param);
 	Renderer::SetWeights(&_weight[0]);
 	Renderer::SetDoF(_dof);
 
 	Renderer::BeginBlurX();
-	_gaussianx->Draw();
+	_gaussianx->Draw(inputSRV);
 	Renderer::BeginBlurY();
-	_gaussiany->Draw();
+	_gaussiany->Draw(_gaussianx->GetWriteSRV());
 }
 
 void Gaussian::SetSlider() {

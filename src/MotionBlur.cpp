@@ -5,13 +5,15 @@
 #include "Renderer.h"
 #include "ShaderManager.h"
 
-void MotionBlur::Draw() {
+void MotionBlur::Draw(ID3D11ShaderResourceView* inputSRV) {
+	Renderer::BeginMotionBlur();
+	_writeSRV = Renderer::GetMBTexture();
+
 	Shader::SetShader(ShaderName::MotionBlur);
 
-	ID3D11ShaderResourceView* peTexture = Renderer::GetPETexture();
-	Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &peTexture);
+	Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &inputSRV);
 	ID3D11ShaderResourceView* velTexture = Renderer::GetVelocityTexture();
 	Renderer::GetDeviceContext()->PSSetShaderResources(1, 1, &velTexture);
 
-	PostEffectBase::Draw();
+	PostEffectBase::Draw(inputSRV);
 }
